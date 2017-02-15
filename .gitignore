@@ -1,14 +1,17 @@
-.idea
+# Intellij #
+.idea/
+out/
 *.iml
+*.iws
+*.ipr
+
+# Mac #
 .DS_Store
-.cache
-.gradle
-.nb-gradle
-.classpath
-.project
-.settings
-.site*
-bin
-build
-out
-target
+
+# Gradle #
+build/
+.gradle/
+
+# Grain #
+/.sass-cache/
+*.dep
