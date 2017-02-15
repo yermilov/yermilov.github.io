@@ -1,0 +1,33 @@
+---
+layout: post
+title: "HTML5 Video tag"
+date: "2014-01-09 14:00"
+author: SysGears
+categories: [grain, groovy]
+comments: true
+published: true
+---
+
+<!--more-->
+
+####Code:
+
+```jsp
+<%=
+    video urls: [
+        'http://html5demos.com/assets/dizzy.mp4',
+        'http://html5demos.com/assets/dizzy.webm',
+        'http://html5demos.com/assets/dizzy.ogv'
+    ]
+%>
+```
+
+####Result:
+
+<%=
+    video urls: [
+        'http://html5demos.com/assets/dizzy.mp4',
+        'http://html5demos.com/assets/dizzy.webm',
+        'http://html5demos.com/assets/dizzy.ogv'
+    ]
+%>

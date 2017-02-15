@@ -1,0 +1,33 @@
+<% if (site.asides?.github?.user) { %>
+<section>
+  <h1>GitHub Repos</h1>
+  <% if (site.asides.github.show_repos) { %>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <% } %>
+  <% if (site.asides.github.show_profile_link) { %>
+    <a href="https://github.com/${site.asides.github.user}">${site.asides.github.user}</a> on GitHub
+  <% } %>
+  <% if (site.asides.github.show_repos) { %>
+  <script type="text/javascript">
+    $(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = "${r '/javascripts/libs/jXHR.js'}";
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: "${site.asides.github.user}",
+            count: "${site.asides.github.count ?: 10}",
+            skip_forks: "${site.asides.github.skip_forks == true}",
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <% } %>
+</section>
+<% } %>
