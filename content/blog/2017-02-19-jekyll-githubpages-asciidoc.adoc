@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Using Jekyll, Asciidoctor and GitHub Pages for static site creation"
-date: "2018-02-19 15:00"
+date: "2017-02-19 00:00"
 author: Yaroslav Yermilov
 categories: [grain, groovy]
 comments: true                    # disables/enables comments section for the post

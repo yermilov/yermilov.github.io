@@ -220,7 +220,7 @@ class ResourceMapper {
      * @return formatted url to the post page
      */
     private String getPostUrl(String basePath, Map resource) {
-        "$basePath${createPostUrl(resource)}"
+        resource.external_url ? resource.external_url : "$basePath${createPostUrl(resource)}"
     }
 
     /**
