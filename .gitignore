@@ -15,3 +15,4 @@ build/
 # Grain #
 /.sass-cache/
 *.dep
+/target/

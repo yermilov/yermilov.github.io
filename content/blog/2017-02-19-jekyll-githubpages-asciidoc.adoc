@@ -1,0 +1,444 @@
+---
+layout: post
+title: "Using Jekyll, Asciidoctor and GitHub Pages for static site creation"
+date: "2018-02-19 15:00"
+author: Yaroslav Yermilov
+categories: [grain, groovy]
+comments: true                    # disables/enables comments section for the post
+published: true                   # defines whether to render the post in 'generate' mode
+sharing: true                     # (optional) disables/enables sharing options for the post, 'true' is by default
+asides: [ asides/recent_posts.html, asides/github.html,
+  asides/about.html]              # (optional) asides to include into the post page, all asides are included by default
+---
+:linkattrs:
+
+?
+
+== Why static matters?
+
+Web started as a bunch of static sites that provided various pieces of useful information for first explorers of internet.
+But it turned into civilization phenomenon with exponential growth only when it became dynamic with all Web 2.0 stuff like social media, wiki-s, media platforms, etc.
+
+Anyway, even today lots of web resources really need a very limited amount of dynamic magic.
+If client state on your site is not persisted, it can be handled by JavaScript locally.
+If content is changing relatively rarely, you can just redeploy it with every change.
+If you need something like commenting feature, you can rely on external resources (for example link:https://disqus.com[disqus.com, window="_blank"] in this case).
+
+And if you get rid of all heavy dynamic weapons like databases and server-side code and express you site as collection of HMTL, CSS and JavaScript files you can gain some very worthy benefits.
+The first and the main one is the ease of site deployment.
+All you need to do is copy you files into any kind of web server (Apache, nginx).
+And if you go further and use cloud file storage (like S3) or dedicated web platform (like GitHub Pages), you get even more (think how it can help you in content management or content delivery, maintenance simplicity, performance and security).
+
+== Who is Jekyll?
+
+.https://en.wikipedia.org/wiki/Strange_Case_of_Dr_Jekyll_and_Mr_Hyde
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-ab698.png'}[caption=""]
+
+link:https://jekyllrb.com[Jekyll, window="_blank"] is a static site generator written in Ruby.
+Actually what it does is taking your content along with desired layout and transform them into collection of HTML, CSS and JavaScript files ready for deployment and servicing as static web resource.
+Content can be provided in any form from plain text files or markdown to pieces of HTMLs.
+Layout is specified as name of one of ready-to-go layouts Jekyll provides (with customization possibilities) or as your own HTML, CSS and JavaScript files with template-related features.
+
+WHITEBOARD SCHEMA GOES HERE
+
+Moreover, Jekyll is a great example of tool with both comprehensive predefined conventions and almost endless customization possibilities.
+If all you need is a simple blog, you should just place you text-file posts named in special way into special directory, define few configuration parameters and you're done.
+If you need something more specific, you can include your own pieces of HTML, CSS or JavaScript anywhere you need, even using Jekyll as just template engine for your soures ignoring all other features.
+
+== So, all I need is a simple blog
+
+Check link:https://jekyllrb.com/docs/quickstart[Jekyll quick-start guide, window="_blank"]!
+You need to follow these 5 steps:
+
+. Install link:https://www.ruby-lang.org/en/documentation/installation/[Ruby, window="_blank"]
+. Execute `gem install jekyll bundler`
+. Execute `jekyll new myblog`
+. Execute `cd myblog; bundle exec jekyll serve`
+. Go to http://localhost:4000
+
+You should get result same as link:https://yermilov.github.io/jekyll-start/[this one, window="_blank"]:
+
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-707aa.png'}[]
+
+However, you can do the same even without installing Ruby and Jekyll itself.
+First, you need to do fork or download sources from link:https://github.com/yermilov/mini-jekyll[mini-jekyll repository, window="_blank"], or, as an alternative, you can quickly create them by yourself:
+
+. Create directory for your blog
+. Create file _config.yml with following content
+[source,yaml]
+----
+title: Your awesome title
+theme: minima
+exclude:
+  - Gemfile
+----
+[start=3]
+. Create file Gemfile with following content
+[source,ruby]
+----
+source "https://rubygems.org"
+ruby RUBY_VERSION
+
+gem "jekyll", "3.4.0"
+gem "minima", "~> 2.0"
+
+----
+[start=4]
+. Create file index.md with following content
+[source,markdown]
+----
+---
+layout: home
+---
+----
+[start=5]
+. Create file about.md with following content
+[source,markdown]
+----
+---
+layout: page
+title: About
+permalink: /about/
+---
+
+This is the very minimum viable Jekyll blog!
+----
+[start=6]
+. Create file _posts/2017-01-01-welcome-to-mini-jekyll.md with following content (you can substitute date part with today's date)
+[source,markdown]
+----
+---
+layout: post
+title:  "Welcome to Mini-Jekyll!"
+---
+----
+
+How can you start this site without even installing Jekyll?
+Easily, with support of link:https://pages.github.com/[GitHub Pages, window="_blank"] - web platform that serves static content from GitHub repositories.
+Besides just showing content as it is, GitHub Pages can determine that your repository contains Jekyll project, render it and serve result.
+All you need to do is:
+
+. link:https://github.com/new[Create new GitHub repository, window="_blank"]
+. Execute `git init` inside your local blog directory
+. Execute `git add .`
+. Execute `git commit -m 'initial blog commit'`
+. Execute `git remote add origin https://github.com/yermilov/mini-jekyll.git` (substitute URL with your)
+. Execute `git push -u origin gh-pages`
+. Go to https://yermilov.github.io/mini-jekyll (substitute with your github username and repository name)
+
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-86b33.png'}[]
+
+== Got Jekyll and GitHub Pages. What's about Asciidoctor?
+
+If you want to get blog for simple text+images posts, you've already got a good starting point.
+But if your blog is going to be developer oriented, you probably may not be satisfied with using neither markdown nor HTML for your posts.
+In this case, link:http://asciidoctor.org/docs/what-is-asciidoc/[Asciidoc, window="_blank"] should be your default choice.
+It shares the same concept as link:http://daringfireball.net/projects/markdown/[Markdown, window="_blank"], is partially compatible with it, but has much more powerfull features needed for advanced drafting of articles, technical manuals, books, presentations and prose.
+
+link:http://asciidoctor.org[Asciidoctor, window="_blank"] is a toolchain that implements Asciidoc format.
+We are going to integrate it with Jekyll for rendering content using link:https://github.com/asciidoctor/jekyll-asciidoc[jekyll-asciidoc plugin, window="_blank"].
+
+As a starting point, fork or download sources from link:https://github.com/asciidoctor/jekyll-asciidoc-quickstart[jekyll-asciidoc-quickstart repository, window="_blank"].
+The same as before, instead you can download it and create your own repository from scratch with same content.
+
+Unlike previous examples, some additional setup is needed.
+GitHub Pages does not (yet) support rendering Asciidoc content, so you can't just push it GitHub repository and got rendered site back.
+Luckily, there is an easy way to overcome this problem.
+However, it will be great to show GitHub demand in Asciidoc rendering for example through http://github.com/support.
+
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-595ea.png'}[]
+
+Actually, we will setup link:https://travis-ci.org/[Travis CI server, window="_blank"] to emulate GitHub Pages staging automation, and push blog live upon committing any change to the repository.
+Steps to achieve it are perfectly described in link:https://github.com/yermilov/jekyll-asciidoc-quickstart/blob/master/README.adoc[jekyll-asciidoc plugin documentation, window="_blank"].
+
+After cloning quickstart repository you need to make two changes in the sources:
+
+. Add GitHub personal access token (described link:https://github.com/yermilov/jekyll-asciidoc-quickstart/blob/master/README.adoc#6-encrypt-the-github-token-for-travis-ci[here, window="_blank"]).
+. Modify original Rakefile, to make it possible to use your e-mail for automated pushes to your repository:
+[source,ruby]
+.Rakefile
+----
+require 'rake-jekyll'
+
+Rake::Jekyll::GitDeployTask.new(:deploy) do |t|
+   t.committer = 'Travis <yermilov17@gmail.com>' # substitute with your e-mail
+end
+----
+
+After your push changes into ***develop*** branch (do not use master or gh-pages because it may cause conflicts), Travis CI automatically will pick up sources, render them using Jekyll and push them back into master or gh-pages branch (depending on GitHub conventions).
+
+Now you can go to https://yermilov.github.io/jekyll-asciidoc-quickstart (substitute with your github username and repository name) and enjoy!
+
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-e7f2b.png'}[]
+
+== Add new post
+
+First thing you probably want to do with your blog is to create a new post.
+To do it, add file named yyyy-mm-dd-new-post.adoc (substitute yyyy-mm-dd with publication date and new-post with short post name).
+
+[source,asciidoc]
+----
+= Post title goes here
+:showtitle:
+:page-navtitle: Name for posts feed goes here
+:page-root: ../../../
+
+Post content goes here
+----
+
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-c5427.png'}[]
+
+For quick start with Asciidoc refer to link:http://asciidoctor.org/docs/asciidoc-writers-guide/[Writer's Guide, window="_blank"].
+After it, you can proceed with more advanced link:http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[Syntax Quick Reference, window="_blank"] and full link:http://asciidoctor.org/docs/user-manual/[User Manual, window="_blank"].
+
+Probably, you already have some post on external resources you want to link to your new blog.
+With Jekyll's flexibility this is the matter of two easy steps.
+First of all create file that will contain your external post metadata.
+Name it yyyy-mm-dd-external-post.***md*** similarly to regular posts.
+
+[source,md]
+----
+---
+navtitle:  "External post"
+external_url: https://yermilov.github.io/mini-jekyll/2017/02/10/welcome-to-mini-jekyll.html
+---
+----
+
+After it, open file _layouts/default.html and do following changes:
+
+[source,diff]
+----
+- <li><a href=".{{ post.url }}">{{ post.navtitle }}</a></li>
+
++ <li>
++   {% if post.external_url %}
++       <a href="{{ post.external_url }}">{{ post.navtitle }}</a>
++   {% else %}
++       <a href=".{{ post.url }}">{{ post.navtitle }}</a>
++   {% endif %}
++ </li>
+----
+
+To my mind, it's completely clear what was changed, which is another great advandage of Jekyll approach.
+
+== Improving pages layout
+
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-33bb0.png'}[]
+
+As we have already made some minor change to default page layout in your blog let's examine some more significant changes.
+For the starting point, pages layout is pretty straightforward.
+There is a file named _default.html_ in the __layouts_ folder and it's used for all site pages.
+Each page (_index.adoc_ or any from the __posts_ folder) during rendering is placed instead of `{{ content }}` placeholder.
+Let's now split it to different layouts.
+First, to change home page layout, create file __layouts/home.html_:
+
+[source,html]
+----
+---
+layout: default
+---
+
+<div class="row">
+    <div class="large-9 columns" role="content">
+        <h4>Posts</h4>
+        <div class="posts nav">
+          {% for post in site.posts %}
+            <div>
+              <h3>
+                {% if post.external_url %}
+                  <a href="{{ post.external_url }}">{{ post.navtitle }}</a>
+                {% else %}
+                  <a href=".{{ post.url }}">{{ post.navtitle }}</a>
+                {% endif %}
+              </h3>
+              {{ post.date | date: "%b %-d, %Y" }}
+              {% if post.summary %}
+                <p> {{ post.summary }} </p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+</div>
+----
+
+First 3 lines are YAML configuration of the layout.
+Here we specify that we want to inherit default layout, but place content of current page instead of `{{ content }}` placeholder.
+
+Now, create file __layouts/post.html_. It will be used as layout for all post pages.
+
+[source,html]
+----
+---
+layout: default
+---
+
+<div class="row">
+
+    <!-- Main Blog Content -->
+
+    <div class="large-9 columns" role="content">
+
+        {{ content }}
+
+    </div>
+
+    <!-- End Main Content -->
+
+    <!-- Sidebar -->
+
+    <aside class="large-3 columns">
+
+        <h4>Posts</h4>
+        <ul id="posts" class="posts nav">
+            {% for post in site.posts limit: 5 %}
+                <li>
+                  {% if post.external_url %}
+                      <a href="{{ post.external_url }}">{{ post.navtitle }}</a>
+                  {% else %}
+                      <a href=".{{ post.url }}">{{ post.navtitle }}</a>
+                  {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+    </aside>
+
+    <!-- End Sidebar -->
+</div>
+----
+
+Next, modify __layouts/default.html_. Do the following change:
+
+[source,diff]
+----
+- <!-- Main Page Content and Sidebar -->
+- ...
+- <!-- End Main Content and Sidebar -->
+
++ <!-- Main Page Content and Sidebar -->
++ {{ content }}
+----
+
+After finishing with layout, we need to reconfigure content files.
+Let's start from _index.adoc_.
+Now it can be just:
+
+[source,asciidoc]
+----
+= Congratulations!
+:showtitle:
+:page-title: Jekyll AsciiDoc Quickstart
+:page-description: A forkable blog-ready Jekyll site using AsciiDoc
+:page-layout: home
+----
+
+Proceed with post files.
+Regular post should look like:
+
+[source,asciidoc]
+----
+= Post title goes here
+:showtitle:
+:page-navtitle: Name for posts feed goes here
+:page-root: ../../../
+:page-layout: post
+:page-summary: Post summary for posts feed goes here
+
+Post content goes here
+----
+
+External post metadata should look like:
+
+[source,markdown]
+----
+---
+navtitle:  "External post"
+external_url: https://yermilov.github.io/mini-jekyll/2017/02/10/welcome-to-mini-jekyll.html
+summary: Remember Mini-Jekyll?
+---
+----
+
+Last thing we should do in scope of this post is organize our layout a little bit.
+For now, our default layout is quite big, let's split it with help of include feature.
+As example, we will take page footer.
+First, create file __includes/footer.html_ with following content:
+
+[source,html]
+----
+<footer class="row">
+    <div class="large-12 columns">
+        <hr>
+        <div class="row">
+            <div class="large-12 columns">
+              <span>
+                {% if site.author %}
+                  {{ site.author | escape }}
+                {% else %}
+                  {{ site.title | escape }}
+                {% endif %}
+              </span>
+              <span>
+                {% if site.email %}
+                <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+                {% endif %}
+              </span>
+            </div>
+        </div>
+    </div>
+</footer>
+----
+
+Next, do the following change with __layouts/default.html_:
+
+[source,diff]
+----
+- <!-- Footer -->
+- <footer class="row">
+- ...
+- </footer>
+
++ <!-- Footer -->
++ {% include footer.html %}
+----
+
+You can notice, that footer use variables named starting with `site.`.
+They are taken from __config.yml_ file.
+Add two lines to it (substitute with your personal data):
+
+[source,yaml]
+----
+author: Yaroslav Yermilov
+email: yermilov17@gmail.com
+----
+
+Now we are done!
+Let's look at what we have now:
+
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-350da.png'}[]
+
+image::${r '/images/jekyll-githubpages-asciidoc/jekyll-366e7.png'}[]
+
+== Links
+
+link:https://jekyllrb.com[Jekyll home, window="_blank"]
+
+link:https://pages.github.com/[GitHub Pages home, window="_blank"]
+
+link:https://github.com/yermilov/mini-jekyll[Mini-Jekyll repository, window="_blank"]
+
+link:http://daringfireball.net/projects/markdown/[Markdown home, window="_blank"]
+
+link:http://asciidoctor.org/docs/what-is-asciidoc/[What is Asciidoc?, window="_blank"]
+
+link:http://asciidoctor.org[Asciidoctor home, window="_blank"]
+
+link:http://asciidoctor.org/docs/asciidoc-writers-guide/[Asciidoc Writer's Guide, window="_blank"]
+
+link:http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[AsciidocSyntax Quick Reference, window="_blank"]
+
+link:http://asciidoctor.org/docs/user-manual/[Asciidoctor User Manual, window="_blank"]
+
+link:https://github.com/asciidoctor/jekyll-asciidoc[jekyll-asciidoc plugin home, window="_blank"]
+
+link:https://github.com/asciidoctor/jekyll-asciidoc-quickstart[jekyll-asciidoc-quickstart repository, window="_blank"].
