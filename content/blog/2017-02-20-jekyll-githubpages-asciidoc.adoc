@@ -37,7 +37,7 @@ And if you go further and use cloud file storage (like S3) or dedicated web plat
 == Who is Jekyll?
 
 .__from https://en.wikipedia.org/wiki/Strange_Case_of_Dr_Jekyll_and_Mr_Hyde__
-image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-ab698.png'}
+image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-ab698.png'}[]
 
 link:https://jekyllrb.com[Jekyll, window="_blank"] is a static site generator written in Ruby.
 Actually what it does is taking your content along with the desired layout and transform them into a collection of HTML, CSS and JavaScript files ready for deployment and servicing as a static web resource.
