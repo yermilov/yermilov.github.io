@@ -14,7 +14,7 @@ sidebar: true
         <% } %>
     <% } %>
     <% page.posts.each { post ->
-        def brief = post.render().content.split('<!--more-->').head()
+        def brief = post.summary ?: post.render().content.split('<!--more-->').head()
     %>
         ${include "article.html", post + [brief: brief]}
     <% } %>

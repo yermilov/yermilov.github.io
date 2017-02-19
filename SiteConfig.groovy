@@ -131,13 +131,13 @@ sharing {
 default_asides = [
         'asides/recent_posts.html',
 //        'asides/bitbucket.html',
-        'asides/github.html',
+//        'asides/github.html',
 //        'asides/tweets.html',
 //        'asides/delicious.html',
 //        'asides/pinboard.html',
 //        'asides/about.html',
-        'asides/facebook.html',
-        'asides/twitter.html',
+//        'asides/facebook.html',
+//        'asides/twitter.html',
 //        'asides/instagram.html',
 //        'asides/google_plus.html'
 ]
