@@ -1,7 +1,6 @@
 apply plugin: 'maven'
 apply plugin: 'groovy'
 apply plugin: 'idea'
-apply plugin: 'eclipse'
 
 group = 'com.sysgears.grain'
 version = '0.4.6'
@@ -76,7 +75,7 @@ task gendeps {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.8'
+    gradleVersion = '3.3'
 }
 
 idea {
