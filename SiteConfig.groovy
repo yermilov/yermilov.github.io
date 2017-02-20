@@ -74,8 +74,8 @@ deploy = github_pages_deploy_cmd
  * Site configuration.
  */
 
-title = 'Development notes'
-subtitle = 'by Yaroslav Yermilov'
+title = 'Development notes by Yaroslav Yermilov'
+subtitle = 'remember kids, the only difference between screwing around and science is writing it down'
 author = 'Yaroslav Yermilov'
 meta_description = 'development notes by Yaroslav Yermilov'
 
@@ -107,21 +107,21 @@ sharing {
     // Button for sharing of posts and pages on Twitter.
     twitter {
         share_button {
-            enabled = true
+            enabled = false
             lang = 'en'
         }
     }
     // Button for sharing of posts and pages on Facebook.
     facebook {
         share_button {
-            enabled = true
+            enabled = false
             lang = 'en_US'          // locale code e.g. 'en_US', 'en_GB', etc.
         }
     }
     // Button for sharing of posts and pages on Google plus one.
     googleplus_one {
         share_button {
-            enabled = true
+            enabled = false
             size = 'medium'         // one of 'small', 'medium', 'standard', 'tall'
         }
     }

@@ -10,7 +10,7 @@ asides: [ asides/recent_posts.html ]
 ---
 :linkattrs:
 
-After I decided to create this blog, the first tool that I found for this task was Jekyll - a static site generator supported by GitHub Pages.
+After I decided to start write things down, the first tool that I found for this task was Jekyll - a static site generator supported by GitHub Pages.
 It was very useful for creating the first version of this blog, but finally, I decided to use Grain (hope to present it in the following article).
 As a result of playing with Jekyll, in this article I will show how to build a simple blog using Jekyll as static site generator, GitHub Pages as static site server and Asciidoc as markdown language.
 We will create a blog from scratch, add new posts and change default configuration and web pages layout using mentioned technologies.
@@ -36,8 +36,8 @@ And if you go further and use cloud file storage (like S3) or dedicated web plat
 
 == Who is Jekyll?
 
-.__from https://en.wikipedia.org/wiki/Strange_Case_of_Dr_Jekyll_and_Mr_Hyde__
-image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-ab698.png'}[]
+.__link:https://en.wikipedia.org/wiki/Strange_Case_of_Dr_Jekyll_and_Mr_Hyde[source, window="_blank"]__
+image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-ab698.png'}[caption="", align=right]
 
 link:https://jekyllrb.com[Jekyll, window="_blank"] is a static site generator written in Ruby.
 Actually what it does is taking your content along with the desired layout and transform them into a collection of HTML, CSS and JavaScript files ready for deployment and servicing as a static web resource.
@@ -59,14 +59,14 @@ You need to follow these 5 steps:
 . Execute `gem install jekyll bundler`
 . Execute `jekyll new myblog`
 . Execute `cd myblog; bundle exec jekyll serve`
-. Go to http://localhost:4000
+. Go to link:http://localhost:4000[http://localhost:4000, window="_blank"]
 
 You should get result same as link:https://yermilov.github.io/jekyll-start/[this one, window="_blank"]:
 
 image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-707aa.png'}[]
 
 However, you can do the same even without installing Ruby and Jekyll itself.
-First, you need to do fork or download sources from link:https://github.com/yermilov/mini-jekyll[mini-jekyll repository, window="_blank"], or, as an alternative, you can quickly create them by yourself:
+First, you need to fork repository or download sources from link:https://github.com/yermilov/mini-jekyll[mini-jekyll repository, window="_blank"], or, as an alternative, you can quickly create them by yourself:
 
 . Create directory for your blog
 . Create file _config.yml with the following content
@@ -132,13 +132,13 @@ All you need to do is:
 . Execute `git commit -m 'initial blog commit'`
 . Execute `git remote add origin https://github.com/yermilov/mini-jekyll.git` (substitute URL with yours)
 . Execute `git push -u origin gh-pages`
-. Go to https://yermilov.github.io/mini-jekyll (substitute with your github username and repository name)
+. Go to link:https://yermilov.github.io/mini-jekyll[https://yermilov.github.io/mini-jekyll, window="_blank"] (substitute with your github username and repository name)
 
 image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-86b33.png'}[]
 
 == Got Jekyll and GitHub Pages. What's about Asciidoctor?
 
-If you want to get blog for simple text+images posts, you've already got a good starting point.
+If you want to create blog for simple text+images posts, you've already got a good starting point.
 But if your blog is going to be developer-oriented, you probably may not be satisfied with using neither markdown nor HTML for your posts.
 In this case, link:http://asciidoctor.org/docs/what-is-asciidoc/[Asciidoc, window="_blank"] should be your default choice.
 It shares the same concept as link:http://daringfireball.net/projects/markdown/[Markdown, window="_blank"], is partially compatible with it, but has much more powerful features needed for advanced drafting of articles, technical manuals, books, presentations, and prose.
@@ -152,7 +152,7 @@ The same as before, instead you can download it and create your own repository f
 Unlike previous examples, some additional setup is needed.
 GitHub Pages does not (yet) support rendering Asciidoc content, so you can't just push it to GitHub repository and got rendered site back.
 Luckily, there is an easy way to overcome this problem.
-However, it will be great to show GitHub demand in Asciidoc rendering for example through http://github.com/support.
+However, it will be great to show GitHub demand in Asciidoc rendering for example through link:http://github.com/support[GitHub support form, window="_blank"].
 
 image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-595ea.png'}[]
 
@@ -175,7 +175,7 @@ Rake::Jekyll::GitDeployTask.new(:deploy) do |t|
 end
 ----
 
-After your push changes into ***develop*** branch (do not use master or gh-pages because it may cause conflicts), Travis CI automatically will pick up sources, render them using Jekyll and push them back into master or gh-pages branch (depending on GitHub conventions).
+After your push changes into ***develop*** branch (do not use __master__ or __gh-pages__ because it may cause conflicts), Travis CI automatically will pick up sources, render them using Jekyll and push them back into master or gh-pages branch (depending on GitHub conventions).
 
 Now you can go to link:https://yermilov.github.io/jekyll-asciidoc-quickstart[https://yermilov.github.io/jekyll-asciidoc-quickstart, window="_blank"] (substitute with your github username and repository name) and enjoy!
 
@@ -184,7 +184,7 @@ image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-e7f2b.png'}[]
 == Adding new post
 
 The first thing you probably want to do with your blog is to create a new post.
-To do it, add file named __yyyy-mm-dd-new-post.adoc__ (substitute yyyy-mm-dd with publication date and new-post with short post name).
+To do it, add file named __yyyy-mm-dd-new-post.adoc__ (substitute yyyy-mm-dd with publication date and new-post with short post name) with following content:
 
 [source,asciidoc]
 ----
@@ -214,7 +214,7 @@ external_url: https://yermilov.github.io/mini-jekyll/2017/02/10/welcome-to-mini-
 ---
 ----
 
-After it, open file _layouts/default.html and do following changes:
+After it, open file ____layouts/default.html___ and do following changes:
 
 [source,diff]
 ----
@@ -229,11 +229,13 @@ After it, open file _layouts/default.html and do following changes:
 + </li>
 ----
 
+Now link in the posts feed is pointing to original external link.
+
 == Improving pages layout
 
 image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-33bb0.png'}[]
 
-As we have already made a minor change to default page layout in our blog let's try some more significant changes, like changing pages layout.
+As we have already made a minor change to default page layout in our blog, let's try some more significant ones, like changing pages layout.
 
 For the starting point, pages layout is pretty straightforward.
 There is a file named _default.html_ in the ____layouts___ folder and it's used for all site pages.
@@ -275,7 +277,7 @@ layout: default
 ----
 
 First 3 lines are YAML configuration of the layout.
-Here we specify that we want to inherit default layout, but place content of current page instead of `{{ content }}` placeholder.
+Here we specify that we want to inherit default layout, which implies placing content of current page instead of `{{ content }}` placeholder.
 
 Now, create file __layouts/post.html_. It will be used as layout for all post pages.
 
@@ -417,7 +419,7 @@ Next, do the following change with __layouts/default.html_:
 + {% include footer.html %}
 ----
 
-You can notice, that footer use variables named starting with `site.`.
+You can notice, that footer uses variables named starting with `site.`.
 They are taken from __config.yml_ file.
 Add two lines to it (substitute with your personal data):
 
