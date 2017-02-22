@@ -1,28 +1,23 @@
 sudo: required
-
 language: java
-
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
 cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
-
 before_install:
+- openssl aes-256-cbc -K $encrypted_55f98c6c891f_key -iv $encrypted_55f98c6c891f_iv
+  -in git_private_key.ppk.enc -out .travis/git_private_key.ppk -d
 - openssl aes-256-cbc -K $encrypted_675b9740fd90_key -iv $encrypted_675b9740fd90_iv
   -in git_private_key.ppk.enc -out .travis\\git_private_key.ppk -d
 - chmod +x grainw
-
 install:
 - "./grainw generate || echo 'hide exit code'"
-
 before_script:
 - eval "$(ssh-agent -s)"
 - chmod 600 .ssh/git_private_key.ppk
 - ssh-add .ssh/git_private_key.ppk
-
 script:
 - "./grainw deploy"
