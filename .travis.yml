@@ -24,6 +24,7 @@ before_script:
 - eval "$(ssh-agent -s)"
 - chmod 600 .travis/id_rsa
 - ssh-add .travis/id_rsa
+- chmod +x grainw
 
 script:
 - "./grainw deploy"
