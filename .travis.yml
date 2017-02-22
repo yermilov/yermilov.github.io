@@ -25,6 +25,8 @@ before_script:
 - eval "$(ssh-agent -s)"
 - chmod 600 .travis/id_rsa
 - ssh-add .travis/id_rsa
+- git config --global user.email "yermilov17@gmail.com"
+- git config --global user.name "Travis-CI"
 
 script:
 - "./grainw deploy"
