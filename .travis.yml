@@ -12,7 +12,8 @@ cache:
   - "$HOME/.gradle/wrapper/"
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_675b9740fd90_key -iv $encrypted_675b9740fd90_iv -in git_private_key.ppk.enc -out .travis\\git_private_key.ppk -d
+- openssl aes-256-cbc -K $encrypted_675b9740fd90_key -iv $encrypted_675b9740fd90_iv
+  -in git_private_key.ppk.enc -out .travis\\git_private_key.ppk -d
 - chmod +x grainw
 
 install:
