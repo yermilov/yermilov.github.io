@@ -74,10 +74,24 @@ class GHPagesDeployer {
                 if (!filesToBeDeleted.isEmpty()) {
                     git(['add', '-u'])
                 }
-                git(['commit', '-m', 'autobuilt from travis-ci'])
+                git(['commit', '-m', commitMessage()])
                 git(['push', 'origin', "$workingBranch:$workingBranch"])
             }
             ant.delete(dir: cacheDeployDir)
+        }
+    }
+
+    private String commitMessage() {
+        if (System.getenv('TRAVIS') == 'true') {
+            String travisBuildNumber = System.getenv('TRAVIS_BUILD_NUMBER')
+            String travisCommit = System.getenv('TRAVIS_COMMIT')
+            String travisCommitMessage = System.getenv('TRAVIS_COMMIT_MESSAGE')
+
+            return "deployed from build-${travisBuildNumber} by Travis-CI from ${travisCommit} (${travisCommitMessage})"
+        } else {
+            String hostname = System.getenv('HOSTNAME') ?: System.getenv('COMPUTERNAME')
+
+            return "deployed from `grain deploy`${hostname ? ' by ' + hostname : ''}"
         }
     }
 
