@@ -74,7 +74,7 @@ class GHPagesDeployer {
                 if (!filesToBeDeleted.isEmpty()) {
                     git(['add', '-u'])
                 }
-                git(['commit', '-m', 'Updated site'])
+                git(['commit', '-m', 'autobuilt from travis-ci'])
                 git(['push', 'origin', "$workingBranch:$workingBranch"])
             }
             ant.delete(dir: cacheDeployDir)

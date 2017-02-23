@@ -94,7 +94,7 @@ rss {
 }
 
 // Site Search.
-enable_site_search = true           // defines whether to enable site search
+enable_site_search = false           // defines whether to enable site search
 
 // Subscription by email.
 subscribe_url = ''                  // url to subscribe by email (service integration required)
