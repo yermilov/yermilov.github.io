@@ -1,20 +1,20 @@
 ---
 layout: post
-title: "Tiebreaker regarding Java HashMap, TreeNode and tieBreakOrder"
+title: "Tiebreaker regarding Java HashMap, TreeNode and TieBreakOrder"
 date: "2017-02-24 00:51"
 categories: [java, jdk, hashmap]
 comments: true
-published: false
+published: true
 sharing: true
 asides: [ asides/recent_posts.html ]
 ---
 :linkattrs:
 
 On the latest link:http://jug.ua/2017/02/clean-tests-jdk-changes/[JUGUA meeting, window="_blank"] Igor Dmitriev has delivered a talk about minor, behind the scenes changes in JDK.
-On of them, seems to be widely-known, was HashMap being intelligent enough to turn buckets which are long linked lists because of pure hashCode implementation into search-tree.
+On of them, seems to be widely-known, was HashMap being intelligent enough to turn buckets which are actually long linked lists (because of pure hashCode implementation) into search-trees.
 Anyway, Igor greatly explained it in a very detailed manner.
-One thing that was unclear for me, and Igor was not able to explain it as well, is why search-tree is constructed for keys which do not have ordering?
-After some time investigating this question at home, seems like I finally got the answer.
+One thing that was unclear for me, and Igor was not able to explain it as well, is why search tree is constructed for keys which do not have ordering?
+After some time investigating this question at home, seems like I have the answer.
 
 ++++
 <!--more-->
@@ -22,7 +22,7 @@ After some time investigating this question at home, seems like I finally got th
 
 == Preface
 
-First, puzzler with a well-known solution.
+First, the puzzler with a well-known solution.
 What's wrong with this code?
 
 [source,groovy]
@@ -57,7 +57,7 @@ Not a big secret, because of very bad hash code function, all entries will go th
 
 image::${r '/images/2017-02-24-tie-break-order/tiebreaker-4e86c.png'}[]
 
-Good news is that Java is clever enough to transform this list into self-balancing binary search tree, after size of the problem (and map) is big enough.
+Good news is that Java is clever enough to transform this list into self-balancing binary search tree after the size of the problem (and map) is big enough.
 
 [source,java]
 ----
@@ -83,7 +83,7 @@ image::${r '/images/2017-02-24-tie-break-order/tiebreaker-72e7c.png'}[]
 
 == Closer to the problem
 
-Attentive reader will ask: if HashMap organizes self-balancing binary search tree, how does it determine order of elements, which is the must for this data structure?
+The attentive reader will ask: if HashMap organizes self-balancing binary search tree, how does it determine an order of elements, which is the must for this data structure?
 Well, if you class luckily implements __Comparable__ interface, it's pretty easy job:
 
 [source,groovy]
@@ -131,17 +131,17 @@ image::${r '/images/2017-02-24-tie-break-order/tiebreaker-93a1a.png'}[]
 
 The problem is that HashMap does not use tiebreak order on get operation.
 
-If key class implements __comparable__, get operation uses search tree feature:
+If key class implements __Comparable__, get operation uses search tree feature:
 
 image::${r '/images/2017-02-24-tie-break-order/tiebreaker-d35a8.png'}[]
 
-If key class does not implement __comparable__, it will traverse all the tree to find specified entry:
+If key class does not implement __Comparable__, it will traverse all the tree to find specified entry:
 
 image::${r '/images/2017-02-24-tie-break-order/tiebreaker-f3142.png'}[]
 
-Given this, two questions occurs one by one:
+Given this, two questions occur one by one:
 
-Q-1. Why tiebreak order is not used?
+Q-1. Why is tiebreak order not used?
 
 A-1. This one is easy:
 
@@ -161,7 +161,7 @@ assert System.identityHashCode(key1) == System.identityHashCode(key2)
 //                                TiebreakerKey28(28)
 ----
 
-By definition, two equal object instances will have different identity hash code, so we can't use it as comparator.
+By definition, two equal object instances will have different identity hash code, so we can't use it as a comparator.
 
 Q-2. ***If we need to traverse the full tree, why HashMap bothers itself with constructing a tree? No benefits, just wasted time on tree creation!***
 
@@ -230,9 +230,9 @@ If we compare two keys of different classes, result is based on class name:
 
 image::${r '/images/2017-02-24-tie-break-order/tiebreaker-755ed.png'}[]
 
-This means that key mix is pretty straightforward: first all keys from first class goes, and then all from the second.
+This means that key mix is pretty straightforward: first, all keys from first class goes, and then all from the second.
 
-If we compare two keys of same class, original rules are used: __compareTo()__ or __System.identityHashCode()__ is invoked.
+If we compare two keys of the same class, original rules are used: __compareTo()__ or __System.identityHashCode()__ is invoked.
 
 And now, the main conclusions:
 
