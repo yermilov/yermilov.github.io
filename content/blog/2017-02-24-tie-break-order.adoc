@@ -167,7 +167,7 @@ Q-2. ***If we need to traverse the full tree, why HashMap bothers itself with co
 
 == Answer
 
-It so simple! HashMap can contain keys of different classes. And some of them may be __comparable__ and some of them not.
+It's so simple! HashMap can contain keys of different classes. And some of them may be __comparable__ and some of them not.
 
 [source,groovy]
 ----
