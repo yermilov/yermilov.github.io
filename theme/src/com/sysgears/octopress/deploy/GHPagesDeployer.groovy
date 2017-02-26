@@ -48,10 +48,10 @@ class GHPagesDeployer {
             ant.mkdir(dir: cacheDeployDir)
             git(['init'])
             if (!isUserPage && !ghPagesExists) {
-                git(['remote', 'add', '-f', 'origin', ghPagesUrl])
+                git(['remote', 'add', '--all', '-f', 'origin', ghPagesUrl])
                 git(['checkout', '-b', workingBranch])
             } else {
-                git(['remote', 'add', '-t', workingBranch, '-f', 'origin', ghPagesUrl])
+                git(['remote', 'add', '--all', '-t', workingBranch, '-f', 'origin', ghPagesUrl])
                 git(['checkout', workingBranch])
                 ant.delete(includeEmptyDirs: true) {
                     fileset(dir: cacheDeployDir) {
@@ -62,7 +62,7 @@ class GHPagesDeployer {
             ant.copy(todir: cacheDeployDir) {
                 fileset(dir: destinationDir)
             }
-            git(['add', '.'])
+            git(['add', '--all', '.'])
         }
 
         def filesToBeDeleted = getListOfDeletedFiles(ant, cacheDeployDir)
@@ -72,7 +72,7 @@ class GHPagesDeployer {
         ant.sequential {
             if (continueDeploy) {
                 if (!filesToBeDeleted.isEmpty()) {
-                    git(['add', '-u'])
+                    git(['add', '--all', '-u'])
                 }
                 git(['commit', '-m', commitMessage()])
                 git(['push', 'origin', "$workingBranch:$workingBranch"])
