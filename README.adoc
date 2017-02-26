@@ -2,4 +2,4 @@
 
 Sources for generating https://yermilov.github.io blog.
 
-image:https://travis-ci.org/yermilov/yermilov.github.io.svg?branch=develop["Travis job", link="https://travis-ci.org/yermilov/yermilov.github.io"]
+Travis job: image:https://travis-ci.org/yermilov/yermilov.github.io.svg?branch=develop["Travis job", link="https://travis-ci.org/yermilov/yermilov.github.io"]
