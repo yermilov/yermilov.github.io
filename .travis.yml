@@ -10,7 +10,8 @@ cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
-  - "$HOME/.grain/"
+  - "$HOME/.grain/packages/"
+  - "$HOME/.grain/tools/"
 
 before_install:
 - mkdir -p .travis
