@@ -46,10 +46,10 @@ class TwitterApiConnector {
      * @return JSONObject with response or null if server respond with error status code
      */
     private JSONArray sendRequest(String resource, Map query) {
-        String consumerKey = site.asides.tweets.consumer_key ?: ''
-        String consumerSecret = site.asides.tweets.consumer_secret ?: ''
-        String accessToken = site.asides.tweets.access_token ?: ''
-        String secretToken = site.asides.tweets.secret_token ?: ''
+        String consumerKey = System.getenv('TWITTER_CONSUMER_KEY') ?: site.asides.tweets.consumer_key
+        String consumerSecret = System.getenv('TWITTER_CONSUMER_SECRET') ?: site.asides.tweets.consumer_secret
+        String accessToken = System.getenv('TWITTER_ACCESS_TOKEN') ?: site.asides.tweets.access_token
+        String secretToken = System.getenv('TWITTER_SECRET_TOKEN') ?: site.asides.tweets.secret_token
 
         def response
         if (consumerKey && consumerSecret && accessToken && secretToken) {

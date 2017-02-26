@@ -179,10 +179,10 @@ asides {
     tweets {
         user = 'yermilov17'
         count = 3
-        consumer_key = System.getenv('TWITTER_CONSUMER_KEY')
-        consumer_secret = System.getenv('TWITTER_CONSUMER_SECRET')
-        access_token = System.getenv('TWITTER_ACCESS_TOKEN')
-        secret_token = System.getenv('TWITTER_SECRET_TOKEN')
+        consumer_key = ''
+        consumer_secret = ''
+        access_token = ''
+        secret_token = ''
         follow_button {
             size = 'large'          // 'large' or 'medium'
             lang = 'en'             // one of 'en', 'fr', 'de', 'it', 'es', etc.
