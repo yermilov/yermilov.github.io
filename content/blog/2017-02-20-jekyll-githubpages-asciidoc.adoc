@@ -6,7 +6,6 @@ categories: [jekyll, asciidoctor, github pages, static sites]
 comments: true
 published: true
 sharing: true
-asides: [ asides/recent_posts.html ]
 ---
 :linkattrs:
 

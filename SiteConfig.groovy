@@ -132,7 +132,7 @@ default_asides = [
         'asides/recent_posts.html',
 //        'asides/bitbucket.html',
 //        'asides/github.html',
-//        'asides/tweets.html',
+        'asides/tweets.html',
 //        'asides/delicious.html',
 //        'asides/pinboard.html',
 //        'asides/about.html',
@@ -177,12 +177,12 @@ asides {
 
     // The latest tweets.
     tweets {
-        user = 'yermilov17'           // Twitter (https://twitter.com/) username
-        count = 2                   // the number of tweets to display
-        //consumer_key = ''         // to get consumer key and secret go to https://dev.twitter.com/apps and create a new application
-        //consumer_secret = ''
-        //access_token = ''
-        //secret_token = ''
+        user = 'yermilov17'
+        count = 3
+        consumer_key = System.getenv('TWITTER_CONSUMER_KEY')
+        consumer_secret = System.getenv('TWITTER_CONSUMER_SECRET')
+        access_token = System.getenv('TWITTER_ACCESS_TOKEN')
+        secret_token = System.getenv('TWITTER_SECRET_TOKEN')
         follow_button {
             size = 'large'          // 'large' or 'medium'
             lang = 'en'             // one of 'en', 'fr', 'de', 'it', 'es', etc.

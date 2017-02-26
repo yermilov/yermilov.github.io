@@ -46,6 +46,9 @@ dependencies {
     compile "com.sysgears.grain:grain:$project.grainVersion"
 
     compile 'org.codehaus.groovy:groovy:2.1.2'
+
+    compile 'oauth.signpost:oauth-signpost:1.2.1.2'
+    compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'
 }
 
 sourceSets {

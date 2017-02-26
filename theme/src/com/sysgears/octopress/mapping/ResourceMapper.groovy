@@ -43,7 +43,7 @@ class ResourceMapper {
             fillDates <<
             resource
         }.sort { -it.date.time }
-        
+
         checkForDuplicateUrls << customizeModels << addSiteMenu << customizeAsides << refinedResources
     }
 
@@ -52,7 +52,7 @@ class ResourceMapper {
      * Replace with your own implementation to customize.
      * The default URL format is '{year}/{month}/{day}/{post name}'.
      *
-     * @param resource the blog post resource 
+     * @param resource the blog post resource
      *
      * @return formatted url to the post page
      */
@@ -71,12 +71,12 @@ class ResourceMapper {
     }
 
     /**
-     * Fills in page `date` and `updated` fields 
+     * Fills in page `date` and `updated` fields
      */
     private def fillDates = { Map it ->
         def update = [date: it.date ? Date.parse(site.datetime_format, it.date) : new Date(it.dateCreated as Long),
-                updated: it.updated ? Date.parse(site.datetime_format, it.updated) : new Date(it.lastUpdated as Long)] 
-        it + update 
+                updated: it.updated ? Date.parse(site.datetime_format, it.updated) : new Date(it.lastUpdated as Long)]
+        it + update
     }
 
     /**
@@ -84,11 +84,11 @@ class ResourceMapper {
      */
     private def customizeUrls = { List tweets, Map resource ->
         def location = resource.location
-        def update = [:] 
+        def update = [:]
         switch (location) {
             case ~/\/(images|javascripts|stylesheets)\/.*/:
                 if (location == '/javascripts/jquery.tweet.js') {
-                    update.tweets = tweets.toString().replace('\\', '\\\\')
+                    update.tweets = tweets.toString().replace('\\', '\\\\').replace("'", "\\'")
                 }
                 update.url = getFingerprintUrl(resource)
                 break
