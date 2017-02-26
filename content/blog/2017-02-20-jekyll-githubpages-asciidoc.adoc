@@ -133,7 +133,7 @@ title:  "Welcome to Mini-Jekyll!"
       mm = '0' + mm
   }
 
-  today = mm + '/' + dd + '/' + yyyy;
+  today = yyyy + '-' + mm + '-' + dd;
 
   document.getElementById('todayFileName').innerHTML = '_posts/' + today + '-welcome-to-mini-jekyll.md'
 </script>
