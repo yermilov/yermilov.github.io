@@ -109,7 +109,7 @@ permalink: /about/
 This is the very minimum viable Jekyll blog!
 ----
 [start=6]
-. Create file _posts/2017-02-20-welcome-to-mini-jekyll.md with following content (you can substitute date part with today's date)
+. Create file +++<span id="todayFileName">_posts/2017-02-20-welcome-to-mini-jekyll.md</span>+++ with following content:
 [source,markdown]
 ----
 ---
@@ -117,6 +117,25 @@ layout: post
 title:  "Welcome to Mini-Jekyll!"
 ---
 ----
+
+++++
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1; //January is 0!
+var yyyy = today.getFullYear();
+
+if (dd < 10) {
+    dd = '0' + dd
+}
+
+if (mm < 10) {
+    mm = '0' + mm
+}
+
+today = mm + '/' + dd + '/' + yyyy;
+
+document.getElementById('todayFileName').innerHTML = '_posts/' + today + '-welcome-to-mini-jekyll.md'
+++++
 
 How can you start this site without even installing Jekyll?
 Easily, with support of link:https://pages.github.com/[GitHub Pages, window="_blank"] - web platform that serves static content from GitHub repositories.
