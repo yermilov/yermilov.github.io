@@ -178,7 +178,7 @@ asides {
     // The latest tweets.
     tweets {
         user = 'yermilov17'
-        count = 4
+        count = 5
         consumer_key = ''
         consumer_secret = ''
         access_token = ''
