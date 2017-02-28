@@ -8,7 +8,7 @@
   final String dayFormat = 'dd'
 %>
 
-<% if (when == 'posted') { %>
+<% if (updatedOn == null || postedOn == updatedOn) { %>
     <time datetime="${xmlDateTime date: postedOn}" pubdate ${ updatedOn != postedOn ? 'data-updated=true' : '' }>
       <span class="month">${postedOn.format(monthFormat)}</span>
       <span class="day">${postedOn.format(dayFormat)}</span>,
@@ -16,7 +16,7 @@
     </time>
   <% } %>
 
-<% if (when == 'updated' && updatedOn) { %>
+<% if (updatedOn != null && postedOn != updatedOn) { %>
      <time datetime="${xmlDateTime date: updatedOn}" class="updated">
        Updated
        <span class="month">${updatedOn.format(monthFormat)}</span>
