@@ -1,7 +1,8 @@
 ---
 layout: post
 title: "Using Jekyll, Asciidoctor and GitHub Pages for static site creation"
-date: "2017-02-20 00:00"
+date: "2017-02-20 02:27"
+updated: "2017-02-26 15:42"
 categories: [jekyll, asciidoctor, github pages, static sites]
 comments: true
 published: true
