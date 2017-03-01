@@ -5,7 +5,7 @@ ${include '/archives/date.html'}
 <% if (page.categories?.size() > 0) { %>
   <footer>
     <% if (page.updated != null && page.date != page.updated) { %>
-      <div>updated ${page.updated.format('MMM dd yyyy')}</div>
+      <div>updated ${page.updated.format('MMM dd, yyyy')}</div>
     <% } %>
 
     <span class="categories">tags:
