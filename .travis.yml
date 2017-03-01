@@ -21,7 +21,7 @@ before_install:
 - chmod +x grainw
 
 install:
-- "./grainw generate || echo 'hide exit code'"
+- "./grainw generate || true"
 
 before_script:
 - eval "$(ssh-agent -s)"
