@@ -130,6 +130,7 @@ sharing {
 // Sidebar modules that should be included by default.
 default_asides = [
         'asides/recent_posts.html',
+        'asides/recent_updates.html',
 //        'asides/bitbucket.html',
 //        'asides/github.html',
         'asides/tweets.html',
@@ -147,6 +148,11 @@ asides {
     // Recent posts.
     recent_posts {
         count = 5
+    }
+
+    // Recent posts.
+    recent_updates {
+        count = 3
     }
 
     // Recent Delicious bookmarks.

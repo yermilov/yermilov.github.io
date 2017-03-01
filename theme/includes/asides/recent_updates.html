@@ -1,0 +1,12 @@
+<% if (!page.recent_updates.empty) { %>
+    <section>
+        <h1>Recent Updates</h1>
+        <ul id="recent_updates">
+            <% page.recent_updates.each { post -> %>
+            <li class="post">
+                <a href="${link post.url}">${titleCase title: post.title}</a>
+            </li>
+            <% } %>
+        </ul>
+    </section>
+<% } %>

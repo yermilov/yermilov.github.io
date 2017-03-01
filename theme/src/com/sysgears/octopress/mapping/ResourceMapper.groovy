@@ -170,16 +170,32 @@ class ResourceMapper {
      */
     private def customizeAsides = { List resources ->
         def posts = resources.findAll { it.layout == 'post' }
-        def max = site.asides?.recent_posts?.count ?: 5
-        def recentPosts = posts.take(max).collect { post -> [url: post.url, title: post.title] }
+
+        def recentPostsCount = site.asides?.recent_posts?.count ?: 5
+        def recentPosts = posts.take(recentPostsCount).collect { post -> [url: post.url, title: post.title] }
+
+        def recentUpdatesCount = site.asides?.recent_updates?.count ?: 3
+        def recentUpdates = posts.drop(recentPostsCount)
+                .findAll({ post -> post.updated != null })
+                .findAll({ post -> post.date != post.updated })
+                .findAll({ post -> post.updated >= recentPosts.last().date })
+                .sort({ post -> -post.updated.time })
+                .take(recentUpdatesCount)
+                .collect { post -> [url: post.url, title: post.title] }
 
         resources.collect { Map page ->
             def asides = page.asides ?: site.default_asides
+
+            Map adds = [:]
+
             if ('asides/recent_posts.html' in asides) {
-                page + [recent_posts: recentPosts]
-            } else {
-                page
+                adds += [recent_posts: recentPosts]
             }
+            if ('asides/recent_updates.html' in asides) {
+                adds += [recent_updates: recentUpdates]
+            }
+
+            return page + adds
         }
     }
 
