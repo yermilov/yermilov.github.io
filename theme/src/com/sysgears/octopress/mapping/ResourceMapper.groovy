@@ -3,7 +3,6 @@ package com.sysgears.octopress.mapping
 import com.sysgears.grain.taglib.GrainUtils
 import com.sysgears.grain.taglib.Site
 import com.sysgears.octopress.mapping.pagination.Paginator
-import com.sysgears.octopress.mapping.twitter.TweetsFetcher
 
 /**
  * Change pages urls and extend models.
@@ -16,11 +15,6 @@ class ResourceMapper {
     private final Site site
 
     /**
-     * Allows to load the latest tweets.
-     */
-    private TweetsFetcher tweetsFetcher
-
-    /**
      * The blog post URL base path. Change the value to customize.
      * Defaults to /blog/
      */
@@ -28,7 +22,6 @@ class ResourceMapper {
 
     public ResourceMapper(Site site) {
         this.site = site
-        tweetsFetcher = new TweetsFetcher(site)
     }
 
     /**
@@ -36,10 +29,8 @@ class ResourceMapper {
      */
     def map = { resources ->
 
-        def tweets = tweetsFetcher.getTweets(site.asides.tweets.count) ?: []
-
         def refinedResources = resources.findResults(filterPublished).collect { Map resource ->
-            customizeUrls.curry(tweets) <<
+            customizeUrls <<
             fillDates <<
             resource
         }.sort { -it.date.time }
@@ -82,14 +73,11 @@ class ResourceMapper {
     /**
      * Customizes pages urls.
      */
-    private def customizeUrls = { List tweets, Map resource ->
+    private def customizeUrls = { Map resource ->
         def location = resource.location
         def update = [:]
         switch (location) {
             case ~/\/(images|javascripts|stylesheets)\/.*/:
-                if (location == '/javascripts/jquery.tweet.js') {
-                    update.tweets = tweets.toString().replace('\\', '\\\\').replace("'", "\\'")
-                }
                 update.url = getFingerprintUrl(resource)
                 break
             case ~/\/blog\/.*/:

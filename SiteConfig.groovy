@@ -178,17 +178,6 @@ asides {
     // The latest tweets.
     tweets {
         user = 'yermilov17'
-        count = 5
-        consumer_key = ''
-        consumer_secret = ''
-        access_token = ''
-        secret_token = ''
-        follow_button {
-            size = 'large'          // 'large' or 'medium'
-            lang = 'en'             // one of 'en', 'fr', 'de', 'it', 'es', etc.
-            show_name = true        // defines whether or not to show username
-            show_count = true       // defines whether or not to show the number of followers
-        }
     }
 
     // Links to social networks:
