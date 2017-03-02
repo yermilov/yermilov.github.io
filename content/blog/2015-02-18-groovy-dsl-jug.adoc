@@ -1,0 +1,21 @@
+---
+layout: post
+title: "'Groovy for Domain-Specific Languages' talk at JUGUA"
+date: "2015-02-18 00:00"
+updated: "2015-02-18 00:00"
+categories: [groovy, dsl, talk]
+comments: true
+published: true
+sharing: true
+---
+:linkattrs:
+
+Venue: link:http://jug.ua/2015/02/dsl-with-groovy-clojure/[JUGUA, window="_blank"]
+
+Sources: link:https://github.com/yermilov/groovy-dsl[https://github.com/yermilov/groovy-dsl, window="_blank"]
+
+Slides: link:https://www.slideshare.net/yaroslavyermilov/groovy-dsl-44945972[slideshare, window="_blank"]
+
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Cue5B11UfDU?ecver=1" frameborder="0" allowfullscreen></iframe>
+++++

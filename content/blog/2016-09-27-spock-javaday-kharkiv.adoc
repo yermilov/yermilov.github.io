@@ -1,0 +1,21 @@
+---
+layout: post
+title: "'What Mr. Spock would possibly say about modern unit testing: pragmatic and emotional overview' talk at JavaDay Kharkiv 2016"
+date: "2016-09-27 00:00"
+updated: "2016-09-27 00:00"
+categories: [spock, junit, testng, testing, groovy, talk]
+comments: true
+published: true
+sharing: true
+---
+:linkattrs:
+
+Venue: link:http://javaday.org.ua/kharkiv/[JavaDay Kharkiv 2016, window="_blank"]
+
+Sources: link:https://github.com/yermilov/spock-talk/tree/c295e4d81483ac12604e8380415146299e49e9eb[https://github.com/yermilov/spock-talk, window="_blank"]
+
+Slides: link:https://www.slideshare.net/yaroslavyermilov/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-62280211[slideshare, window="_blank"]
+
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9GwQg_4MX7o?ecver=1" frameborder="0" allowfullscreen></iframe>
+++++
