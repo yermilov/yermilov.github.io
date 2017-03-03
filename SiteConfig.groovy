@@ -82,8 +82,9 @@ meta_description = 'development notes by Yaroslav Yermilov'
 // Blog and Archive
 posts_per_blog_page = 5             // the number of posts to display per blog page
 posts_per_archive_page = 10         // the number of posts to display per archive page
+
 disqus {
-    short_name = ''                 // the unique identifier assigned to a Disqus (http://disqus.com/) forum
+    short_name = 'yermilov-github-io'
 }
 
 // RSS feed.
