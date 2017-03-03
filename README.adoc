@@ -1,4 +1,5 @@
 = yermilov.github.io
+:linkattrs:
 
 Sources for generating https://yermilov.github.io blog.
 
