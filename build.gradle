@@ -1,18 +1,11 @@
-apply plugin: 'maven'
 apply plugin: 'groovy'
 apply plugin: 'idea'
 
-group = 'com.sysgears.grain'
-version = '0.4.6'
 defaultTasks 'preview'
 
 ext {
     mainClassName = 'com.sysgears.grain.Main'
-    compatibilityVersion = JavaVersion.VERSION_1_5
 }
-
-sourceCompatibility = compatibilityVersion
-targetCompatibility = compatibilityVersion
 
 clean.doLast { ant.delete(dir: '.cache'); ant.delete(dir: 'target') }
 
@@ -36,7 +29,7 @@ configurations.all {
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
     maven {
         url 'https://oss.sonatype.org/content/groups/public/'
     }
@@ -45,7 +38,7 @@ repositories {
 dependencies {
     compile "com.sysgears.grain:grain:$project.grainVersion"
 
-    compile 'org.codehaus.groovy:groovy:2.1.2'
+    compile 'org.codehaus.groovy:groovy:2.4.9'
 
     compile 'oauth.signpost:oauth-signpost:1.2.1.2'
     compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'
