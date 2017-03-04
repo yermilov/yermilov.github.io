@@ -19,15 +19,7 @@ buildscript {
             throw new RuntimeException('Grain version is not set in properties file')
         }
     }
-
-    repositories { jcenter() }
-
-    dependencies {
-        classpath 'com.netflix.nebula:nebula-dependency-recommender:3.6.3'
-    }
 }
-
-apply plugin: 'nebula.dependency-recommender'
 
 configurations.all {
     exclude group: 'commons-logging'
@@ -43,17 +35,13 @@ repositories {
     }
 }
 
-dependencyRecommendations {
-    mavenBom module: 'netflix:platform:latest.release'
-}
-
 dependencies {
     compile "com.sysgears.grain:grain:$project.grainVersion"
 
-    compile 'org.codehaus.groovy:groovy'
+    compile 'org.codehaus.groovy:groovy:2.4.9'
 
-    compile 'oauth.signpost:oauth-signpost'
-    compile 'oauth.signpost:signpost-commonshttp4'
+    compile 'oauth.signpost:oauth-signpost:1.2.1.2'
+    compile 'oauth.signpost:signpost-commonshttp4:1.2.1.2'
 }
 
 sourceSets {
