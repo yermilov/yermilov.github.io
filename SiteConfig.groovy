@@ -78,6 +78,7 @@ title = 'Development notes by Yaroslav Yermilov'
 subtitle = 'remember kids, the only difference between screwing around and science is writing it down'
 author = 'Yaroslav Yermilov'
 meta_description = 'development notes by Yaroslav Yermilov'
+github_repository = 'https://github.com/yermilov/yermilov.github.io'
 
 // Blog and Archive
 posts_per_blog_page = 5             // the number of posts to display per blog page
