@@ -25,33 +25,9 @@ After some time investigating this question at home, seems like I have the answe
 First, the puzzler with a well-known solution.
 What's wrong with this code?
 
-[source,groovy]
-----
-class TiebreakerKey28 {
-    int value
-
-    int hashCode() {
-        28
-    }
-
-    boolean equals(o) {
-        if (this.is(o)) return true
-        if (getClass() != o.class) return false
-
-        TiebreakerKey28 key = (TiebreakerKey28) o
-
-        if (value != key.value) return false
-
-        return true
-    }
-}
-
-HashMap<TiebreakerKey28, String> hashMap = new HashMap<>()
-
-10.times {
-    hashMap.put(new TiebreakerKey28(value: it), "hello for the $it time")
-}
-----
+++++
+${gist id:'ceaeef659c16eff45c3dafa5c1502267'}
+++++
 
 Not a big secret, because of very bad hash code function, all entries will go the same bucket and form a linked list with poor performance.
 
@@ -59,19 +35,9 @@ image::${r '/images/2017-02-24-tie-break-order/tiebreaker-4e86c.png'}[]
 
 Good news is that Java is clever enough to transform this list into self-balancing binary search tree after the size of the problem (and map) is big enough.
 
-[source,java]
-----
-if (binCount >= TREEIFY_THRESHOLD - 1) // TREEIFY_THRESHOLD = 8
-    treeifyBin(tab, hash);
-
-...
-
-final void treeifyBin(Node<K,V>[] tab, int hash) {
-    int n, index; Node<K,V> e;
-    if (tab == null || (n = tab.length) < MIN_TREEIFY_CAPACITY) // MIN_TREEIFY_CAPACITY = 64
-        resize();
-    else ...
-----
+++++
+${gist id:'63780a37c936fd4d27a7241351ea12b3'}
+++++
 
 Putting into simple words, for 10 elements with same hash code we will get a linked list:
 
@@ -86,38 +52,9 @@ image::${r '/images/2017-02-24-tie-break-order/tiebreaker-72e7c.png'}[]
 The attentive reader will ask: if HashMap organizes self-balancing binary search tree, how does it determine an order of elements, which is the must for this data structure?
 Well, if you class luckily implements __Comparable__ interface, it's pretty easy job:
 
-[source,groovy]
-----
-class TiebreakerKey28 implements Comparable<TiebreakerKey28> {
-    int value
-
-    int hashCode() {
-        28
-    }
-
-    boolean equals(o) {
-        if (this.is(o)) return true
-        if (getClass() != o.class) return false
-
-        TiebreakerKey28 key = (TiebreakerKey28) o
-
-        if (value != key.value) return false
-
-        return true
-    }
-
-    @Override
-    int compareTo(TiebreakerKey28 other) {
-        this.value <=> other.value
-    }
-}
-
-HashMap<TiebreakerKey28, String> hashMap = new HashMap<>()
-
-11.times {
-    hashMap.put(new TiebreakerKey28(value: it), "hello for the $it time")
-}
-----
+++++
+${gist id:'cf90e7eef1975bad9cc302f53612ef6a'}
+++++
 
 image::${r '/images/2017-02-24-tie-break-order/tiebreaker-512ed.png'}[]
 
@@ -145,21 +82,9 @@ Q-1. Why is tiebreak order not used?
 
 A-1. This one is easy:
 
-[source,groovy]
-----
-TiebreakerKey28 key1 = new TiebreakerKey28(value: 28)
-TiebreakerKey28 key2 = new TiebreakerKey28(value: 28)
-
-assert key1 == key2
-assert System.identityHashCode(key1) == System.identityHashCode(key2)
-
-// Assertion failed:
-//
-// assert System.identityHashCode(key1) == System.identityHashCode(key2)
-//               |                |     |         |                |
-//               1205406622       |     false     293907205        TiebreakerKey28(28)
-//                                TiebreakerKey28(28)
-----
+++++
+${gist id:'e1b620606c7739f3db9f5e47c6fe413c'}
+++++
 
 By definition, two equal object instances will have different identity hash code, so we can't use it as a comparator.
 
@@ -169,61 +94,9 @@ Q-2. ***If we need to traverse the full tree, why HashMap bothers itself with co
 
 It's so simple! HashMap can contain keys of different classes. And some of them may be __comparable__ and some of them not.
 
-[source,groovy]
-----
-class TiebreakerKey28 {
-    int value
-
-    int hashCode() {
-        28
-    }
-
-    boolean equals(o) {
-        if (this.is(o)) return true
-        if (getClass() != o.class) return false
-
-        TiebreakerKey28 key = (TiebreakerKey28) o
-
-        if (value != key.value) return false
-
-        return true
-    }
-}
-
-class TiebreakerComparableKey28 implements Comparable<TiebreakerComparableKey28> {
-    int value
-
-    int hashCode() {
-        28
-    }
-
-    boolean equals(o) {
-        if (this.is(o)) return true
-        if (getClass() != o.class) return false
-
-        TiebreakerComparableKey28 key = (TiebreakerComparableKey28) o
-
-        if (value != key.value) return false
-
-        return true
-    }
-
-    @Override
-    int compareTo(TiebreakerComparableKey28 other) {
-        this.value <=> other.value
-    }
-}
-
-HashMap hashMap = new HashMap<>()
-
-(1..6).each {
-    hashMap.put(new TiebreakerKey28(value: it), "hello for the $it time")
-}
-
-(7..12).each {
-    hashMap.put(new TiebreakerComparableKey28(value: it), "hello for the $it time")
-}
-----
+++++
+${gist id:'a8b968c30f7ea0211a3dd10c288494d3'}
+++++
 
 What does this mix imply?
 If we compare two keys of different classes, result is based on class name:

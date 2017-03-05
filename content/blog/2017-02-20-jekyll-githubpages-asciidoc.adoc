@@ -70,53 +70,33 @@ First, you need to fork repository or download sources from link:https://github.
 
 . Create directory for your blog
 . Create file _config.yml with the following content
-[source,yaml]
-----
-title: Your awesome title
-theme: minima
-exclude:
-  - Gemfile
-----
+++++
+${gist id:'f25ae17a6bc85b7fc75eab310bc9ff52'}
+++++
+
 [start=3]
 . Create file Gemfile with the following content
-[source,ruby]
-----
-source "https://rubygems.org"
-ruby RUBY_VERSION
+++++
+${gist id:'118d18ea311905e224e311fd16f7c4dd'}
+++++
 
-gem "jekyll", "3.4.0"
-gem "minima", "~> 2.0"
-
-----
 [start=4]
 . Create file index.md with the following content
-[source,markdown]
-----
----
-layout: home
----
-----
+++++
+${gist id:'9cadf8cb8f96067e5022501ca825026a'}
+++++
+
 [start=5]
 . Create file about.md with following content
-[source,markdown]
-----
----
-layout: page
-title: About
-permalink: /about/
----
+++++
+${gist id:'994c3dff2062a96f9f257000482e2c36'}
+++++
 
-This is the very minimum viable Jekyll blog!
-----
 [start=6]
 . Create file +++<span id="todayFileName">_posts/2017-02-20-welcome-to-mini-jekyll.md</span>+++ with following content:
-[source,markdown]
-----
----
-layout: post
-title:  "Welcome to Mini-Jekyll!"
----
-----
+++++
+${gist id:'8102dc4bee24aeef7f511d7211eaf741'}
+++++
 
 ++++
 <script>
@@ -187,14 +167,9 @@ After cloning quickstart repository you need to make two changes in the sources:
 . Add GitHub personal access token (described link:https://github.com/asciidoctor/jekyll-asciidoc-quickstart/blob/master/README.adoc#6-encrypt-the-github-token-for-travis-ci[here, window="_blank"]).
 . Modify original __.Rakefile__, to make it possible to use your e-mail for automated pushes to your repository:
 
-[source,ruby]
-----
-require 'rake-jekyll'
-
-Rake::Jekyll::GitDeployTask.new(:deploy) do |t|
-   t.committer = 'Travis <example@gmail.com>' # substitute with your e-mail
-end
-----
+++++
+${gist id:'4abe7931165f10cf28edd9b55c4d32ba'}
+++++
 
 After your push changes into ***develop*** branch (do not use __master__ or __gh-pages__ because it may cause conflicts), Travis CI automatically will pick up sources, render them using Jekyll and push them back into master or gh-pages branch (depending on GitHub conventions).
 
@@ -207,15 +182,9 @@ image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-e7f2b.png'}[]
 The first thing you probably want to do with your blog is to create a new post.
 To do it, add file named __yyyy-mm-dd-new-post.adoc__ (substitute yyyy-mm-dd with publication date and new-post with short post name) with following content:
 
-[source,asciidoc]
-----
-= Post title goes here
-:showtitle:
-:page-navtitle: Name for posts feed goes here
-:page-root: ../../../
-
-Post content goes here
-----
+++++
+${gist id:'a7a48ff65668b4299bf5f9692b4a9c46'}
+++++
 
 image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-c5427.png'}[]
 
@@ -227,28 +196,15 @@ With Jekyll's flexibility, this is the matter of two easy steps.
 First of all, create file that will contain your external post metadata.
 Name it __yyyy-mm-dd-external-post.**md**__ similarly to regular posts.
 
-[source,md]
-----
----
-navtitle:  "External post"
-external_url: https://yermilov.github.io/mini-jekyll/2017/02/10/welcome-to-mini-jekyll.html
----
-----
+++++
+${gist id:'7889355953f8277594ca2f2a8c57215f'}
+++++
 
 After it, open file ____layouts/default.html___ and do following changes:
 
-[source,diff]
-----
-- <li><a href=".{{ post.url }}">{{ post.navtitle }}</a></li>
-
-+ <li>
-+   {% if post.external_url %}
-+       <a href="{{ post.external_url }}">{{ post.navtitle }}</a>
-+   {% else %}
-+       <a href=".{{ post.url }}">{{ post.navtitle }}</a>
-+   {% endif %}
-+ </li>
-----
+++++
+${gist id:'a158df94b32e91588acdaf7fb073d629'}
+++++
 
 Now link in the posts feed is pointing to original external link.
 
@@ -267,132 +223,45 @@ image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-5de01.png'}[]
 Let's now split it to different layouts.
 First, to change home page layout, create file __layouts/home.html_:
 
-[source,html]
-----
----
-layout: default
----
-
-<div class="row">
-    <div class="large-9 columns" role="content">
-        <h4>Posts</h4>
-        <div class="posts nav">
-          {% for post in site.posts %}
-            <div>
-              <h3>
-                {% if post.external_url %}
-                  <a href="{{ post.external_url }}">{{ post.navtitle }}</a>
-                {% else %}
-                  <a href=".{{ post.url }}">{{ post.navtitle }}</a>
-                {% endif %}
-              </h3>
-              {{ post.date | date: "%b %-d, %Y" }}
-              {% if post.summary %}
-                <p> {{ post.summary }} </p>
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-    </div>
-</div>
-----
+++++
+${gist id:'f8e11c33860336e880f774d232ec0508'}
+++++
 
 First 3 lines are YAML configuration of the layout.
 Here we specify that we want to inherit default layout, which implies placing content of current page instead of `{{ content }}` placeholder.
 
 Now, create file __layouts/post.html_. It will be used as layout for all post pages.
 
-[source,html]
-----
----
-layout: default
----
-
-<div class="row">
-
-    <!-- Main Blog Content -->
-
-    <div class="large-9 columns" role="content">
-
-        {{ content }}
-
-    </div>
-
-    <!-- End Main Content -->
-
-    <!-- Sidebar -->
-
-    <aside class="large-3 columns">
-
-        <h4>Posts</h4>
-        <ul id="posts" class="posts nav">
-            {% for post in site.posts limit: 5 %}
-                <li>
-                  {% if post.external_url %}
-                      <a href="{{ post.external_url }}">{{ post.navtitle }}</a>
-                  {% else %}
-                      <a href=".{{ post.url }}">{{ post.navtitle }}</a>
-                  {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-
-    </aside>
-
-    <!-- End Sidebar -->
-</div>
-----
+++++
+${gist id:'992833bd62105b491f5ba7ee2fa93b9d'}
+++++
 
 Next, modify __layouts/default.html_. Do the following change:
 
-[source,diff]
-----
-- <!-- Main Page Content and Sidebar -->
-- ...
-- <!-- End Main Content and Sidebar -->
-
-+ <!-- Main Page Content and Sidebar -->
-+ {{ content }}
-----
+++++
+${gist id:'f78b89670d5da8f3e57a5941c7c33b34'}
+++++
 
 After finishing with layout, we need to reconfigure content files.
 Let's start from _index.adoc_.
 Now it can be just:
 
-[source,asciidoc]
-----
-= Congratulations!
-:showtitle:
-:page-title: Jekyll AsciiDoc Quickstart
-:page-description: A forkable blog-ready Jekyll site using AsciiDoc
-:page-layout: home
-----
+++++
+${gist id:'c9ab333a1f1318837bc82885e9cdf9bc'}
+++++
 
 Proceed with post files.
 Regular post should look like:
 
-[source,asciidoc]
-----
-= Post title goes here
-:showtitle:
-:page-navtitle: Name for posts feed goes here
-:page-root: ../../../
-:page-layout: post
-:page-summary: Post summary for posts feed goes here
-
-Post content goes here
-----
+++++
+${gist id:'08ed4a66561c14bb8809450f09be9cfb'}
+++++
 
 External post metadata should look like:
 
-[source,markdown]
-----
----
-navtitle:  "External post"
-external_url: https://yermilov.github.io/mini-jekyll/2017/02/10/welcome-to-mini-jekyll.html
-summary: Remember Mini-Jekyll?
----
-----
+++++
+${gist id:'ff4701d26a3d727df1fa91d1c17d2e23'}
+++++
 
 The last thing we should do in scope of this post is organizing our layout a little bit.
 For now, our default layout is quite big, let's split it with help of include feature.
@@ -402,53 +271,23 @@ image::${r '/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-faaab.png'}[]
 
 First, create file __includes/footer.html_ with following content:
 
-[source,html]
-----
-<footer class="row">
-    <div class="large-12 columns">
-        <hr>
-        <div class="row">
-            <div class="large-12 columns">
-              <span>
-                {% if site.author %}
-                  {{ site.author | escape }}
-                {% else %}
-                  {{ site.title | escape }}
-                {% endif %}
-              </span>
-              <span>
-                {% if site.email %}
-                <a href="mailto:{{ site.email }}">{{ site.email }}</a>
-                {% endif %}
-              </span>
-            </div>
-        </div>
-    </div>
-</footer>
-----
+++++
+${gist id:'52ae2b49bb67c02b38e04cd0a83cea72'}
+++++
 
 Next, do the following change with __layouts/default.html_:
 
-[source,diff]
-----
-- <!-- Footer -->
-- <footer class="row">
-- ...
-- </footer>
-
-+ <!-- Footer -->
-+ {% include footer.html %}
-----
+++++
+${gist id:'16edd990579e2f562ecbff880e5dc0b6'}
+++++
 
 You can notice, that footer uses variables named starting with `site.`.
 They are taken from __config.yml_ file.
 Add two lines to it (substitute with your personal data):
 
-[source,yaml]
-----
-author: Yaroslav Yermilov
-email: example@gmail.com
-----
+++++
+${gist id:'80964004f7c01b96fd47d2120e09a751'}
+++++
 
 Now we are done!
 Let's examine final result:
