@@ -8,10 +8,7 @@
     <% } %>
     <% if (!page.meta) { %>
       <p class="meta">
-        ${include 'post/date.html', [when: 'posted']}
-        <% if (site.disqus?.short_name && page.comments != false) { %>
-         | <a href="${page.index ? site.url + page.url : ''}#disqus_thread">Comments</a>
-        <% } %>
+        ${include 'post/date.html'}
       </p>
     <% } %>
   </header>
