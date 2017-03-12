@@ -1,0 +1,25 @@
+<div class="sharing">
+  <% if (site.sharing?.twitter?.share_button?.enabled == true) { %>
+    <div>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-via="yermilov17" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </div>
+  <% } %>
+  <% if (site.sharing?.googleplus_one?.share_button?.enabled == true) { %>
+    <div class="g-plusone" data-size="${site.sharing.googleplus_one.share_button?.size ?: 'medium'}"></div>
+  <% } %>
+  <% if (site.sharing?.facebook?.share_button?.enabled == true) { %>
+  <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/${site.sharing.facebook?.share_button?.lang ?: 'en_US'}/all.js#xfbml=1";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+
+    <!-- Your share button code -->
+    <div class="fb-share-button" data-layout="button_count" data-size="large">
+    </div>
+  <% } %>
+</div>

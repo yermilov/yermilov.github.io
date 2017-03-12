@@ -109,14 +109,14 @@ sharing {
     // Button for sharing of posts and pages on Twitter.
     twitter {
         share_button {
-            enabled = false
+            enabled = true
             lang = 'en'
         }
     }
     // Button for sharing of posts and pages on Facebook.
     facebook {
         share_button {
-            enabled = false
+            enabled = true
             lang = 'en_US'          // locale code e.g. 'en_US', 'en_GB', etc.
         }
     }

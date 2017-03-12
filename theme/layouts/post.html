@@ -1,6 +1,7 @@
 ---
 layout: default
 single: true
+sharing: true
 ---
 
 <div class="blog-index">
@@ -11,9 +12,6 @@ single: true
       ${include 'post/date.html', [when: 'updated']}
       ${include 'post/categories.html'}
     </p>
-    <% if (page.sharing != null ? page.sharing : true) { %>
-      ${include 'post/sharing.html'}
-    <% } %>
     <p class="meta">
       <% if (page.prev_post?.url) { %>
         <a class="basic-alignment left" href="${link page.prev_post.url}" title="Previous Post: ${page.prev_post.title}">&laquo; ${titleCase title: page.prev_post.title}</a>

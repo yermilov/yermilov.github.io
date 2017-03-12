@@ -1,7 +1,11 @@
 <% if (page.sidebar != false) { %>
-<aside class="sidebar">
-  <% (page.asides ?: site.default_asides).each { aside -> %>
-    ${ include aside }
-  <% } %>
-</aside>
+    <aside class="sidebar">
+      <% if (page.sharing != null ? page.sharing : true) { %>
+        ${include 'asides/sharing.html'}
+      <% } %>
+
+      <% (page.asides ?: site.default_asides).each { aside -> %>
+        ${ include aside }
+      <% } %>
+    </aside>
 <% } %>
