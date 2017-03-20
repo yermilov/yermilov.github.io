@@ -43,6 +43,16 @@ Typical static site generator takes your content (it can be plain text file, mar
 According to link:https://www.staticgen.com/[staticgen.com, window="_blank"], there are dozens of different static sites generators and link:https://jekyllrb.com[Jekyll, window="_blank"] is the most popular from them.
 I've already posted an link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}[article, window="_blank"] about Jekyll, and today we will look closely at link:https://sysgears.com/grain/[Grain, window="_blank"], which is actually a workhorse of this blog itself.
 
+== So, Grain
+
+Grain is an open source static website generator for Groovy.
+It provides all usual static site generator features and moreover it has two specific killer features:
+
+- support of embedded Groovy code for any content files (including stylesheet and JS files)
+- Groovy classes are Grain first class citizens
+
+== Getting started
+
 == Links
 
 link:https://www.staticgen.com/[Top Open-Source Static Site Generators, window="_blank"]
