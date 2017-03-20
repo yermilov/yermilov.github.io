@@ -3,14 +3,16 @@ layout: post
 title: "Groovy static sites with Grain"
 date: "2017-03-20 14:57"
 updated: "2017-03-20 14:57"
-categories: [grain, asciidoctor, github pages, static sites]
+categories: [grain, groovy, asciidoctor, github pages, static sites]
 comments: true
 published: false
 sharing: true
 ---
 :linkattrs:
 
-$TBD
+First option I considered when I decided to start up this blog was to use static site generator and Jekyll as the most popular one was an obvious option.
+Recently after I was ready with the first version of this blog and first post - link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}['Using Jekyll, Asciidoctor and GitHub Pages for static site creation', window="_blank"], I've noticed a link in link:https://twitter.com/sdelamo[@sdelamo, window="_blank"] link:http://groovycalamari.com/issues/68[Groovy Calamary #68, window="_blank"] to the static site generator from Groovy world - link:https://sysgears.com/grain/[Grain, window="_blank"].
+As I consider myself as a huge Groovy ecosystem fan, I could not resist it and quickly migrated this blog to Grain.
 
 ++++
 <!--more-->
@@ -37,4 +39,16 @@ And if you get rid of all heavy dynamic weapons like databases and server-side c
 
 == Service site generators
 
+Typical static site generator takes your content (it can be plain text file, markdown, asciidoc, etc.) along with the desired layout (usually HTML with some kind of template DSL) and transform them into a collection of HTML, CSS and JavaScript files ready for deployment and servicing as a static web resource.
+According to link:https://www.staticgen.com/[staticgen.com, window="_blank"], there are dozens of different static sites generators and link:https://jekyllrb.com[Jekyll, window="_blank"] is the most popular from them.
+I've already posted an link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}[article, window="_blank"] about Jekyll, and today we will look closely at link:https://sysgears.com/grain/[Grain, window="_blank"], which is actually a workhorse of this blog itself.
+
 == Links
+
+link:https://www.staticgen.com/[Top Open-Source Static Site Generators, window="_blank"]
+
+link:https://jekyllrb.com[Jekyll's home, window="_blank"]
+
+link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}['Using Jekyll, Asciidoctor and GitHub Pages for static site creation', window="_blank"]
+
+link:https://sysgears.com/grain/[Grain's home, window="_blank"]
