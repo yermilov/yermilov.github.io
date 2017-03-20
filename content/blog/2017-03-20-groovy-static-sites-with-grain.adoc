@@ -3,14 +3,38 @@ layout: post
 title: "Groovy static sites with Grain"
 date: "2017-03-20 14:57"
 updated: "2017-03-20 14:57"
-categories: []
+categories: [grain, asciidoctor, github pages, static sites]
 comments: true
 published: false
 sharing: true
 ---
 :linkattrs:
 
+$TBD
 
 ++++
 <!--more-->
 ++++
+
+== Why static matters?
+
+Typical web resource after you request a page from it, does something like following:
+
+. fetch some data from storage
+. process it
+. select one of web page templates and render it
+. return result
+
+Many of them do not require dedicated data storage or data itself is changing relatively rarely.
+It means that web pages can be generated once and served without no additional processing for every request.
+
+It's very important that we should not return to the boring Web 1.0 world.
+If client state on your site is not persisted, it can be handled by JavaScript locally.
+If content is changing relatively rarely, you can just redeploy it with every change.
+If you need something like commenting feature, you can rely on external resources (for example link:https://disqus.com[disqus.com, window="_blank"] in this case).
+
+And if you get rid of all heavy dynamic weapons like databases and server-side code and express your site as a collection of HMTL, CSS and JavaScript files you can gain some very worthy benefits: ease of site deployment, content caching and delivering (which leads to better performance) and security management.
+
+== Service site generators
+
+== Links
