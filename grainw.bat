@@ -34,7 +34,7 @@ GOTO fail
 :init
 
 @REM Determine java options
-IF "%GRAIN_OPTS%" == "" set GRAIN_OPTS=-server -Xmx256M -Xms32M -XX:PermSize=32m -XX:MaxPermSize=128m -Dfile.encoding=UTF-8
+IF "%GRAIN_OPTS%" == "" set GRAIN_OPTS=-server -Xmx256M -Xms32M -Dfile.encoding=UTF-8
 SET JAVA_OPTS=%GRAIN_OPTS% %JAVA_OPTS%
 
 @REM Get target Grain version
@@ -72,7 +72,7 @@ if "%ERRORLEVEL%"=="2" (
     CALL gradlew.bat gendeps
     CALL :validateAndLaunch %*
 )
-EXIT /B %ERRORLEVEL% 
+EXIT /B %ERRORLEVEL%
 
 :fail
 EXIT /B 1

@@ -37,7 +37,7 @@ if [ -n "$GRAIN_OPTS" ]
    then
      GRAIN_OPTS="$GRAIN_OPTS"
    else
-     GRAIN_OPTS="-server -Xmx256M -Xms32M -XX:PermSize=32m -XX:MaxPermSize=128m -Dfile.encoding=UTF-8"
+     GRAIN_OPTS="-server -Xmx256M -Xms32M -Dfile.encoding=UTF-8"
   fi
 JAVA_OPTS="$GRAIN_OPTS $JAVA_OPTS"
 
@@ -50,7 +50,7 @@ if [ ! -f $APP_PROPS ]; then
 fi
 
 while read line; do
-    case "$line" in 
+    case "$line" in
         *grain.version*)
             TMP_VERSION="${line#*=}";
             read -r GRAIN_VERSION << eof
