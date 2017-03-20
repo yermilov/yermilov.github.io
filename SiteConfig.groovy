@@ -43,14 +43,14 @@ environments {
 
 python {
     interpreter = 'jython' // 'auto', 'python', 'jython'
-    //cmd_candidates = ['python2', 'python', 'python2.7']
-    //setup_tools = '2.1'
+    // cmd_candidates = ['python2', 'python', 'python2.7']
+    // setup_tools = '2.1'
 }
 
 ruby {
     interpreter = 'jruby'   // 'auto', 'ruby', 'jruby'
-    //cmd_candidates = ['ruby', 'ruby1.8.7', 'ruby1.9.3', 'user.home/.rvm/bin/ruby']
-    //ruby_gems = '2.2.2'
+    // cmd_candidates = ['ruby', 'ruby1.8.7', 'ruby1.9.3', 'user.home/.rvm/bin/ruby']
+    // ruby_gems = '2.2.2'
 }
 
 /*
@@ -120,29 +120,13 @@ sharing {
             lang = 'en_US'          // locale code e.g. 'en_US', 'en_GB', etc.
         }
     }
-    // Button for sharing of posts and pages on Google plus one.
-    googleplus_one {
-        share_button {
-            enabled = false
-            size = 'medium'         // one of 'small', 'medium', 'standard', 'tall'
-        }
-    }
 }
 
 // Sidebar modules that should be included by default.
 default_asides = [
         'asides/recent_posts.html',
         'asides/recent_updates.html',
-//        'asides/bitbucket.html',
-//        'asides/github.html',
-        'asides/tweets.html',
-//        'asides/delicious.html',
-//        'asides/pinboard.html',
-//        'asides/about.html',
-//        'asides/facebook.html',
-//        'asides/twitter.html',
-//        'asides/instagram.html',
-//        'asides/google_plus.html'
+        'asides/tweets.html'
 ]
 
 asides {
@@ -157,52 +141,10 @@ asides {
         count = 3
     }
 
-    // Recent Delicious bookmarks.
-    delicious {
-        user = ''                   // Delicious (https://delicious.com/) username
-        count = 5                   // the number of bookmarks to show
-    }
-
-    // Recent Pinboard bookmarks.
-    pinboard {
-        user = ''                   // Pinboard (http://pinboard.in/) username
-        count = 5                   // the number of bookmarks to show
-    }
-
-    // BitBucket repositories.
-    bitbucket {
-        user = ''                   // BitBucket (https://bitbucket.org/) username
-        show_profile_link = true    // whether to show link to BitBucket profile
-    }
-
-    // GitHub repositories.
-    github {
-        user = 'yermilov'           // GitHub (https://github.com/) username
-        show_profile_link = true    // whether to show link to GitHub profile
-        skip_forks = true
-        count = 10                  // the number of repositories to show
-    }
-
     // The latest tweets.
     tweets {
         user = 'yermilov17'
     }
-
-    // Links to social networks:
-    google_plus {
-        user = '105565521760571946004'
-    }
-    twitter {
-        user = 'yermilov17'
-    }
-    facebook {
-        user = 'yaroslav.yermilov'
-    }
-    instagram {
-        user = 'yaroslav.yermilov'
-    }
-
-    about_author = '?'
 }
 
 commands = [
