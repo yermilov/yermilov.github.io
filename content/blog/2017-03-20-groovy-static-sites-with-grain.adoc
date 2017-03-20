@@ -1,0 +1,16 @@
+---
+layout: post
+title: "Groovy static sites with Grain"
+date: "2017-03-20 14:57"
+updated: "2017-03-20 14:57"
+categories: []
+comments: true
+published: false
+sharing: true
+---
+:linkattrs:
+
+
+++++
+<!--more-->
+++++

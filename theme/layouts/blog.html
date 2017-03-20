@@ -15,7 +15,8 @@ sharing: false
         <% } %>
     <% } %>
     <% page.posts.each { post ->
-        def brief = post.summary ?: post.render().content.split('<!--more-->').head()
+        def contentSplittedByMore = post.render().content.split('<!--more-->')
+        def brief = post.summary ?: (contentSplittedByMore.size() > 0 ? contentSplittedByMore.first() : '')
     %>
         ${include "article.html", post + [brief: brief]}
     <% } %>
