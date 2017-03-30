@@ -11,7 +11,7 @@ sharing: true
 :linkattrs:
 
 First option I considered when I decided to start up this blog was to use static site generator and Jekyll as the most popular one was an obvious option.
-Recently after I was ready with the first version of this blog and first post - link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}['Using Jekyll, Asciidoctor and GitHub Pages for static site creation', window="_blank"], I've noticed a link in link:https://twitter.com/sdelamo[@sdelamo, window="_blank"] link:http://groovycalamari.com/issues/68[Groovy Calamary #68, window="_blank"] to the static site generator from Groovy world - link:https://sysgears.com/grain/[Grain, window="_blank"].
+Shortly after I was ready with the first version of this blog and first post - link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}['Using Jekyll, Asciidoctor and GitHub Pages for static site creation', window="_blank"], I've noticed a link in link:https://twitter.com/sdelamo[@sdelamo, window="_blank"] link:http://groovycalamari.com/issues/68[Groovy Calamary #68, window="_blank"] to the static site generator from Groovy world - link:https://sysgears.com/grain/[Grain, window="_blank"].
 As I consider myself as a huge Groovy ecosystem fan, I could not resist it and quickly migrated this blog to Grain.
 
 ++++
@@ -52,6 +52,20 @@ It provides all usual static site generator features and moreover it has two spe
 - Groovy classes are Grain first class citizens
 
 == Getting started
+
+Starting Grain blog is as easy as downloading one of its link:https://sysgears.com/grain/themes/[themes, window="_blank"].
+Let's examine it with yet another blog example, which means link:https://sysgears.com/grain/themes/octopress/[Grain Octopress Theme, window="_blank"] is theme of our choice.
+To ensure everything is working open your project directory and execute following:
+
+++++
+${gist id:'8287efd2bfe42acdd125578282e0ab2f'}
+++++
+
+If you open now link:http://localhost:4000[http://localhost:4000, window="_blank"], you should see following:
+
+image::${r '/images/2017-03-20-groovy-static-sites-with-grain/3600d.png'}[]
+
+== Now some housekeeping
 
 == Links
 
