@@ -98,17 +98,34 @@ ${gist id:'365b888e528ddeca13604ac1a492df87'}
 
 You can check example of housekeeping commit link:https://github.com/yermilov/grain-example/commit/f19bd93b16ecdbdbba2a445816dd06579cd61315[here, window="_blank"].
 
-== Deployment to GitHub Pages
+== Adding new post
 
-== Add first post
+The first thing you probably want to do with your blog is to create a new post.
+To do it, add file named __yyyy-mm-dd-new-post.adoc__ (substitute yyyy-mm-dd with publication date and new-post with short post name) with following content:
+
+++++
+${gist id:'57ddf7f0300c32ccc937783f565d2b9b'}
+++++
+
+As you can see, another great thing about Grain is that it supports link:http://asciidoctor.org/docs/what-is-asciidoc/[Asciidoc, window="_blank"] format out-of-the-box.
+It's a great benefit if your blog is going to be developer-oriented, and you probably may not be satisfied with using neither markdown nor HTML for your posts.
+Asciidoc shares the same concept as link:http://daringfireball.net/projects/markdown/[Markdown, window="_blank"], is partially compatible with it, but has much more powerful features needed for advanced drafting of articles, technical manuals, books, presentations, and prose.
+
+Now your blog should look like following:
+
+image::${r '/images/2017-03-20-groovy-static-sites-with-grain/8020f.png'}[]
+
+And if you follow new post link:
+
+image::${r '/images/2017-03-20-groovy-static-sites-with-grain/cf787.png'}[]
 
 == Personalization
-
-== Link to external post
 
 == Groovy as first class citizen
 
 == Custom configuration
+
+== Deployment to GitHub Pages
 
 == Links
 
