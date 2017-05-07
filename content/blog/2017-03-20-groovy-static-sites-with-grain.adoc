@@ -67,6 +67,49 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/3600d.png'}[]
 
 == Now some housekeeping
 
+Before start actually using Grain, you need to perform some housekeeping.
+For example, as Grain try to rely on Groovy ecosystem tool as much as possible, it uses Gradle as build tool.
+But distribution that we've just download uses version 1.8 of Gradle wrapper (for the moment of writting this article 3.5 is actual version).
+You can easily update it by applying following change to __build.gradle__ file:
+
+++++
+${gist id:'ad77d1f1c747791a37491d7cdaf6125c'}
+++++
+
+And running following command:
+
+++++
+${gist id:'d44849eee1050307969f218b29a7b869'}
+++++
+
+Also, it would be great to update __.gitignore__ file to ignore irrelevant for VCS files as following:
+
+++++
+${gist id:'67f0c7aae6a9299f3d58c15415078f21'}
+++++
+
+Modern web requires you to serve all your site content over HTTPS protocol.
+By default not all Grain Octopress Theme content complies it.
+You should edit file __theme/includes/custom/head.html__ as following:
+
+++++
+${gist id:'365b888e528ddeca13604ac1a492df87'}
+++++
+
+You can check example of housekeeping commit link:https://github.com/yermilov/grain-example/commit/f19bd93b16ecdbdbba2a445816dd06579cd61315[here, window="_blank"].
+
+== Deployment to GitHub Pages
+
+== Add first post
+
+== Personalization
+
+== Link to external post
+
+== Groovy as first class citizen
+
+== Custom configuration
+
 == Links
 
 link:https://www.staticgen.com/[Top Open-Source Static Site Generators, window="_blank"]
