@@ -119,11 +119,22 @@ And if you follow new post link:
 
 image::${r '/images/2017-03-20-groovy-static-sites-with-grain/cf787.png'}[]
 
-== Personalization
+== Simple personalization
+
+As you can see, there are plenty of defaults used by your blog now.
+This problem is easily fixed via __SiteConfig.groovy__ file.
+You can find tons of parameters there and even introduce your own.
+For the beginning, let's concentrate on the simple ones and perform following changes:
+
+++++
+${gist id:'e36aa454a84fa42563ae9cf9689abc8d'}
+++++
+
+Now, your blog should look a little bit more personal:
+
+image::${r '/images/2017-03-20-groovy-static-sites-with-grain/0cc17.png'}[]
 
 == Groovy as first class citizen
-
-== Custom configuration
 
 == Deployment to GitHub Pages
 
