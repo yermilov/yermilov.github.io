@@ -136,6 +136,14 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/0cc17.png'}[]
 
 == Groovy as first class citizen
 
+=== SiteConfig
+
+=== Embedded groovy code
+
+=== Groovy classes
+
+=== Tags
+
 == Deployment to GitHub Pages
 
 == Links
