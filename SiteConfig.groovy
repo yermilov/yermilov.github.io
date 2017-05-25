@@ -178,20 +178,42 @@ def createPost = { String postTitle ->
     )
 }
 
+def publishPost = { String postTitleSuffix ->
+    def blogDir = new File("${content_dir}/blog/")
+
+    def files = blogDir.listFiles().findAll({ it.name.startsWith(postTitleSuffix) })
+    if (files.size() == 0) {
+        throw new IllegalArgumentException("There are no files named $postTitleSuffix: $files")
+    }
+    if (files.size() > 1) {
+        throw new IllegalArgumentException("There are more that one file named $postTitleSuffix: $files")
+    }
+
+    def file = files.first()
+    String originalDate = file.name.substring(0, 10)
+
+    def date = new Date()
+    def publishDate = date.format('yyyy-MM-dd')
+    def publishFileName = publishDate + file.name.substring(10)
+
+    def publishFile = new File(blogDir, publishFileName)
+    file.renameTo(publishFile)
+
+    def imagesDir = new File("${content_dir}/images/").listFiles().find({ it.name.startsWith(postTitleSuffix) })
+    imagesDir.renameTo(new File("${content_dir}/images/", imagesDir.name.replace(originalDate, publishDate)))
+
+    publishFile.text = publishFile.text.replace(originalDate, publishDate)
+    publishFile.text = publishFile.text.replace('published: false', 'published: true')
+
+    int datesStartIndex = publishFile.text.indexOf('date: "')
+    int datesEndIndex = publishFile.text.indexOf('categories: [')
+
+    publishFile.text = """${publishFile.text.substring(0, datesStartIndex)}date: "${date.format(datetime_format)}"
+updated: "${date.format(datetime_format)}"
+${publishFile.text.substring(datesEndIndex)}"""
+}
+
 commands = [
 'create-post': createPost,
-'create-page': { String location, String pageTitle ->
-        def ext = new File(location).extension
-        def file
-        if (!ext) {
-            file = new File(content_dir + location, 'index.markdown')
-        } else {
-            file = new File(content_dir, location)
-        }
-        file.parentFile.mkdirs()
-        file.exists() || file.write("""---
-layout: page
-title: "${pageTitle}"
-navigate: true
----
-""")}]
+'publish-post': publishPost
+]
