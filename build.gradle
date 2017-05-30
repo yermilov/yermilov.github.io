@@ -81,7 +81,7 @@ idea {
 }
 
 task generate(type: JavaExec) {
-    logging.captureStandardOutput LogLevel.INFO
+    logging.captureStandardOutput LogLevel.DEBUG
     classpath sourceSets.main.runtimeClasspath
     main = mainClassName
     args name
