@@ -1,4 +1,17 @@
+sudo: required
+
 language: java
+
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.grain/packages/"
+  - "$HOME/.grain/tools/"
 
 before_install:
 - mkdir -p .travis
@@ -7,7 +20,7 @@ before_install:
 - chmod +x grainw
 
 install:
-- "./grainw generate"
+- "./grainw generate || true"
 
 before_script:
 - eval "$(ssh-agent -s)"
