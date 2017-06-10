@@ -47,12 +47,9 @@ class GHPagesDeployer {
             ant.delete(dir: cacheDeployDir, failonerror: false)
             ant.mkdir(dir: cacheDeployDir)
             git(['init'])
-            if (!isUserPage && !ghPagesExists) {
-                git(['remote', 'add', '-f', 'origin', ghPagesUrl])
-                git(['checkout', '-b', workingBranch])
-            } else {
-                git(['remote', 'add', '-t', workingBranch, '-f', 'origin', ghPagesUrl])
-                git(['checkout', workingBranch])
+            git(['remote', 'add', '-f', 'origin', ghPagesUrl])
+            git(['checkout', '-B', workingBranch])
+            if (isUserPage || ghPagesExists) {
                 ant.delete(includeEmptyDirs: true) {
                     fileset(dir: cacheDeployDir) {
                         exclude(name: '.git')
