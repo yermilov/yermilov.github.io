@@ -35,7 +35,7 @@ class GHPagesDeployer {
         def workingBranch = isUserPage ? 'master' : 'gh-pages'
         def cacheDeployDir = "$cacheDir/gh-deploy"
 
-        def ghPagesExists = !isUserPage ? ghPagesBranchExists(ant, ghPagesUrl) : null
+        def workingBranchExists = workingBranchExists(ant, workingBranch, ghPagesUrl)
 
         def git = { List args ->
             ant.exec(executable: 'git', dir: cacheDeployDir) {
@@ -47,14 +47,17 @@ class GHPagesDeployer {
             ant.delete(dir: cacheDeployDir, failonerror: false)
             ant.mkdir(dir: cacheDeployDir)
             git(['init'])
-            git(['remote', 'add', '-f', 'origin', ghPagesUrl])
-            git(['checkout', '-B', workingBranch])
-            if (isUserPage || ghPagesExists) {
+            if (workingBranchExists) {
+                git(['remote', 'add', '-t', workingBranch, '-f', 'origin', ghPagesUrl])
+                git(['checkout', '-b', workingBranch])
                 ant.delete(includeEmptyDirs: true) {
                     fileset(dir: cacheDeployDir) {
                         exclude(name: '.git')
                     }
                 }
+            } else {
+                git(['remote', 'add', '-f', 'origin', ghPagesUrl])
+                git(['checkout', '--orphan', workingBranch])
             }
             ant.copy(todir: cacheDeployDir) {
                 fileset(dir: destinationDir)
@@ -93,17 +96,18 @@ class GHPagesDeployer {
     }
 
     /**
-     * Determines whether gh-pages branch exists for given repo.
+     * Determines whether working branch exists for given repo.
      *
      * @param ant AntBuilder instance
+     * @param workingBranch working branch name
      * @param ghPagesUrl GitHub repo url
      * @return true if branch exists, false otherwise
      */
-    private def ghPagesBranchExists(AntBuilder ant, String ghPagesUrl) {
+    private def workingBranchExists(AntBuilder ant, String workingBranch, String ghPagesUrl) {
         ant.exec(executable: 'git', outputproperty: 'gitLsOutput') {
             ['ls-remote', '--heads', ghPagesUrl].collect { arg(value: it) }
         }
-        ant.project.properties.gitLsOutput.contains('refs/heads/gh-pages')
+        ant.project.properties.gitLsOutput.contains("refs/heads/$workingBranch")
     }
 
     /**
