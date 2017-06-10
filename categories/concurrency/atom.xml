@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title><![CDATA[Development notes by Yaroslav Yermilov]]></title><link href="https://yermilov.github.io/categories/concurrency/atom.xml" rel="self"/><link href="https://yermilov.github.io/"/><updated>2017-06-10T16:02:30+00:00</updated><id>https://yermilov.github.io/</id><author><name><![CDATA[Yaroslav Yermilov]]></name></author><generator uri="http://sysgears.com/grain/">Grain</generator><entry><title type="html"><![CDATA[GPars, Eratosthenes and Sieve of Concurrency]]></title><link href="https://yermilov.github.io/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/"/><updated>2017-05-25T15:45:00+00:00</updated><id>/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>When there is a need to make sequential code concurrent, there are two major options.
+First one is to take the original code as is, divide it between multiple executors, protect a mutable state from concurrent access, do all other "please don&#8217;t fail" multithreading stuff and hope for better.
+The alternative is to look through different concurrency concepts like data parallelism, actors, dataflows, CSP, etc., select the most appropriate one for your problem statement and write the solution on its basis.
+Luckily there is a library that provides DSLs for all major concurrency concepts called <a href="http://www.gpars.org/" target="_blank">GPars</a>.
+In this article I will tease how it can be used before my <a href="http://jeeconf.com/program/gpars-unsung-hero-of-concurrency-in-practice/" target="_blank">JEEConf talk</a>.</p>
+</div>
+<!--more-->
+<div class="sect1">
+<h2 id="_example_problem">Example problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For demonstration purposes let&#8217;s take a problem of finding prime numbers and well-known algorithm to solve this problem - <a href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes" target="_blank">Sieve of Eratosthenes</a>.</p>
+</div>
+<div class="paragraph">
+<p>Just to remind it ourselves - a prime number is a natural number that has exactly two distinct natural number divisors: 1 and itself.</p>
+</div>
+<div class="paragraph">
+<p>Sieve of Eratosthenes suggests that primes can be found with the following algorithm:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a list of consecutive integers from 2 through n: (2, 3, 4, &#8230;&#8203;, n).</p>
+</li>
+<li>
+<p>Take the smallest number from the list - it is prime.</p>
+</li>
+<li>
+<p>Iterate through the list of remaining numbers and keep only those that can&#8217;t be divided by number found in previous step (that&#8217;s why it&#8217;s called sieve).</p>
+</li>
+<li>
+<p>Repeat previous two steps until the desired number of primes is generated.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-05-25-gpars-eratosthenes-and-sieve-of-concurrency/f6ca8-6420e3488e509dce176a1e957ea07ff5.gif" alt="f6ca8 6420e3488e509dce176a1e957ea07ff5">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sequential_solution">Sequential solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Optimized sequential solution may look like following:</p>
+</div>
+
+
+<div id="gistd1f54e1e8887c090a38d29eb92cee17a">
+  <script src="https://gist.github.com/d1f54e1e8887c090a38d29eb92cee17a.js"></script>
+</div>
+<div class="paragraph">
+<p>Turning this code into concurrent solution may become a challenge.
+Especially, turning into bug-free one.
+But even if it&#8217;s not a challenge for an experienced developer, if we check original algorithm description, we can find that there are concurrency concepts that fit it much more naturally that trivial migration from sequential to the concurrent solution.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_meet_gpars">Meet GPars</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>That&#8217;s when GPars comes into the game.
+First of all, add it to your project as following dependency:</p>
+</div>
+
+
+<div id="gistba20b04041a16c74a143645815885028">
+  <script src="https://gist.github.com/ba20b04041a16c74a143645815885028.js"></script>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s go through original algorithm step by step and implement it using the most powerful GPars concept - dataflows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a list of consecutive integers from 2 through n: (2, 3, 4, &#8230;&#8203;, n).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This one can easily be translated into asynchronous task:</p>
+</div>
+
+
+<div id="gist5e154bc336ac0fed66b3497687536cbe">
+  <script src="https://gist.github.com/5e154bc336ac0fed66b3497687536cbe.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Take the smallest number from the list - it is prime.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Again, it&#8217;s trivial:</p>
+</div>
+
+
+<div id="gist40eadcbafaa4e173553f735a929b1ba0">
+  <script src="https://gist.github.com/40eadcbafaa4e173553f735a929b1ba0.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>Iterate through the list of remaining numbers and keep only those that can&#8217;t be divided by number found in the previous step.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Here, we define the asynchronous operator, that takes each number from <em>remainingNumbers</em> queue and push it into <em>sievedNumbers</em> queue if it can&#8217;t be divided by the number found in the previous step.</p>
+</div>
+
+
+<div id="gist5273479e8e5a4aa626237f14a1ff996f">
+  <script src="https://gist.github.com/5273479e8e5a4aa626237f14a1ff996f.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p>Repeat previous two steps until the desired number of primes is generated.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Complete code looks like following:</p>
+</div>
+
+
+<div id="gist3bb1310bfb59af0fe1fb473ef5ad2166">
+  <script src="https://gist.github.com/3bb1310bfb59af0fe1fb473ef5ad2166.js"></script>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I can see several immediate benefits from choosing GPars Dataflows as a basic concept for implementing Sieve of Eratosthenes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>source code almost 100% matches original algorithm text script</p>
+</li>
+<li>
+<p>zero lines of excessive concurrency infrastructure in the source code</p>
+</li>
+<li>
+<p>safe and reliable execution in the concurrent environment provided by framework out-of-the-box</p>
+</li>
+</ul>
+</div>
+</div>
+</div>]]></content></entry></feed>

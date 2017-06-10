@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title><![CDATA[Development notes by Yaroslav Yermilov]]></title><link href="https://yermilov.github.io/categories/jdk/atom.xml" rel="self"/><link href="https://yermilov.github.io/"/><updated>2017-06-10T16:02:30+00:00</updated><id>https://yermilov.github.io/</id><author><name><![CDATA[Yaroslav Yermilov]]></name></author><generator uri="http://sysgears.com/grain/">Grain</generator><entry><title type="html"><![CDATA[Tiebreaker regarding Java HashMap, TreeNode and TieBreakOrder]]></title><link href="https://yermilov.github.io/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/"/><updated>2017-02-24T03:56:00+00:00</updated><id>/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>On the latest <a href="http://jug.ua/2017/02/clean-tests-jdk-changes/" target="_blank">JUGUA meeting</a> Igor Dmitriev has delivered a talk about minor, behind the scenes changes in JDK.
+On of them, seems to be widely-known, was HashMap being intelligent enough to turn buckets which are actually long linked lists (because of pure hashCode implementation) into search-trees.
+Anyway, Igor greatly explained it in a very detailed manner.
+One thing that was unclear for me, and Igor was not able to explain it as well, is why search tree is constructed for keys which do not have ordering?
+After some time investigating this question at home, seems like I have the answer.</p>
+</div>
+<!--more-->
+<div class="sect1">
+<h2 id="_preface">Preface</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, the puzzler with a well-known solution.
+What&#8217;s wrong with this code?</p>
+</div>
+
+
+<div id="gistceaeef659c16eff45c3dafa5c1502267">
+  <script src="https://gist.github.com/ceaeef659c16eff45c3dafa5c1502267.js"></script>
+</div>
+<div class="paragraph">
+<p>Not a big secret, because of very bad hash code function, all entries will go the same bucket and form a linked list with poor performance.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-4e86c-4e86c2bd6d8ad4629cd44accb889be91.png" alt="tiebreaker 4e86c 4e86c2bd6d8ad4629cd44accb889be91">
+</div>
+</div>
+<div class="paragraph">
+<p>Good news is that Java is clever enough to transform this list into self-balancing binary search tree after the size of the problem (and map) is big enough.</p>
+</div>
+
+
+<div id="gist63780a37c936fd4d27a7241351ea12b3">
+  <script src="https://gist.github.com/63780a37c936fd4d27a7241351ea12b3.js"></script>
+</div>
+<div class="paragraph">
+<p>Putting into simple words, for 10 elements with same hash code we will get a linked list:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-eee9f-eee9f37c77d38e8cb0ceabdc3fc4f883.png" alt="tiebreaker eee9f eee9f37c77d38e8cb0ceabdc3fc4f883">
+</div>
+</div>
+<div class="paragraph">
+<p>For 11 elements, list will be treeified:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-72e7c-72e7c6c141be981f3d2f56e8d342d929.png" alt="tiebreaker 72e7c 72e7c6c141be981f3d2f56e8d342d929">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_closer_to_the_problem">Closer to the problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The attentive reader will ask: if HashMap organizes self-balancing binary search tree, how does it determine an order of elements, which is the must for this data structure?
+Well, if you class luckily implements <em>Comparable</em> interface, it&#8217;s pretty easy job:</p>
+</div>
+
+
+<div id="gistcf90e7eef1975bad9cc302f53612ef6a">
+  <script src="https://gist.github.com/cf90e7eef1975bad9cc302f53612ef6a.js"></script>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-512ed-512edac15bc15f2e881c438e0baeee4c.png" alt="tiebreaker 512ed 512edac15bc15f2e881c438e0baeee4c">
+</div>
+</div>
+<div class="paragraph">
+<p>But what if not?
+In this case as a <a href="https://en.wikipedia.org/wiki/Tiebreaker" target="_blank">tiebreaker</a>, HashMap uses <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#identityHashCode-java.lang.Object-" target="_blank">System.identityHashCode()</a>.
+Or simpler, some value unique and constant for each instance.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-93a1a-93a1af2efc58a8fe7c9ff1fdc4b030f6.png" alt="tiebreaker 93a1a 93a1af2efc58a8fe7c9ff1fdc4b030f6">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_so_long_what_s_the_problem">So long! What&#8217;s the problem?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The problem is that HashMap does not use tiebreak order on get operation.</p>
+</div>
+<div class="paragraph">
+<p>If key class implements <em>Comparable</em>, get operation uses search tree feature:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-d35a8-d35a8ac56ddde62abc2177ae5c297000.png" alt="tiebreaker d35a8 d35a8ac56ddde62abc2177ae5c297000">
+</div>
+</div>
+<div class="paragraph">
+<p>If key class does not implement <em>Comparable</em>, it will traverse all the tree to find specified entry:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-f3142-f3142241619599dd171768d3c73f7604.png" alt="tiebreaker f3142 f3142241619599dd171768d3c73f7604">
+</div>
+</div>
+<div class="paragraph">
+<p>Given this, two questions occur one by one:</p>
+</div>
+<div class="paragraph">
+<p>Q-1. Why is tiebreak order not used?</p>
+</div>
+<div class="paragraph">
+<p>A-1. This one is easy:</p>
+</div>
+
+
+<div id="giste1b620606c7739f3db9f5e47c6fe413c">
+  <script src="https://gist.github.com/e1b620606c7739f3db9f5e47c6fe413c.js"></script>
+</div>
+<div class="paragraph">
+<p>By definition, two equal object instances will have different identity hash code, so we can&#8217;t use it as a comparator.</p>
+</div>
+<div class="paragraph">
+<p>Q-2. <strong><strong>If we need to traverse the full tree, why HashMap bothers itself with constructing a tree? No benefits, just wasted time on tree creation!</strong></strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_answer">Answer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It&#8217;s so simple! HashMap can contain keys of different classes. And some of them may be <em>comparable</em> and some of them not.</p>
+</div>
+
+
+<div id="gista8b968c30f7ea0211a3dd10c288494d3">
+  <script src="https://gist.github.com/a8b968c30f7ea0211a3dd10c288494d3.js"></script>
+</div>
+<div class="paragraph">
+<p>What does this mix imply?
+If we compare two keys of different classes, result is based on class name:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-755ed-755edcfa943292ad31cbfc42ed20da05.png" alt="tiebreaker 755ed 755edcfa943292ad31cbfc42ed20da05">
+</div>
+</div>
+<div class="paragraph">
+<p>This means that key mix is pretty straightforward: first, all keys from first class goes, and then all from the second.</p>
+</div>
+<div class="paragraph">
+<p>If we compare two keys of the same class, original rules are used: <em>compareTo()</em> or <em>System.identityHashCode()</em> is invoked.</p>
+</div>
+<div class="paragraph">
+<p>And now, the main conclusions:</p>
+</div>
+<div class="paragraph">
+<p><strong><strong>if we want to get incomparable key from the map, full traverse is used:</strong></strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-3f4b5-3f4b5cb15b2af11910548adf33ecc857.png" alt="tiebreaker 3f4b5 3f4b5cb15b2af11910548adf33ecc857">
+</div>
+</div>
+<div class="paragraph">
+<p><strong><strong>if we want to get comparable key from the map, while it goes through comparable keys on its way through the tree, it may use search-tree feature for quick search:</strong></strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-fe010-fe0105e3b53429e27e0f6d21618d71d8.png" alt="tiebreaker fe010 fe0105e3b53429e27e0f6d21618d71d8">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One of my most favorite feature of programming craft, is that there are so many <em>magic</em> things, which after several hours of investigation turns into <em>very rational</em> decisions.</p>
+</div>
+</div>
+</div>]]></content></entry></feed>

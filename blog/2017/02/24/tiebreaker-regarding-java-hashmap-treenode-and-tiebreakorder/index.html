@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <title>Tiebreaker regarding Java HashMap, TreeNode and TieBreakOrder - Development notes by Yaroslav Yermilov</title>
+  <meta name="author" content="Yaroslav Yermilov">
+  
+  
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="canonical" href="https://yermilov.github.io/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/">
+  <link href="/images/favicon-eec3051d5c356d1798bea1d8a3617c51.png" rel="icon">
+  <link href="/stylesheets/screen-cf4a1a1132f018198f3439a322a5948b.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="atom.xml" rel="alternate" title="Development notes by Yaroslav Yermilov" type="application/atom+xml">
+  
+    <script src="/javascripts/libs/jquery.min-663628f795cb62444143fde1ebdf2b5b.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/modernizr-2.0-f86b862d5ee138da61daf47f24116ed7.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/octopress-52bd0860c81b8af484852d75380d38f3.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/github-2c23ec60bbc7e962f6324b25d8b2ae44.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/jquery.tweet-408e79928ca077df30b72fe36df5754e.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/twitter-options-3c532dad65b529c40ef8d69d7a22e4b2.js" type="text/javascript"></script>
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-91383043-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+</head>
+
+
+<body 
+   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Development notes by Yaroslav Yermilov</a></h1>
+  
+    <h2>remember kids, the only difference between screwing around and science is writing it down</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss ">
+  <li><a href="https://yermilov.github.io/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  
+    <li><a href="/">Home</a></li>
+  
+    <li><a href="/archives/">Archives</a></li>
+  
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div class="blog-index">
+<article class="hentry" role="article">
+  <article>
+
+  <header>
+    
+      <h1 class="entry-title">Tiebreaker Regarding Java HashMap, TreeNode and TieBreakOrder</h1>
+    
+    
+      <p class="meta">
+        
+
+
+    <time datetime="2017-02-24T03:56:00+00:00" pubdate >
+      <span class="month">Feb</span>
+      <span class="day">24</span>,
+      <span class="year">2017</span>
+    </time>
+  
+
+
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="paragraph">
+<p>On the latest <a href="http://jug.ua/2017/02/clean-tests-jdk-changes/" target="_blank">JUGUA meeting</a> Igor Dmitriev has delivered a talk about minor, behind the scenes changes in JDK.
+On of them, seems to be widely-known, was HashMap being intelligent enough to turn buckets which are actually long linked lists (because of pure hashCode implementation) into search-trees.
+Anyway, Igor greatly explained it in a very detailed manner.
+One thing that was unclear for me, and Igor was not able to explain it as well, is why search tree is constructed for keys which do not have ordering?
+After some time investigating this question at home, seems like I have the answer.</p>
+</div>
+<!--more-->
+<div class="sect1">
+<h2 id="_preface">Preface</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, the puzzler with a well-known solution.
+What&#8217;s wrong with this code?</p>
+</div>
+
+
+<div id="gistceaeef659c16eff45c3dafa5c1502267">
+  <script src="https://gist.github.com/ceaeef659c16eff45c3dafa5c1502267.js"></script>
+</div>
+<div class="paragraph">
+<p>Not a big secret, because of very bad hash code function, all entries will go the same bucket and form a linked list with poor performance.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-4e86c-4e86c2bd6d8ad4629cd44accb889be91.png" alt="tiebreaker 4e86c 4e86c2bd6d8ad4629cd44accb889be91">
+</div>
+</div>
+<div class="paragraph">
+<p>Good news is that Java is clever enough to transform this list into self-balancing binary search tree after the size of the problem (and map) is big enough.</p>
+</div>
+
+
+<div id="gist63780a37c936fd4d27a7241351ea12b3">
+  <script src="https://gist.github.com/63780a37c936fd4d27a7241351ea12b3.js"></script>
+</div>
+<div class="paragraph">
+<p>Putting into simple words, for 10 elements with same hash code we will get a linked list:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-eee9f-eee9f37c77d38e8cb0ceabdc3fc4f883.png" alt="tiebreaker eee9f eee9f37c77d38e8cb0ceabdc3fc4f883">
+</div>
+</div>
+<div class="paragraph">
+<p>For 11 elements, list will be treeified:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-72e7c-72e7c6c141be981f3d2f56e8d342d929.png" alt="tiebreaker 72e7c 72e7c6c141be981f3d2f56e8d342d929">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_closer_to_the_problem">Closer to the problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The attentive reader will ask: if HashMap organizes self-balancing binary search tree, how does it determine an order of elements, which is the must for this data structure?
+Well, if you class luckily implements <em>Comparable</em> interface, it&#8217;s pretty easy job:</p>
+</div>
+
+
+<div id="gistcf90e7eef1975bad9cc302f53612ef6a">
+  <script src="https://gist.github.com/cf90e7eef1975bad9cc302f53612ef6a.js"></script>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-512ed-512edac15bc15f2e881c438e0baeee4c.png" alt="tiebreaker 512ed 512edac15bc15f2e881c438e0baeee4c">
+</div>
+</div>
+<div class="paragraph">
+<p>But what if not?
+In this case as a <a href="https://en.wikipedia.org/wiki/Tiebreaker" target="_blank">tiebreaker</a>, HashMap uses <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#identityHashCode-java.lang.Object-" target="_blank">System.identityHashCode()</a>.
+Or simpler, some value unique and constant for each instance.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-93a1a-93a1af2efc58a8fe7c9ff1fdc4b030f6.png" alt="tiebreaker 93a1a 93a1af2efc58a8fe7c9ff1fdc4b030f6">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_so_long_what_s_the_problem">So long! What&#8217;s the problem?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The problem is that HashMap does not use tiebreak order on get operation.</p>
+</div>
+<div class="paragraph">
+<p>If key class implements <em>Comparable</em>, get operation uses search tree feature:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-d35a8-d35a8ac56ddde62abc2177ae5c297000.png" alt="tiebreaker d35a8 d35a8ac56ddde62abc2177ae5c297000">
+</div>
+</div>
+<div class="paragraph">
+<p>If key class does not implement <em>Comparable</em>, it will traverse all the tree to find specified entry:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-f3142-f3142241619599dd171768d3c73f7604.png" alt="tiebreaker f3142 f3142241619599dd171768d3c73f7604">
+</div>
+</div>
+<div class="paragraph">
+<p>Given this, two questions occur one by one:</p>
+</div>
+<div class="paragraph">
+<p>Q-1. Why is tiebreak order not used?</p>
+</div>
+<div class="paragraph">
+<p>A-1. This one is easy:</p>
+</div>
+
+
+<div id="giste1b620606c7739f3db9f5e47c6fe413c">
+  <script src="https://gist.github.com/e1b620606c7739f3db9f5e47c6fe413c.js"></script>
+</div>
+<div class="paragraph">
+<p>By definition, two equal object instances will have different identity hash code, so we can&#8217;t use it as a comparator.</p>
+</div>
+<div class="paragraph">
+<p>Q-2. <strong><strong>If we need to traverse the full tree, why HashMap bothers itself with constructing a tree? No benefits, just wasted time on tree creation!</strong></strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_answer">Answer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It&#8217;s so simple! HashMap can contain keys of different classes. And some of them may be <em>comparable</em> and some of them not.</p>
+</div>
+
+
+<div id="gista8b968c30f7ea0211a3dd10c288494d3">
+  <script src="https://gist.github.com/a8b968c30f7ea0211a3dd10c288494d3.js"></script>
+</div>
+<div class="paragraph">
+<p>What does this mix imply?
+If we compare two keys of different classes, result is based on class name:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-755ed-755edcfa943292ad31cbfc42ed20da05.png" alt="tiebreaker 755ed 755edcfa943292ad31cbfc42ed20da05">
+</div>
+</div>
+<div class="paragraph">
+<p>This means that key mix is pretty straightforward: first, all keys from first class goes, and then all from the second.</p>
+</div>
+<div class="paragraph">
+<p>If we compare two keys of the same class, original rules are used: <em>compareTo()</em> or <em>System.identityHashCode()</em> is invoked.</p>
+</div>
+<div class="paragraph">
+<p>And now, the main conclusions:</p>
+</div>
+<div class="paragraph">
+<p><strong><strong>if we want to get incomparable key from the map, full traverse is used:</strong></strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-3f4b5-3f4b5cb15b2af11910548adf33ecc857.png" alt="tiebreaker 3f4b5 3f4b5cb15b2af11910548adf33ecc857">
+</div>
+</div>
+<div class="paragraph">
+<p><strong><strong>if we want to get comparable key from the map, while it goes through comparable keys on its way through the tree, it may use search-tree feature for quick search:</strong></strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-fe010-fe0105e3b53429e27e0f6d21618d71d8.png" alt="tiebreaker fe010 fe0105e3b53429e27e0f6d21618d71d8">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One of my most favorite feature of programming craft, is that there are so many <em>magic</em> things, which after several hours of investigation turns into <em>very rational</em> decisions.</p>
+</div>
+</div>
+</div></div>
+
+</article>
+
+  <footer>
+    <p class="meta">
+      
+
+
+    <time datetime="2017-02-24T03:56:00+00:00" pubdate >
+      <span class="month">Feb</span>
+      <span class="day">24</span>,
+      <span class="year">2017</span>
+    </time>
+  
+
+
+      
+<div class="categories">
+  <p class="meta">Tags:</p>
+  
+     <a class="category" href="/categories/java/">java</a>
+  
+     <a class="category" href="/categories/jdk/">jdk</a>
+  
+     <a class="category" href="/categories/hashmap/">hashmap</a>
+  
+</div>
+
+
+    </p>
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/" title="Previous Post: GPars, Eratosthenes and Sieve of Concurrency">&laquo; GPars, Eratosthenes and Sieve of Concurrency</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2017/02/20/using-jekyll-asciidoctor-and-github-pages-for-static-site-creation/" title="Next Post: Using Jekyll, Asciidoctor and GitHub Pages for static site creation">Using Jekyll, Asciidoctor and GitHub Pages for Static Site Creation &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+    <aside class="sidebar">
+      
+        <section>
+    
+        <h1>Share</h1>
+        <div class="sharing">
+          
+            <div>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-via="yermilov17" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+          
+          
+          <!-- Load Facebook SDK for JavaScript -->
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+
+            <!-- Your share button code -->
+            <div class="fb-share-button" data-layout="button_count" data-size="large">
+            </div>
+          
+        </div>
+    
+</section>
+      
+
+      
+        <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/">GPars, Eratosthenes and Sieve of Concurrency</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/">Tiebreaker Regarding Java HashMap, TreeNode and TieBreakOrder</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/02/20/using-jekyll-asciidoctor-and-github-pages-for-static-site-creation/">Using Jekyll, Asciidoctor and GitHub Pages for Static Site Creation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/27/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-javaday-kharkiv-2016/">'What Mr. Spock Would Possibly Say About Modern Unit Testing: Pragmatic and Emotional Overview' Talk at JavaDay Kharkiv 2016</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/12/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-jeeconf-2016/">'What Mr. Spock Would Possibly Say About Modern Unit Testing: Pragmatic and Emotional Overview' Talk at JEEConf 2016</a>
+      </li>
+    
+  </ul>
+</section>
+
+      
+        
+      
+        
+    <section>
+        <a class="twitter-timeline" data-height="1000" href="https://twitter.com/yermilov17">Tweets by yermilov17</a>
+        <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </section>
+
+
+      
+    </aside>
+
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Yaroslav Yermilov -
+  <span class="credit">Sources at <a href="https://github.com/yermilov/yermilov.github.io">GitHub</a></span> -
+  <span class="credit">Powered by <a href="http://sysgears.com/grain/">Grain</a></span>
+</p>
+
+</footer>
+  <!-- Load script if disquss comments are enabled and `page.comments` is either empty (index) or set to true -->
+
+<script type="text/javascript">
+  var disqus_shortname = "yermilov-github-io";
+  
+    // `page.comments` can only be set to true on pages/posts, so we embed the comments here.
+    // var disqus_developer = 1;
+    var disqus_identifier = "https://yermilov.github.io/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/";
+    var disqus_url = "https://yermilov.github.io/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/";
+    var disqus_script = 'embed.js';
+  
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'https://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+<!-- Place your javascript or css declarations here so that they will be placed after footer -->
+
+
+</body>
+
+</html>

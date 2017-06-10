@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title><![CDATA[Development notes by Yaroslav Yermilov]]></title><link href="https://yermilov.github.io/atom.xml" rel="self"/><link href="https://yermilov.github.io/"/><updated>2017-05-25T15:45:00+00:00</updated><id>https://yermilov.github.io/</id><author><name><![CDATA[Yaroslav Yermilov]]></name></author><generator uri="http://sysgears.com/grain/">Grain</generator><entry><title type="html"><![CDATA[GPars, Eratosthenes and Sieve of Concurrency]]></title><link href="https://yermilov.github.io/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/"/><updated>2017-05-25T15:45:00+00:00</updated><id>/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>When there is a need to make sequential code concurrent, there are two major options.
+First one is to take the original code as is, divide it between multiple executors, protect a mutable state from concurrent access, do all other "please don&#8217;t fail" multithreading stuff and hope for better.
+The alternative is to look through different concurrency concepts like data parallelism, actors, dataflows, CSP, etc., select the most appropriate one for your problem statement and write the solution on its basis.
+Luckily there is a library that provides DSLs for all major concurrency concepts called <a href="http://www.gpars.org/" target="_blank">GPars</a>.
+In this article I will tease how it can be used before my <a href="http://jeeconf.com/program/gpars-unsung-hero-of-concurrency-in-practice/" target="_blank">JEEConf talk</a>.</p>
+</div>
+<!--more-->
+<div class="sect1">
+<h2 id="_example_problem">Example problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For demonstration purposes let&#8217;s take a problem of finding prime numbers and well-known algorithm to solve this problem - <a href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes" target="_blank">Sieve of Eratosthenes</a>.</p>
+</div>
+<div class="paragraph">
+<p>Just to remind it ourselves - a prime number is a natural number that has exactly two distinct natural number divisors: 1 and itself.</p>
+</div>
+<div class="paragraph">
+<p>Sieve of Eratosthenes suggests that primes can be found with the following algorithm:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a list of consecutive integers from 2 through n: (2, 3, 4, &#8230;&#8203;, n).</p>
+</li>
+<li>
+<p>Take the smallest number from the list - it is prime.</p>
+</li>
+<li>
+<p>Iterate through the list of remaining numbers and keep only those that can&#8217;t be divided by number found in previous step (that&#8217;s why it&#8217;s called sieve).</p>
+</li>
+<li>
+<p>Repeat previous two steps until the desired number of primes is generated.</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-05-25-gpars-eratosthenes-and-sieve-of-concurrency/f6ca8-6420e3488e509dce176a1e957ea07ff5.gif" alt="f6ca8 6420e3488e509dce176a1e957ea07ff5">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sequential_solution">Sequential solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Optimized sequential solution may look like following:</p>
+</div>
+
+
+<div id="gistd1f54e1e8887c090a38d29eb92cee17a">
+  <script src="https://gist.github.com/d1f54e1e8887c090a38d29eb92cee17a.js"></script>
+</div>
+<div class="paragraph">
+<p>Turning this code into concurrent solution may become a challenge.
+Especially, turning into bug-free one.
+But even if it&#8217;s not a challenge for an experienced developer, if we check original algorithm description, we can find that there are concurrency concepts that fit it much more naturally that trivial migration from sequential to the concurrent solution.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_meet_gpars">Meet GPars</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>That&#8217;s when GPars comes into the game.
+First of all, add it to your project as following dependency:</p>
+</div>
+
+
+<div id="gistba20b04041a16c74a143645815885028">
+  <script src="https://gist.github.com/ba20b04041a16c74a143645815885028.js"></script>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s go through original algorithm step by step and implement it using the most powerful GPars concept - dataflows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a list of consecutive integers from 2 through n: (2, 3, 4, &#8230;&#8203;, n).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This one can easily be translated into asynchronous task:</p>
+</div>
+
+
+<div id="gist5e154bc336ac0fed66b3497687536cbe">
+  <script src="https://gist.github.com/5e154bc336ac0fed66b3497687536cbe.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="2">
+<li>
+<p>Take the smallest number from the list - it is prime.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Again, it&#8217;s trivial:</p>
+</div>
+
+
+<div id="gist40eadcbafaa4e173553f735a929b1ba0">
+  <script src="https://gist.github.com/40eadcbafaa4e173553f735a929b1ba0.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>Iterate through the list of remaining numbers and keep only those that can&#8217;t be divided by number found in the previous step.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Here, we define the asynchronous operator, that takes each number from <em>remainingNumbers</em> queue and push it into <em>sievedNumbers</em> queue if it can&#8217;t be divided by the number found in the previous step.</p>
+</div>
+
+
+<div id="gist5273479e8e5a4aa626237f14a1ff996f">
+  <script src="https://gist.github.com/5273479e8e5a4aa626237f14a1ff996f.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p>Repeat previous two steps until the desired number of primes is generated.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Complete code looks like following:</p>
+</div>
+
+
+<div id="gist3bb1310bfb59af0fe1fb473ef5ad2166">
+  <script src="https://gist.github.com/3bb1310bfb59af0fe1fb473ef5ad2166.js"></script>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>I can see several immediate benefits from choosing GPars Dataflows as a basic concept for implementing Sieve of Eratosthenes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>source code almost 100% matches original algorithm text script</p>
+</li>
+<li>
+<p>zero lines of excessive concurrency infrastructure in the source code</p>
+</li>
+<li>
+<p>safe and reliable execution in the concurrent environment provided by framework out-of-the-box</p>
+</li>
+</ul>
+</div>
+</div>
+</div>]]></content></entry><entry><title type="html"><![CDATA[Tiebreaker regarding Java HashMap, TreeNode and TieBreakOrder]]></title><link href="https://yermilov.github.io/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/"/><updated>2017-02-24T03:56:00+00:00</updated><id>/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>On the latest <a href="http://jug.ua/2017/02/clean-tests-jdk-changes/" target="_blank">JUGUA meeting</a> Igor Dmitriev has delivered a talk about minor, behind the scenes changes in JDK.
+On of them, seems to be widely-known, was HashMap being intelligent enough to turn buckets which are actually long linked lists (because of pure hashCode implementation) into search-trees.
+Anyway, Igor greatly explained it in a very detailed manner.
+One thing that was unclear for me, and Igor was not able to explain it as well, is why search tree is constructed for keys which do not have ordering?
+After some time investigating this question at home, seems like I have the answer.</p>
+</div>
+<!--more-->
+<div class="sect1">
+<h2 id="_preface">Preface</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, the puzzler with a well-known solution.
+What&#8217;s wrong with this code?</p>
+</div>
+
+
+<div id="gistceaeef659c16eff45c3dafa5c1502267">
+  <script src="https://gist.github.com/ceaeef659c16eff45c3dafa5c1502267.js"></script>
+</div>
+<div class="paragraph">
+<p>Not a big secret, because of very bad hash code function, all entries will go the same bucket and form a linked list with poor performance.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-4e86c-4e86c2bd6d8ad4629cd44accb889be91.png" alt="tiebreaker 4e86c 4e86c2bd6d8ad4629cd44accb889be91">
+</div>
+</div>
+<div class="paragraph">
+<p>Good news is that Java is clever enough to transform this list into self-balancing binary search tree after the size of the problem (and map) is big enough.</p>
+</div>
+
+
+<div id="gist63780a37c936fd4d27a7241351ea12b3">
+  <script src="https://gist.github.com/63780a37c936fd4d27a7241351ea12b3.js"></script>
+</div>
+<div class="paragraph">
+<p>Putting into simple words, for 10 elements with same hash code we will get a linked list:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-eee9f-eee9f37c77d38e8cb0ceabdc3fc4f883.png" alt="tiebreaker eee9f eee9f37c77d38e8cb0ceabdc3fc4f883">
+</div>
+</div>
+<div class="paragraph">
+<p>For 11 elements, list will be treeified:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-72e7c-72e7c6c141be981f3d2f56e8d342d929.png" alt="tiebreaker 72e7c 72e7c6c141be981f3d2f56e8d342d929">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_closer_to_the_problem">Closer to the problem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The attentive reader will ask: if HashMap organizes self-balancing binary search tree, how does it determine an order of elements, which is the must for this data structure?
+Well, if you class luckily implements <em>Comparable</em> interface, it&#8217;s pretty easy job:</p>
+</div>
+
+
+<div id="gistcf90e7eef1975bad9cc302f53612ef6a">
+  <script src="https://gist.github.com/cf90e7eef1975bad9cc302f53612ef6a.js"></script>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-512ed-512edac15bc15f2e881c438e0baeee4c.png" alt="tiebreaker 512ed 512edac15bc15f2e881c438e0baeee4c">
+</div>
+</div>
+<div class="paragraph">
+<p>But what if not?
+In this case as a <a href="https://en.wikipedia.org/wiki/Tiebreaker" target="_blank">tiebreaker</a>, HashMap uses <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/System.html#identityHashCode-java.lang.Object-" target="_blank">System.identityHashCode()</a>.
+Or simpler, some value unique and constant for each instance.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-93a1a-93a1af2efc58a8fe7c9ff1fdc4b030f6.png" alt="tiebreaker 93a1a 93a1af2efc58a8fe7c9ff1fdc4b030f6">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_so_long_what_s_the_problem">So long! What&#8217;s the problem?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The problem is that HashMap does not use tiebreak order on get operation.</p>
+</div>
+<div class="paragraph">
+<p>If key class implements <em>Comparable</em>, get operation uses search tree feature:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-d35a8-d35a8ac56ddde62abc2177ae5c297000.png" alt="tiebreaker d35a8 d35a8ac56ddde62abc2177ae5c297000">
+</div>
+</div>
+<div class="paragraph">
+<p>If key class does not implement <em>Comparable</em>, it will traverse all the tree to find specified entry:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-f3142-f3142241619599dd171768d3c73f7604.png" alt="tiebreaker f3142 f3142241619599dd171768d3c73f7604">
+</div>
+</div>
+<div class="paragraph">
+<p>Given this, two questions occur one by one:</p>
+</div>
+<div class="paragraph">
+<p>Q-1. Why is tiebreak order not used?</p>
+</div>
+<div class="paragraph">
+<p>A-1. This one is easy:</p>
+</div>
+
+
+<div id="giste1b620606c7739f3db9f5e47c6fe413c">
+  <script src="https://gist.github.com/e1b620606c7739f3db9f5e47c6fe413c.js"></script>
+</div>
+<div class="paragraph">
+<p>By definition, two equal object instances will have different identity hash code, so we can&#8217;t use it as a comparator.</p>
+</div>
+<div class="paragraph">
+<p>Q-2. <strong><strong>If we need to traverse the full tree, why HashMap bothers itself with constructing a tree? No benefits, just wasted time on tree creation!</strong></strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_answer">Answer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It&#8217;s so simple! HashMap can contain keys of different classes. And some of them may be <em>comparable</em> and some of them not.</p>
+</div>
+
+
+<div id="gista8b968c30f7ea0211a3dd10c288494d3">
+  <script src="https://gist.github.com/a8b968c30f7ea0211a3dd10c288494d3.js"></script>
+</div>
+<div class="paragraph">
+<p>What does this mix imply?
+If we compare two keys of different classes, result is based on class name:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-755ed-755edcfa943292ad31cbfc42ed20da05.png" alt="tiebreaker 755ed 755edcfa943292ad31cbfc42ed20da05">
+</div>
+</div>
+<div class="paragraph">
+<p>This means that key mix is pretty straightforward: first, all keys from first class goes, and then all from the second.</p>
+</div>
+<div class="paragraph">
+<p>If we compare two keys of the same class, original rules are used: <em>compareTo()</em> or <em>System.identityHashCode()</em> is invoked.</p>
+</div>
+<div class="paragraph">
+<p>And now, the main conclusions:</p>
+</div>
+<div class="paragraph">
+<p><strong><strong>if we want to get incomparable key from the map, full traverse is used:</strong></strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-3f4b5-3f4b5cb15b2af11910548adf33ecc857.png" alt="tiebreaker 3f4b5 3f4b5cb15b2af11910548adf33ecc857">
+</div>
+</div>
+<div class="paragraph">
+<p><strong><strong>if we want to get comparable key from the map, while it goes through comparable keys on its way through the tree, it may use search-tree feature for quick search:</strong></strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-24-tie-break-order/tiebreaker-fe010-fe0105e3b53429e27e0f6d21618d71d8.png" alt="tiebreaker fe010 fe0105e3b53429e27e0f6d21618d71d8">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One of my most favorite feature of programming craft, is that there are so many <em>magic</em> things, which after several hours of investigation turns into <em>very rational</em> decisions.</p>
+</div>
+</div>
+</div>]]></content></entry><entry><title type="html"><![CDATA[Using Jekyll, Asciidoctor and GitHub Pages for static site creation]]></title><link href="https://yermilov.github.io/blog/2017/02/20/using-jekyll-asciidoctor-and-github-pages-for-static-site-creation/"/><updated>2017-02-20T02:27:00+00:00</updated><id>/blog/2017/02/20/using-jekyll-asciidoctor-and-github-pages-for-static-site-creation/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>After I decided to start write things down, the first tool that I found for this task was Jekyll - a static site generator supported by GitHub Pages.
+It was very useful for creating the first version of this blog, but finally, I decided to use Grain (hope to present it in the following article).
+As a result of playing with Jekyll, in this article I will show how to build a simple blog using Jekyll as static site generator, GitHub Pages as static site server and Asciidoc as markdown language.
+We will create a blog from scratch, add new posts and change default configuration and web pages layout using mentioned technologies.</p>
+</div>
+<!--more-->
+<div class="sect1">
+<h2 id="_why_static_matters">Why static matters?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The web started as a bunch of static sites that provided various pieces of useful information for first explorers of the internet.
+But it turned into civilization phenomenon with exponential growth only when it became dynamic with all Web 2.0 stuff like social media, wikis, media platforms, etc.</p>
+</div>
+<div class="paragraph">
+<p>Anyway, even today lots of web resources really need a very limited amount of dynamic magic.
+If client state on your site is not persisted, it can be handled by JavaScript locally.
+If content is changing relatively rarely, you can just redeploy it with every change.
+If you need something like commenting feature, you can rely on external resources (for example <a href="https://disqus.com" target="_blank">disqus.com</a> in this case).</p>
+</div>
+<div class="paragraph">
+<p>And if you get rid of all heavy dynamic weapons like databases and server-side code and express your site as a collection of HMTL, CSS and JavaScript files you can gain some very worthy benefits.
+The first and the main one is the ease of site deployment.
+All you need to do is copy your files into any kind of web server (Apache, Nginx).
+And if you go further and use cloud file storage (like S3) or dedicated web platform (like GitHub Pages), you get even more (think how it can help you in content management, content delivery, maintenance simplicity, performance, and security).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_who_is_jekyll">Who is Jekyll?</h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align: right">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-ab698-ab69891f3e58371ac378b226143fa763.png" alt="jekyll ab698 ab69891f3e58371ac378b226143fa763">
+</div>
+<div class="title"><em><a href="https://en.wikipedia.org/wiki/Strange_Case_of_Dr_Jekyll_and_Mr_Hyde" target="_blank">source</a></em></div>
+</div>
+<div class="paragraph">
+<p><a href="https://jekyllrb.com" target="_blank">Jekyll</a> is a static site generator written in Ruby.
+Actually what it does is taking your content along with the desired layout and transform them into a collection of HTML, CSS and JavaScript files ready for deployment and servicing as a static web resource.
+Content can be provided in any form from plain text files or markdown to pieces of HTMLs.
+The layout is specified as the name of one of the ready-to-go layouts Jekyll provides (with customization possibilities) or as your own HTML, CSS, and JavaScript files with template-related features.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-ecef3-ecef3ed5e49ee2c1093d722619911c85.png" alt="jekyll ecef3 ecef3ed5e49ee2c1093d722619911c85">
+</div>
+</div>
+<div class="paragraph">
+<p>Moreover, Jekyll is a great example of the tool with both comprehensive predefined conventions and almost endless customization possibilities.
+If all you need is a simple blog, you should just place you text-file posts named in a special way into the special directory, define few configuration parameters and you&#8217;re done.
+If you need something more specific, you can include your own pieces of HTML, CSS or JavaScript anywhere you need, even using Jekyll as just template engine for your sources ignoring all other features.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_so_all_i_need_is_a_simple_blog">So, all I need is a simple blog</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Check <a href="https://jekyllrb.com/docs/quickstart" target="_blank">Jekyll quick-start guide</a>!
+You need to follow these 5 steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install <a href="https://www.ruby-lang.org/en/documentation/installation/" target="_blank">Ruby</a></p>
+</li>
+<li>
+<p>Execute <code>gem install jekyll bundler</code></p>
+</li>
+<li>
+<p>Execute <code>jekyll new myblog</code></p>
+</li>
+<li>
+<p>Execute <code>cd myblog; bundle exec jekyll serve</code></p>
+</li>
+<li>
+<p>Go to <a href="http://localhost:4000" target="_blank">http://localhost:4000</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You should get result same as <a href="https://yermilov.github.io/jekyll-start/" target="_blank">this one</a>:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-707aa-707aab07625a4434b996c11a11c9a6ba.png" alt="jekyll 707aa 707aab07625a4434b996c11a11c9a6ba">
+</div>
+</div>
+<div class="paragraph">
+<p>However, you can do the same even without installing Ruby and Jekyll itself.
+First, you need to fork repository or download sources from <a href="https://github.com/yermilov/mini-jekyll" target="_blank">mini-jekyll repository</a>, or, as an alternative, you can quickly create them by yourself:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create directory for your blog</p>
+</li>
+<li>
+<p>Create file _config.yml with the following content</p>
+</li>
+</ol>
+</div>
+
+
+<div id="gistf25ae17a6bc85b7fc75eab310bc9ff52">
+  <script src="https://gist.github.com/f25ae17a6bc85b7fc75eab310bc9ff52.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="3">
+<li>
+<p>Create file Gemfile with the following content</p>
+</li>
+</ol>
+</div>
+
+
+<div id="gist118d18ea311905e224e311fd16f7c4dd">
+  <script src="https://gist.github.com/118d18ea311905e224e311fd16f7c4dd.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p>Create file index.md with the following content</p>
+</li>
+</ol>
+</div>
+
+
+<div id="gist9cadf8cb8f96067e5022501ca825026a">
+  <script src="https://gist.github.com/9cadf8cb8f96067e5022501ca825026a.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="5">
+<li>
+<p>Create file about.md with following content</p>
+</li>
+</ol>
+</div>
+
+
+<div id="gist994c3dff2062a96f9f257000482e2c36">
+  <script src="https://gist.github.com/994c3dff2062a96f9f257000482e2c36.js"></script>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="6">
+<li>
+<p>Create file <span id="todayFileName">_posts/2017-02-20-welcome-to-mini-jekyll.md</span> with following content:</p>
+</li>
+</ol>
+</div>
+
+
+<div id="gist8102dc4bee24aeef7f511d7211eaf741">
+  <script src="https://gist.github.com/8102dc4bee24aeef7f511d7211eaf741.js"></script>
+</div>
+<script>
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; //January is 0!
+  var yyyy = today.getFullYear();
+
+  if (dd < 10) {
+      dd = '0' + dd
+  }
+
+  if (mm < 10) {
+      mm = '0' + mm
+  }
+
+  today = yyyy + '-' + mm + '-' + dd;
+
+  document.getElementById('todayFileName').innerHTML = '_posts/' + today + '-welcome-to-mini-jekyll.md'
+</script>
+<div class="paragraph">
+<p>How can you start this site without even installing Jekyll?
+Easily, with support of <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> - web platform that serves static content from GitHub repositories.
+Besides just showing content as it is, GitHub Pages can determine that your repository contains Jekyll project, render it and serve result.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-e5cd5-e5cd5a4b237fae4edc9efc449ec92f97.png" alt="jekyll e5cd5 e5cd5a4b237fae4edc9efc449ec92f97">
+</div>
+</div>
+<div class="paragraph">
+<p>All you need to do is:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://github.com/new" target="_blank">Create new GitHub repository</a></p>
+</li>
+<li>
+<p>Execute <code>git init</code> inside your local blog directory</p>
+</li>
+<li>
+<p>Execute <code>git add .</code></p>
+</li>
+<li>
+<p>Execute <code>git commit -m 'initial blog commit'</code></p>
+</li>
+<li>
+<p>Execute <code>git remote add origin <a href="https://github.com/yermilov/mini-jekyll.git" class="bare">https://github.com/yermilov/mini-jekyll.git</a></code> (substitute URL with yours)</p>
+</li>
+<li>
+<p>Execute <code>git push -u origin gh-pages</code></p>
+</li>
+<li>
+<p>Go to <a href="https://yermilov.github.io/mini-jekyll" target="_blank">https://yermilov.github.io/mini-jekyll</a> (substitute with your github username and repository name)</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-86b33-86b33272473f30136abb8f58bd27abcc.png" alt="jekyll 86b33 86b33272473f30136abb8f58bd27abcc">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_got_jekyll_and_github_pages_what_s_about_asciidoctor">Got Jekyll and GitHub Pages. What&#8217;s about Asciidoctor?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you want to create blog for simple text+images posts, you&#8217;ve already got a good starting point.
+But if your blog is going to be developer-oriented, you probably may not be satisfied with using neither markdown nor HTML for your posts.
+In this case, <a href="http://asciidoctor.org/docs/what-is-asciidoc/" target="_blank">Asciidoc</a> should be your default choice.
+It shares the same concept as <a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown</a>, is partially compatible with it, but has much more powerful features needed for advanced drafting of articles, technical manuals, books, presentations, and prose.</p>
+</div>
+<div class="paragraph">
+<p><a href="http://asciidoctor.org" target="_blank">Asciidoctor</a> is a toolchain that implements Asciidoc format.
+We are going to integrate it with Jekyll for rendering content using <a href="https://github.com/asciidoctor/jekyll-asciidoc" target="_blank">jekyll-asciidoc plugin</a>.</p>
+</div>
+<div class="paragraph">
+<p>As a starting point, fork or download sources from <a href="https://github.com/asciidoctor/jekyll-asciidoc-quickstart" target="_blank">jekyll-asciidoc-quickstart repository</a>.
+The same as before, instead you can download it and create your own repository from scratch with same content.</p>
+</div>
+<div class="paragraph">
+<p>Unlike previous examples, some additional setup is needed.
+GitHub Pages does not (yet) support rendering Asciidoc content, so you can&#8217;t just push it to GitHub repository and got rendered site back.
+Luckily, there is an easy way to overcome this problem.
+However, it will be great to show GitHub demand in Asciidoc rendering for example through <a href="http://github.com/support" target="_blank">GitHub support form</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-595ea-595eab93a79c0e1912251cdf8b32edbe.png" alt="jekyll 595ea 595eab93a79c0e1912251cdf8b32edbe">
+</div>
+</div>
+<div class="paragraph">
+<p>Actually, we will setup <a href="https://travis-ci.org/" target="_blank">Travis CI server</a> to emulate GitHub Pages staging automation, and push blog live upon committing any change to the repository.
+Steps to achieve it are perfectly described in <a href="https://github.com/asciidoctor/jekyll-asciidoc-quickstart/blob/master/README.adoc" target="_blank">jekyll-asciidoc plugin documentation</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-e1af1-e1af1db7acd5c92a9069103e2d6d7256.png" alt="jekyll e1af1 e1af1db7acd5c92a9069103e2d6d7256">
+</div>
+</div>
+<div class="paragraph">
+<p>After cloning quickstart repository you need to make two changes in the sources:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add GitHub personal access token (described <a href="https://github.com/asciidoctor/jekyll-asciidoc-quickstart/blob/master/README.adoc#6-encrypt-the-github-token-for-travis-ci" target="_blank">here</a>).</p>
+</li>
+<li>
+<p>Modify original <em>.Rakefile</em>, to make it possible to use your e-mail for automated pushes to your repository:</p>
+</li>
+</ol>
+</div>
+
+
+<div id="gist4abe7931165f10cf28edd9b55c4d32ba">
+  <script src="https://gist.github.com/4abe7931165f10cf28edd9b55c4d32ba.js"></script>
+</div>
+<div class="paragraph">
+<p>After your push changes into <strong><strong>develop</strong></strong> branch (do not use <em>master</em> or <em>gh-pages</em> because it may cause conflicts), Travis CI automatically will pick up sources, render them using Jekyll and push them back into master or gh-pages branch (depending on GitHub conventions).</p>
+</div>
+<div class="paragraph">
+<p>Now you can go to <a href="https://yermilov.github.io/jekyll-asciidoc-quickstart" target="_blank">https://yermilov.github.io/jekyll-asciidoc-quickstart</a> (substitute with your github username and repository name) and enjoy!</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-e7f2b-e7f2bd8762f464e3fe2a7f2f3acb50a8.png" alt="jekyll e7f2b e7f2bd8762f464e3fe2a7f2f3acb50a8">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_new_post">Adding new post</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The first thing you probably want to do with your blog is to create a new post.
+To do it, add file named <em>yyyy-mm-dd-new-post.adoc</em> (substitute yyyy-mm-dd with publication date and new-post with short post name) with following content:</p>
+</div>
+
+
+<div id="gista7a48ff65668b4299bf5f9692b4a9c46">
+  <script src="https://gist.github.com/a7a48ff65668b4299bf5f9692b4a9c46.js"></script>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-c5427-c5427c7c2496d42ac1d8b6ff61414a0e.png" alt="jekyll c5427 c5427c7c2496d42ac1d8b6ff61414a0e">
+</div>
+</div>
+<div class="paragraph">
+<p>For quick start with Asciidoc refer to <a href="http://asciidoctor.org/docs/asciidoc-writers-guide/" target="_blank">Writer&#8217;s Guide</a>.
+After it, you can proceed with more advanced <a href="http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/" target="_blank">Syntax Quick Reference</a> and full <a href="http://asciidoctor.org/docs/user-manual/" target="_blank">User Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>Probably, you already have some post on external resources you want to link to your new blog.
+With Jekyll&#8217;s flexibility, this is the matter of two easy steps.
+First of all, create file that will contain your external post metadata.
+Name it <em>yyyy-mm-dd-external-post.<strong>md</strong></em> similarly to regular posts.</p>
+</div>
+
+
+<div id="gist7889355953f8277594ca2f2a8c57215f">
+  <script src="https://gist.github.com/7889355953f8277594ca2f2a8c57215f.js"></script>
+</div>
+<div class="paragraph">
+<p>After it, open file <em><em>_layouts/default.html</em></em> and do following changes:</p>
+</div>
+
+
+<div id="gista158df94b32e91588acdaf7fb073d629">
+  <script src="https://gist.github.com/a158df94b32e91588acdaf7fb073d629.js"></script>
+</div>
+<div class="paragraph">
+<p>Now link in the posts feed is pointing to original external link.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_improving_pages_layout">Improving pages layout</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-33bb0-33bb0628a770179921350f59ae06896b.png" alt="jekyll 33bb0 33bb0628a770179921350f59ae06896b">
+</div>
+</div>
+<div class="paragraph">
+<p>As we have already made a minor change to default page layout in our blog, let&#8217;s try some more significant ones, like changing pages layout.</p>
+</div>
+<div class="paragraph">
+<p>For the starting point, pages layout is pretty straightforward.
+There is a file named <em>default.html</em> in the <em><em>_layouts</em></em> folder and it&#8217;s used for all site pages.
+Each page (<em>index.adoc</em> or any from the <em><em>_posts</em></em> folder) during rendering is placed instead of <code>{{ content }}</code> placeholder.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-5de01-5de01f5a2d2a2f8b4e4a68955562eef1.png" alt="jekyll 5de01 5de01f5a2d2a2f8b4e4a68955562eef1">
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now split it to different layouts.
+First, to change home page layout, create file <em>_layouts/home.html</em>:</p>
+</div>
+
+
+<div id="gistf8e11c33860336e880f774d232ec0508">
+  <script src="https://gist.github.com/f8e11c33860336e880f774d232ec0508.js"></script>
+</div>
+<div class="paragraph">
+<p>First 3 lines are YAML configuration of the layout.
+Here we specify that we want to inherit default layout, which implies placing content of current page instead of <code>{{ content }}</code> placeholder.</p>
+</div>
+<div class="paragraph">
+<p>Now, create file <em>_layouts/post.html</em>. It will be used as layout for all post pages.</p>
+</div>
+
+
+<div id="gist992833bd62105b491f5ba7ee2fa93b9d">
+  <script src="https://gist.github.com/992833bd62105b491f5ba7ee2fa93b9d.js"></script>
+</div>
+<div class="paragraph">
+<p>Next, modify <em>_layouts/default.html</em>. Do the following change:</p>
+</div>
+
+
+<div id="gistf78b89670d5da8f3e57a5941c7c33b34">
+  <script src="https://gist.github.com/f78b89670d5da8f3e57a5941c7c33b34.js"></script>
+</div>
+<div class="paragraph">
+<p>After finishing with layout, we need to reconfigure content files.
+Let&#8217;s start from <em>index.adoc</em>.
+Now it can be just:</p>
+</div>
+
+
+<div id="gistc9ab333a1f1318837bc82885e9cdf9bc">
+  <script src="https://gist.github.com/c9ab333a1f1318837bc82885e9cdf9bc.js"></script>
+</div>
+<div class="paragraph">
+<p>Proceed with post files.
+Regular post should look like:</p>
+</div>
+
+
+<div id="gist08ed4a66561c14bb8809450f09be9cfb">
+  <script src="https://gist.github.com/08ed4a66561c14bb8809450f09be9cfb.js"></script>
+</div>
+<div class="paragraph">
+<p>External post metadata should look like:</p>
+</div>
+
+
+<div id="gistff4701d26a3d727df1fa91d1c17d2e23">
+  <script src="https://gist.github.com/ff4701d26a3d727df1fa91d1c17d2e23.js"></script>
+</div>
+<div class="paragraph">
+<p>The last thing we should do in scope of this post is organizing our layout a little bit.
+For now, our default layout is quite big, let&#8217;s split it with help of include feature.
+As example, we will take page footer.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-faaab-faaabca1ee1e62db70a6b4c9409660d5.png" alt="jekyll faaab faaabca1ee1e62db70a6b4c9409660d5">
+</div>
+</div>
+<div class="paragraph">
+<p>First, create file <em>_includes/footer.html</em> with following content:</p>
+</div>
+
+
+<div id="gist52ae2b49bb67c02b38e04cd0a83cea72">
+  <script src="https://gist.github.com/52ae2b49bb67c02b38e04cd0a83cea72.js"></script>
+</div>
+<div class="paragraph">
+<p>Next, do the following change with <em>_layouts/default.html</em>:</p>
+</div>
+
+
+<div id="gist16edd990579e2f562ecbff880e5dc0b6">
+  <script src="https://gist.github.com/16edd990579e2f562ecbff880e5dc0b6.js"></script>
+</div>
+<div class="paragraph">
+<p>You can notice, that footer uses variables named starting with <code>site.</code>.
+They are taken from <em>_config.yml</em> file.
+Add two lines to it (substitute with your personal data):</p>
+</div>
+
+
+<div id="gist80964004f7c01b96fd47d2120e09a751">
+  <script src="https://gist.github.com/80964004f7c01b96fd47d2120e09a751.js"></script>
+</div>
+<div class="paragraph">
+<p>Now we are done!
+Let&#8217;s examine final result:</p>
+</div>
+<div class="imageblock" style="text-align: right">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-350da-350da985b22ab2d3d61f647f644be394.png" alt="jekyll 350da 350da985b22ab2d3d61f647f644be394">
+</div>
+<div class="title"><em>Home page</em></div>
+</div>
+<div class="imageblock" style="text-align: right">
+<div class="content">
+<img src="/images/2017-02-20-jekyll-githubpages-asciidoc/jekyll-366e7-366e77e92daa91ca729cf28a15b3acf5.png" alt="jekyll 366e7 366e77e92daa91ca729cf28a15b3acf5">
+</div>
+<div class="title"><em>Post page</em></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_links">Links</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://jekyllrb.com" target="_blank">Jekyll home</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://pages.github.com/" target="_blank">GitHub Pages home</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/yermilov/mini-jekyll" target="_blank">Mini-Jekyll repository</a></p>
+</div>
+<div class="paragraph">
+<p><a href="http://daringfireball.net/projects/markdown/" target="_blank">Markdown home</a></p>
+</div>
+<div class="paragraph">
+<p><a href="http://asciidoctor.org" target="_blank">Asciidoctor home</a></p>
+</div>
+<div class="paragraph">
+<p><a href="http://asciidoctor.org/docs/what-is-asciidoc/" target="_blank">What is Asciidoc?</a></p>
+</div>
+<div class="paragraph">
+<p><a href="http://asciidoctor.org/docs/asciidoc-writers-guide/" target="_blank">Asciidoc Writer&#8217;s Guide</a></p>
+</div>
+<div class="paragraph">
+<p><a href="http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/" target="_blank">Asciidoc Syntax Quick Reference</a></p>
+</div>
+<div class="paragraph">
+<p><a href="http://asciidoctor.org/docs/user-manual/" target="_blank">Asciidoctor User Manual</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/asciidoctor/jekyll-asciidoc" target="_blank">jekyll-asciidoc plugin home</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/asciidoctor/jekyll-asciidoc-quickstart" target="_blank">jekyll-asciidoc-quickstart repository</a></p>
+</div>
+</div>
+</div>]]></content></entry><entry><title type="html"><![CDATA['What Mr. Spock would possibly say about modern unit testing: pragmatic and emotional overview' talk at JavaDay Kharkiv 2016]]></title><link href="https://yermilov.github.io/blog/2016/09/27/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-javaday-kharkiv-2016/"/><updated>2016-09-27T00:00:00+00:00</updated><id>/blog/2016/09/27/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-javaday-kharkiv-2016/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>Venue: <a href="http://javaday.org.ua/kharkiv/" target="_blank">JavaDay Kharkiv 2016</a></p>
+</div>
+<div class="paragraph">
+<p>Sources: <a href="https://github.com/yermilov/spock-talk/tree/c295e4d81483ac12604e8380415146299e49e9eb" target="_blank">https://github.com/yermilov/spock-talk</a></p>
+</div>
+<div class="paragraph">
+<p>Slides: <a href="https://www.slideshare.net/yaroslavyermilov/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-62280211" target="_blank">slideshare</a></p>
+</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9GwQg_4MX7o?ecver=1" frameborder="0" allowfullscreen></iframe>]]></content></entry><entry><title type="html"><![CDATA['What Mr. Spock would possibly say about modern unit testing: pragmatic and emotional overview' talk at JEEConf 2016]]></title><link href="https://yermilov.github.io/blog/2016/07/12/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-jeeconf-2016/"/><updated>2016-07-12T00:00:00+00:00</updated><id>/blog/2016/07/12/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-jeeconf-2016/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>Venue: <a href="http://jeeconf.com/program/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview/" target="_blank">JEEConf 2016</a></p>
+</div>
+<div class="paragraph">
+<p>Sources: <a href="https://github.com/yermilov/spock-talk/tree/99f52d5c41b09dca50a7c360f919363ed7484f40" target="_blank">https://github.com/yermilov/spock-talk</a></p>
+</div>
+<div class="paragraph">
+<p>Slides: <a href="https://www.slideshare.net/yaroslavyermilov/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-62280211" target="_blank">slideshare</a></p>
+</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3nSXDEj7sKM?ecver=1" frameborder="0" allowfullscreen></iframe>]]></content></entry><entry><title type="html"><![CDATA['Building domain-specific languages with Groovy' talk at JEEConf 2015]]></title><link href="https://yermilov.github.io/blog/2015/07/22/building-domain-specific-languages-with-groovy-talk-at-jeeconf-2015/"/><updated>2015-07-22T00:00:00+00:00</updated><id>/blog/2015/07/22/building-domain-specific-languages-with-groovy-talk-at-jeeconf-2015/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>Venue: <a href="http://jeeconf.com/materials/building-dsl-with-groovy/" target="_blank">JEEConf 2015</a></p>
+</div>
+<div class="paragraph">
+<p>Sources: <a href="https://github.com/yermilov/groovy-dsl" target="_blank">https://github.com/yermilov/groovy-dsl</a></p>
+</div>
+<div class="paragraph">
+<p>Slides: <a href="https://www.slideshare.net/yaroslavyermilov/groovy-dsl-48630799" target="_blank">slideshare</a></p>
+</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ft3XrFrGiuA?ecver=1" frameborder="0" allowfullscreen></iframe>]]></content></entry><entry><title type="html"><![CDATA['Groovy for Domain-Specific Languages' talk at JUGUA]]></title><link href="https://yermilov.github.io/blog/2015/02/18/groovy-for-domain-specific-languages-talk-at-jugua/"/><updated>2015-02-18T00:00:00+00:00</updated><id>/blog/2015/02/18/groovy-for-domain-specific-languages-talk-at-jugua/</id><content type="html"><![CDATA[<div class="paragraph">
+<p>Venue: <a href="http://jug.ua/2015/02/dsl-with-groovy-clojure/" target="_blank">JUGUA</a></p>
+</div>
+<div class="paragraph">
+<p>Sources: <a href="https://github.com/yermilov/groovy-dsl" target="_blank">https://github.com/yermilov/groovy-dsl</a></p>
+</div>
+<div class="paragraph">
+<p>Slides: <a href="https://www.slideshare.net/yaroslavyermilov/groovy-dsl-44945972" target="_blank">slideshare</a></p>
+</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Cue5B11UfDU?ecver=1" frameborder="0" allowfullscreen></iframe>]]></content></entry></feed>
