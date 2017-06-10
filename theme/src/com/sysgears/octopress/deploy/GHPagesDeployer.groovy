@@ -38,6 +38,7 @@ class GHPagesDeployer {
         def workingBranchExists = workingBranchExists(ant, workingBranch, ghPagesUrl)
 
         def git = { List args ->
+            ant.echo("Executing... git $args")
             ant.exec(executable: 'git', dir: cacheDeployDir) {
                 args.collect { arg(value: it) }
             }
