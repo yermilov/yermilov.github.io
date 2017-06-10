@@ -34,7 +34,7 @@ GOTO fail
 :init
 
 @REM Determine java options
-IF "%GRAIN_OPTS%" == "" set GRAIN_OPTS=-server -Xmx512M -Xms512M -Dfile.encoding=UTF-8
+IF "%GRAIN_OPTS%" == "" set GRAIN_OPTS=-server -Xmx8G -Xms8G -Dfile.encoding=UTF-8
 SET JAVA_OPTS=%GRAIN_OPTS% %JAVA_OPTS%
 
 @REM Get target Grain version
