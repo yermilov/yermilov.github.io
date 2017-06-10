@@ -37,7 +37,7 @@ if [ -n "$GRAIN_OPTS" ]
    then
      GRAIN_OPTS="$GRAIN_OPTS"
    else
-     GRAIN_OPTS="-server -Xmx8G -Xms8G -Dfile.encoding=UTF-8"
+     GRAIN_OPTS="-server -Xms2048M -Xmx2048M -XX:MaxPermSize=1024M -Dfile.encoding=UTF-8"
   fi
 JAVA_OPTS="$GRAIN_OPTS $JAVA_OPTS"
 
