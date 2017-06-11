@@ -38,7 +38,7 @@ class GHPagesDeployer {
         def workingBranchExists = workingBranchExists(ant, workingBranch, ghPagesUrl)
 
         def git = { List args ->
-            ant.echo("Executing... git $args")
+            ant.echo("Executing... git ${args.join(' ')}")
             ant.exec(executable: 'git', dir: cacheDeployDir) {
                 args.collect { arg(value: it) }
             }
@@ -50,7 +50,7 @@ class GHPagesDeployer {
             git(['init'])
             if (workingBranchExists) {
                 git(['remote', 'add', '-t', workingBranch, '-f', 'origin', ghPagesUrl])
-                git(['checkout', '-b', workingBranch])
+                git(['checkout', workingBranch])
                 ant.delete(includeEmptyDirs: true) {
                     fileset(dir: cacheDeployDir) {
                         exclude(name: '.git')
@@ -88,7 +88,7 @@ class GHPagesDeployer {
             String travisCommit = System.getenv('TRAVIS_COMMIT')
             String travisCommitMessage = System.getenv('TRAVIS_COMMIT_MESSAGE')
 
-            return "deployed from build-${travisBuildNumber} by Travis-CI from ${travisCommit} (${travisCommitMessage})"
+            return "deployed build-${travisBuildNumber} by Travis-CI from ${travisCommit} (${travisCommitMessage})"
         } else {
             String hostname = System.getenv('HOSTNAME') ?: System.getenv('COMPUTERNAME')
 
