@@ -136,6 +136,9 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/0cc17.png'}[]
 
 == Groovy as first class citizen
 
+As I already said, Groovy is a privileged citizen of Grain world.
+To prove it, in the following sections I will demonstrate simple examples how you can put pieces of Groovy code pretty much everywhere in your blog sources.
+
 === SiteConfig
 
 === Embedded groovy code
