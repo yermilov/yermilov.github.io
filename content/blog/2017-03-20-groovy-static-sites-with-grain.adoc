@@ -69,7 +69,7 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/3600d.png'}[]
 
 Before start actually using Grain, you need to perform some housekeeping.
 For example, as Grain try to rely on Groovy ecosystem tool as much as possible, it uses Gradle as build tool.
-But distribution that we've just download uses version 1.8 of Gradle wrapper (for the moment of writting this article 3.5 is actual version).
+But distribution that we've just download uses version 1.8 of Gradle wrapper (for the moment of writting this article 4.0 is actual version).
 You can easily update it by applying following change to __build.gradle__ file:
 
 ++++
@@ -88,6 +88,12 @@ Also, it would be great to update __.gitignore__ file to ignore irrelevant for V
 ${gist id:'67f0c7aae6a9299f3d58c15415078f21'}
 ++++
 
+You should also fix JVM memory configuration in __grainw__ files:
+
+++++
+${gist id:'a27c146412d4d6abcbde9331d312c9af'}
+++++
+
 Modern web requires you to serve all your site content over HTTPS protocol.
 By default not all Grain Octopress Theme content complies it.
 You should edit file __theme/includes/custom/head.html__ as following:
@@ -95,8 +101,6 @@ You should edit file __theme/includes/custom/head.html__ as following:
 ++++
 ${gist id:'365b888e528ddeca13604ac1a492df87'}
 ++++
-
-You can check example of housekeeping commit link:https://github.com/yermilov/grain-example/commit/f19bd93b16ecdbdbba2a445816dd06579cd61315[here, window="_blank"].
 
 == Adding new post
 
@@ -137,9 +141,51 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/0cc17.png'}[]
 == Groovy as first class citizen
 
 As I already said, Groovy is a privileged citizen of Grain world.
-To prove it, in the following sections I will demonstrate simple examples how you can put pieces of Groovy code pretty much everywhere in your blog sources.
+To prove it, in the following sections I will demonstrate simple examples how you can put pieces of Groovy code pretty much everywhere in your site sources.
 
 === SiteConfig
+
+As you already saw, __SiteConfig.groovy__ file contains site configuration.
+What is important, is that it is implemented as executable Groovy script, which constructs site build context.
+Inside it you can:
+
+- assign primitive values to configuration parameters
+
+++++
+${gist id:'df26ecc1e8cf0635e4e9eba6d94c0b86'}
+++++
+
+- use special Groovy literals like patters, string templates or lists
+
+++++
+${gist id:'1aa616b0e89a9c1c858e6d96bb94f0c6'}
+++++
+
+- instantiate objects and execute methods on them
+
+++++
+${gist id:'9763624cf6becc9be3b5afce43b073fd'}
+++++
+
+- use Groovy builders for hierarchical parameters
+
+++++
+${gist id:'6d4ceea06cb9ab146ad5ed1191216a82'}
+++++
+
+Last but not least, you can use special ``commands`` object to create custom commands for grain cli.
+
+++++
+${gist id:'83914dd6bc422569d7ecb9ef21ebfb30'}
+++++
+
+It means that if you execute `./grainw create-post 'HOWTO: create post from CLI'`` you will got following result:
+
+++++
+${gist id:'a1d47cfc42df32c2294bfd6392bf3b00'}
+++++
+
+image::${r '/images/2017-03-20-groovy-static-sites-with-grain/ee478.png'}[]
 
 === Embedded groovy code
 
