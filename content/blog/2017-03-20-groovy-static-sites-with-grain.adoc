@@ -12,7 +12,7 @@ sharing: true
 
 First option I considered when I decided to start up this blog was to use static site generator and Jekyll as the most popular one was an obvious option.
 Shortly after I was ready with the first version of this blog and first post - link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}['Using Jekyll, Asciidoctor and GitHub Pages for static site creation', window="_blank"], I've noticed a link in link:https://twitter.com/sdelamo[@sdelamo, window="_blank"] link:http://groovycalamari.com/issues/68[Groovy Calamary #68, window="_blank"] to the static site generator from Groovy world - link:https://sysgears.com/grain/[Grain, window="_blank"].
-As I consider myself as a huge Groovy ecosystem fan, I could not resist it and quickly migrated this blog to Grain.
+As I consider myself as a Groovy ecosystem fan, I could not resist it and quickly migrated this blog to Grain.
 
 ++++
 <!--more-->
@@ -39,19 +39,14 @@ And if you get rid of all heavy dynamic weapons like databases and server-side c
 
 == Service site generators
 
-Typical static site generator takes your content (it can be plain text file, markdown, asciidoc, etc.) along with the desired layout (usually HTML with some kind of template DSL) and transform them into a collection of HTML, CSS and JavaScript files ready for deployment and servicing as a static web resource.
+Typical static site generator takes your content (it can be plain text file, markdown, asciidoc, etc.) along with bunch of configuration parameters and the desired layout (usually HTML with some kind of template DSL) and transform them into a collection of HTML, CSS and JavaScript files ready for deployment and servicing as a static web resource.
 According to link:https://www.staticgen.com/[staticgen.com, window="_blank"], there are dozens of different static sites generators and link:https://jekyllrb.com[Jekyll, window="_blank"] is the most popular from them.
 I've already posted an link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}[article, window="_blank"] about Jekyll, and today we will look closely at link:https://sysgears.com/grain/[Grain, window="_blank"], which is actually a workhorse of this blog itself.
 
 == So, Grain
 
 Grain is an open source static website generator for Groovy.
-It provides all usual static site generator features and moreover it has two specific killer features:
-
-- support of embedded Groovy code for any content files (including stylesheet and JS files)
-- Groovy classes are Grain first class citizens
-
-== Getting started
+It provides all usual static site generator features and moreover has a very specific killer feature - Groovy is a privileged citizen for all kinds of source files (configuration, layout, content and more).
 
 Starting Grain blog is as easy as downloading one of its link:https://sysgears.com/grain/themes/[themes, window="_blank"].
 Let's examine it with yet another blog example, which means link:https://sysgears.com/grain/themes/octopress/[Grain Octopress Theme, window="_blank"] is theme of our choice.
@@ -69,7 +64,7 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/3600d.png'}[]
 
 Before start actually using Grain, you need to perform some housekeeping.
 For example, as Grain try to rely on Groovy ecosystem tool as much as possible, it uses Gradle as build tool.
-But distribution that we've just download uses version 1.8 of Gradle wrapper (for the moment of writting this article 4.0 is actual version).
+But distribution that we've just download uses version 1.8 of Gradle wrapper (for the moment of writing this article 4.0 is actual version).
 You can easily update it by applying following change to __build.gradle__ file:
 
 ++++
@@ -123,29 +118,13 @@ And if you follow new post link:
 
 image::${r '/images/2017-03-20-groovy-static-sites-with-grain/cf787.png'}[]
 
-== Simple personalization
+As I said in the beginning, Groovy is a privileged citizen in the Grain world.
+To prove it, in the following sections I will demonstrate simple examples how you can use Groovy in all kinds of site sources - configuration, layout, content and even deployment.
+
+== Site configuration
 
 As you can see, there are plenty of defaults used by your blog now.
 This problem is easily fixed via __SiteConfig.groovy__ file.
-You can find tons of parameters there and even introduce your own.
-For the beginning, let's concentrate on the simple ones and perform following changes:
-
-++++
-${gist id:'e36aa454a84fa42563ae9cf9689abc8d'}
-++++
-
-Now, your blog should look a little bit more personal:
-
-image::${r '/images/2017-03-20-groovy-static-sites-with-grain/0cc17.png'}[]
-
-== Groovy as first class citizen
-
-As I already said, Groovy is a privileged citizen of Grain world.
-To prove it, in the following sections I will demonstrate simple examples how you can put pieces of Groovy code pretty much everywhere in your site sources.
-
-=== SiteConfig
-
-As you already saw, __SiteConfig.groovy__ file contains site configuration.
 What is important, is that it is implemented as executable Groovy script, which constructs site build context.
 Inside it you can:
 
@@ -173,7 +152,18 @@ ${gist id:'9763624cf6becc9be3b5afce43b073fd'}
 ${gist id:'6d4ceea06cb9ab146ad5ed1191216a82'}
 ++++
 
-Last but not least, you can use special ``commands`` object to create custom commands for grain cli.
+You can find tons of parameters there and even introduce your own.
+For the beginning, let's concentrate on the simple ones and perform following changes:
+
+++++
+${gist id:'e36aa454a84fa42563ae9cf9689abc8d'}
+++++
+
+Now, your blog should look a little bit more personal:
+
+image::${r '/images/2017-03-20-groovy-static-sites-with-grain/0cc17.png'}[]
+
+Moreover, you can use special ``commands`` object to create custom commands for grain cli.
 
 ++++
 ${gist id:'83914dd6bc422569d7ecb9ef21ebfb30'}
@@ -187,11 +177,9 @@ ${gist id:'a1d47cfc42df32c2294bfd6392bf3b00'}
 
 image::${r '/images/2017-03-20-groovy-static-sites-with-grain/ee478.png'}[]
 
-=== Embedded groovy code
+== Site layout
 
-=== Groovy classes
-
-=== Tags
+== Site content
 
 == Deployment to GitHub Pages
 
