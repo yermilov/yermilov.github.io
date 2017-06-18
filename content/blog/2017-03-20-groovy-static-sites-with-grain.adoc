@@ -179,6 +179,34 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/ee478.png'}[]
 
 == Site layout
 
+Grain has a pretty usual layout system.
+Let's explore it using example of __theme\layouts\blog.html__ which controls layout of site home page.
+
+++++
+${gist id:'d31cd182f6ebd74926fae55e4fb4e0ac'}
+++++
+
+On the lines 1-5, you can see typical page front matter.
+First of all, it configures layout inheritance.
+You can open file named __theme\layouts\default.html__, which is parent layout for __blog.html__ and check that  __blog.html__ content will be put inside ``{ content }`` tag (line 14) of __default.html__:
+
+++++
+${gist id:'472a52e4be5bbfab967715a2d8d90cca'}
+++++
+
+Following lines of front matter are passed into special ``page`` object and can be used to parametrize layout behavior.
+
+After front matter we see kind of usual HTML code with addition of Groovy.
+It can be one-liner, just like in lines 19 and 36.
+In these concrete example special implicit method ``include`` is used, which takes another HTML file and optionally parameters map, renders their content and insert into original page.
+
+More sophisticated option is multi-line Groovy code, which is, however, very natural and clear.
+You can use ``if`` statement (like in line 8) to control which parts of page layout should be rendered and which not.
+As a result you do not need any special constructions like many other static site generators has.
+For example, if you need to render collection of elements, you can use Groovy Collection API like in line 16.
+
+With such approach you can easily implement some very interesting features like in line 17, where you loop through list of blog posts, render content of each one, extract briefs and put them on your home page.
+
 == Site content
 
 == Deployment to GitHub Pages
