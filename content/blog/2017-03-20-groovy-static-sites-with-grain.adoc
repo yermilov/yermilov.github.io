@@ -18,7 +18,7 @@ As I consider myself as a Groovy ecosystem fan, I could not resist it and quickl
 <!--more-->
 ++++
 
-== Why static matters?
+== Service site generators
 
 Typical web resource after you request a page from it, does something like following:
 
@@ -36,8 +36,6 @@ If content is changing relatively rarely, you can just redeploy it with every ch
 If you need something like commenting feature, you can rely on external resources (for example link:https://disqus.com[disqus.com, window="_blank"] in this case).
 
 And if you get rid of all heavy dynamic weapons like databases and server-side code and express your site as a collection of HMTL, CSS and JavaScript files you can gain some very worthy benefits: ease of site deployment, content caching and delivering (which leads to better performance) and security management.
-
-== Service site generators
 
 Typical static site generator takes your content (it can be plain text file, markdown, asciidoc, etc.) along with bunch of configuration parameters and the desired layout (usually HTML with some kind of template DSL) and transform them into a collection of HTML, CSS and JavaScript files ready for deployment and servicing as a static web resource.
 According to link:https://www.staticgen.com/[staticgen.com, window="_blank"], there are dozens of different static sites generators and link:https://jekyllrb.com[Jekyll, window="_blank"] is the most popular from them.
@@ -180,7 +178,7 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/ee478.png'}[]
 == Site layout
 
 Grain has a pretty usual layout system.
-Let's explore it using example of __theme\layouts\blog.html__ which controls layout of site home page.
+Let's explore it using example of __theme/layouts/blog.html__ which controls layout of site home page.
 
 ++++
 ${gist id:'d31cd182f6ebd74926fae55e4fb4e0ac'}
@@ -188,7 +186,7 @@ ${gist id:'d31cd182f6ebd74926fae55e4fb4e0ac'}
 
 On the lines 1-5, you can see typical page front matter.
 First of all, it configures layout inheritance.
-You can open file named __theme\layouts\default.html__, which is parent layout for __blog.html__ and check that  __blog.html__ content will be put inside ``{ content }`` tag (line 14) of __default.html__:
+You can open file named __theme/layouts/default.html__, which is parent layout for __blog.html__ and check that  __blog.html__ content will be put inside ``{ content }`` tag (line 14) of __default.html__:
 
 ++++
 ${gist id:'472a52e4be5bbfab967715a2d8d90cca'}
@@ -208,6 +206,51 @@ For example, if you need to render collection of elements, you can use Groovy Co
 With such approach you can easily implement some very interesting features like in line 17, where you loop through list of blog posts, render content of each one, extract briefs and put them on your home page.
 
 == Site content
+
+Just like with layout files you can simply put any Groovy code anywhere in your content file.
+For example, if you modify latest generated post as following:
+
+++++
+${gist id:'42639e6e2d6157fc54c71314a5bcfd98'}
+++++
+
+You will get something like:
+
+image::${r '/images/2017-03-20-groovy-static-sites-with-grain/05279.png'}[]
+
+Pay attention that this code will be executed once and its result will be put into static HTML page.
+If you need dynamic behavior you will probable need something like:
+
+++++
+${gist id:'ac9904062cbeb91196034b423e4c1247'}
+++++
+
+If you need to reuse some code in multiple places, there is a nice feature called code custom tags in Grain.
+If you have an experience with template frameworks like JSP, you can find something familiar in it.
+As reference, open file __\theme\src\com\sysgears\octopress\taglibs\OctopressTagLib.groovy__ which already contains several very useful tags like ``gist`` or ``img``.
+As you can see, custom tag is as simple as Groovy closure and HTML template, so we can implement our own in 3 minutes.
+
+First, add following closure to __\theme\src\com\sysgears\octopress\taglibs\OctopressTagLib.groovy__:
+
+++++
+${gist id:'4abbf385d08118452dd25162ca42986e'}
+++++
+
+Then, create new file __\theme\includes\tags\dateMessage.html__ with following content:
+
+++++
+${gist id:'f799a454c3be0d07fc44cced4f41c0be'}
+++++
+
+And last, modify your content page:
+
+++++
+${gist id:'c7e583fa6da4ca837114094ba408f73a'}
+++++
+
+Ready! You will get something like:
+
+image::${r '/images/2017-03-20-groovy-static-sites-with-grain/22b63.png'}[]
 
 == Deployment to GitHub Pages
 
