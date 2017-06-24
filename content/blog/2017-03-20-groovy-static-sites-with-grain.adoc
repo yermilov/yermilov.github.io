@@ -254,6 +254,53 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/22b63.png'}[]
 
 == Deployment to GitHub Pages
 
+Now, it's time to finalize all our efforts and publish results of our work to the internet.
+It can be achieved easily with support of link:https://pages.github.com/[GitHub Pages, window="_blank"] - web platform that serves static content from GitHub repositories.
+If you put some static resources to your repository branch named __gh-pages__ GitHub Pages, will automatically serve it as web resource.
+
+So, first obvious option is to run ``./grainw generate`` and push content of __dist__ folder to the __gh-pages__ branch of your repository.
+
+But this option is really boring.
+Let's rather set up automatic pipeline: link:https://travis-ci.org/[Travis CI job, window="_blank"] which will be started automatically by each commit to __develop__ branch, and actually do the same: run ``./grainw generate`` and push content of __dist__ folder to the __gh-pages__ branch from the same repository.
+
+First thing we need to do - generate key pair, so Travis job will be able to push to your repository - just run ``ssh-keygen -t rsa``.
+Then, go to link:https://github.com/settings/keys[GitHub settings page, window="_blank"], and register public part of generated key.
+
+Next, create file __.travis.yml__ to configure Travis job with following content:
+
+++++
+${gist id:'06601cf711422ecc791d3cd85c5cc3c0'}
+++++
+
+Don't forget to enable your repository build at link:https://travis-ci.org/profile/[Travis dashboard, window="_blank"].
+
+As you can see, Travis is supposed to take private part of your generated key from __.travis/__ directory.
+But surely it's not safe to really put is there.
+Luckily enough, Travis supports file encryption.
+You just need to run following command ``travis encrypt-file .travis/id_rsa --add``.
+But it's important to know two tweaks regarding this command: first, be careful enough to commit encrypted file __id_rsa.enc__ instead of original __.travis/id_rsa__ and second - this command does not work on Windows boxes, you need a *nix one.
+
+As you can see, there is almost no manual scripting of interaction with git in job definition.
+The reason is that grain has special ``grainw deploy`` command which will invoke __\theme\src\com\sysgears\octopress\deploy\GHPagesDeployer.groovy__ script.
+It works fine with manual deployment process, but needs some improvements to integrate fine with Travis.
+You can take desired code here:
+
+++++
+${gist id:'ed573c2c93e1ed69d6a9c552a7cf8898'}
+++++
+
+__GHPagesDeployer__ script is instantiated in __SiteConfig__ script we already seen.
+You need to configure it, by providing one parameter in __SiteConfig.groovy__ file:
+
+++++
+${gist id:'f5f2d9d09a9f52a842e25517f963be01'}
+++++
+
+Last thing you should do is go to the setting of your Travis job and enable __Build only if .travis.yml is present__ to prevent its running from __gh-pages__ branch.
+Not you can push your latest changes to GitHub and watch how they will be processed by Travis job.
+
+If you've done everything correct, you should get the same result as I have here - https://yermilov.github.io/grain-example/.
+
 == Links
 
 link:https://www.staticgen.com/[Top Open-Source Static Site Generators, window="_blank"]
@@ -263,3 +310,21 @@ link:https://jekyllrb.com[Jekyll's home, window="_blank"]
 link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}['Using Jekyll, Asciidoctor and GitHub Pages for static site creation', window="_blank"]
 
 link:https://sysgears.com/grain/[Grain's home, window="_blank"]
+
+link:https://github.com/yermilov/grain-example[Sample repository, window="_blank"]
+
+link:http://daringfireball.net/projects/markdown/[Markdown home, window="_blank"]
+
+link:http://asciidoctor.org[Asciidoctor home, window="_blank"]
+
+link:http://asciidoctor.org/docs/what-is-asciidoc/[What is Asciidoc?, window="_blank"]
+
+link:http://asciidoctor.org/docs/asciidoc-writers-guide/[Asciidoc Writer's Guide, window="_blank"]
+
+link:http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[Asciidoc Syntax Quick Reference, window="_blank"]
+
+link:http://asciidoctor.org/docs/user-manual/[Asciidoctor User Manual, window="_blank"]
+
+link:https://pages.github.com/[GitHub Pages home, window="_blank"]
+
+link:https://travis-ci.org/[Travis CI, window="_blank"]
