@@ -186,7 +186,7 @@ ${gist id:'d31cd182f6ebd74926fae55e4fb4e0ac'}
 
 On the lines 1-5, you can see typical page front matter.
 First of all, it configures layout inheritance.
-You can open file named __theme/layouts/default.html__, which is parent layout for __blog.html__ and check that  __blog.html__ content will be put inside ``{ content }`` tag (line 14) of __default.html__:
+You can open file named __theme/layouts/default.html__, which is parent layout for __blog.html__ and check that  __blog.html__ content will be put inside ``${ raw text:'${ content }' }`` tag (line 14) of __default.html__:
 
 ++++
 ${gist id:'472a52e4be5bbfab967715a2d8d90cca'}
@@ -236,7 +236,7 @@ First, add following closure to __\theme\src\com\sysgears\octopress\taglibs\Octo
 ${gist id:'4abbf385d08118452dd25162ca42986e'}
 ++++
 
-Then, create new file __\theme\includes\tags\dateMessage.html__ with following content:
+Then, create new file __\theme\includes\tags\dateNow.html__ with following content:
 
 ++++
 ${gist id:'f799a454c3be0d07fc44cced4f41c0be'}
