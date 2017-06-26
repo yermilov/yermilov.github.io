@@ -1,11 +1,11 @@
 ---
 layout: post
 title: "Groovy static sites with Grain"
-date: "2017-03-20 14:57"
-updated: "2017-03-20 14:57"
+date: "2017-06-27 01:04"
+updated: "2017-06-27 01:04"
 categories: [grain, groovy, asciidoctor, github pages, static sites]
 comments: true
-published: false
+published: true
 sharing: true
 ---
 :linkattrs:
@@ -56,7 +56,7 @@ ${gist id:'8287efd2bfe42acdd125578282e0ab2f'}
 
 If you open now link:http://localhost:4000[http://localhost:4000, window="_blank"], you should see following:
 
-image::${r '/images/2017-03-20-groovy-static-sites-with-grain/3600d.png'}[]
+image::${r '/images/2017-06-27-groovy-static-sites-with-grain/3600d.png'}[]
 
 == Now some housekeeping
 
@@ -110,11 +110,11 @@ Asciidoc shares the same concept as link:http://daringfireball.net/projects/mark
 
 Now your blog should look like following:
 
-image::${r '/images/2017-03-20-groovy-static-sites-with-grain/8020f.png'}[]
+image::${r '/images/2017-06-27-groovy-static-sites-with-grain/8020f.png'}[]
 
 And if you follow new post link:
 
-image::${r '/images/2017-03-20-groovy-static-sites-with-grain/cf787.png'}[]
+image::${r '/images/2017-06-27-groovy-static-sites-with-grain/cf787.png'}[]
 
 As I said in the beginning, Groovy is a privileged citizen in the Grain world.
 To prove it, in the following sections I will demonstrate simple examples how you can use Groovy in all kinds of site sources - configuration, layout, content and even deployment.
@@ -159,21 +159,21 @@ ${gist id:'e36aa454a84fa42563ae9cf9689abc8d'}
 
 Now, your blog should look a little bit more personal:
 
-image::${r '/images/2017-03-20-groovy-static-sites-with-grain/0cc17.png'}[]
+image::${r '/images/2017-06-27-groovy-static-sites-with-grain/0cc17.png'}[]
 
-Moreover, you can use individual ``commands`` object to create custom commands for grain cli.
+Moreover, you can use ``commands`` object to create custom commands for grain cli.
 
 ++++
 ${gist id:'83914dd6bc422569d7ecb9ef21ebfb30'}
 ++++
 
-It means that if you execute `./grainw create-post 'HOWTO: create post from CLI'`` you will got following result:
+It means that if you execute ``./grainw create-post 'HOWTO: create post from CLI'`` you will got following result:
 
 ++++
 ${gist id:'a1d47cfc42df32c2294bfd6392bf3b00'}
 ++++
 
-image::${r '/images/2017-03-20-groovy-static-sites-with-grain/ee478.png'}[]
+image::${r '/images/2017-06-27-groovy-static-sites-with-grain/ee478.png'}[]
 
 == Site layout
 
@@ -186,7 +186,7 @@ ${gist id:'d31cd182f6ebd74926fae55e4fb4e0ac'}
 
 On the lines 1-5, you can see typical page front matter.
 First of all, it configures layout inheritance.
-You can open file named __theme/layouts/default.html__, which is parent layout for __blog.html__ and check that  __blog.html__ content will be put inside ``${ raw text:'${ content }' }`` tag (line 14) of __default.html__:
+You can open file named __theme/layouts/default.html__, which is parent layout for __blog.html__ and check that  __blog.html__ content will be put inside ``${ raw text:'${content}' }`` tag (line 14) of __default.html__:
 
 ++++
 ${gist id:'472a52e4be5bbfab967715a2d8d90cca'}
@@ -216,7 +216,7 @@ ${gist id:'42639e6e2d6157fc54c71314a5bcfd98'}
 
 You will get something like:
 
-image::${r '/images/2017-03-20-groovy-static-sites-with-grain/05279.png'}[]
+image::${r '/images/2017-06-27-groovy-static-sites-with-grain/05279.png'}[]
 
 Pay attention that this code will be executed once and its result will be put into static HTML page.
 If you need dynamic behavior you will probable need something like:
@@ -225,7 +225,7 @@ If you need dynamic behavior you will probable need something like:
 ${gist id:'ac9904062cbeb91196034b423e4c1247'}
 ++++
 
-If you need to reuse some code in multiple places, there is an excellent feature called code custom tags in Grain.
+If you need to reuse some code in multiple places, there is an excellent feature called custom tags in Grain.
 If you have an experience with template frameworks like JSP, you can find something familiar in it.
 As reference, open file __\theme\src\com\sysgears\octopress\taglibs\OctopressTagLib.groovy__ which already contains several very useful tags like ``gist`` or ``img``.
 As you can see, custom tag is as simple as Groovy closure and HTML template so that we can implement our own in 3 minutes.
@@ -250,21 +250,20 @@ ${gist id:'c7e583fa6da4ca837114094ba408f73a'}
 
 Ready! You will get something like:
 
-image::${r '/images/2017-03-20-groovy-static-sites-with-grain/22b63.png'}[]
+image::${r '/images/2017-06-27-groovy-static-sites-with-grain/22b63.png'}[]
 
 == Deployment to GitHub Pages
 
 Now, it's time to finalize all our efforts and publish results of our work to the internet.
 It can be achieved easily with support of link:https://pages.github.com/[GitHub Pages, window="_blank"] - web platform that serves static content from GitHub repositories.
-If you put some static resources to your repository branch named __gh-pages__ GitHub Pages, will automatically serve it as web resource.
+If you put some static resources to your repository branch named __gh-pages__, GitHub Pages will automatically serve it as web resource.
 
-So, first obvious option is to run ``./grainw generate`` and push content of __dist__ folder to the __gh-pages__ branch of your repository.
+So, first obvious option is to run ``./grainw generate`` and push content of __dist__ folder to the __gh-pages__ branch of your repository manually. But it is so boring!
 
-But this option is boring.
 Let's rather set up automatic pipeline: link:https://travis-ci.org/[Travis CI job, window="_blank"] which will be started automatically by each commit to __develop__ branch, and actually do the same: run ``./grainw generate`` and push content of __dist__ folder to the __gh-pages__ branch from the same repository.
 
-The first thing we need to do - generate key pair, so Travis job will be able to push to your repository - just run ``ssh-keygen -t rsa``.
-Then, go to link:https://github.com/settings/keys[GitHub settings page, window="_blank"], and register public part of generated key.
+The first thing we need to do - generate key pair, so Travis job will have permissions to push to your repository. To achieve it just run ``ssh-keygen -t rsa`` in your shell.
+Then, go to link:https://github.com/settings/keys[GitHub settings page, window="_blank"], and register new SSH key by providing its public part.
 
 Next, create file __.travis.yml__ to configure Travis job with following content:
 
@@ -275,14 +274,14 @@ ${gist id:'06601cf711422ecc791d3cd85c5cc3c0'}
 Don't forget to enable your repository build at link:https://travis-ci.org/profile/[Travis dashboard, window="_blank"].
 
 As you can see, Travis is supposed to take private part of your generated key from __.travis/__ directory.
-But surely it's not safe to put is there.
+But surely it's not safe to put something private into public GitHub repository.
 Luckily enough, Travis supports file encryption.
-You just need to run following command ``travis encrypt-file .travis/id_rsa --add``.
+All you need is to run ``travis encrypt-file .travis/id_rsa --add``.
 But it's important to know two tweaks regarding this command: first, be careful enough to commit encrypted file __id_rsa.enc__ instead of original __.travis/id_rsa__ and second - this command does not work on Windows boxes, you need a *nix one.
 
-As you can see, there is almost no manual scripting of interaction with git in job definition.
+As you can see, there is almost no manual scripting for interaction with git in job definition.
 The reason is that grain has special ``grainw deploy`` command which will invoke __\theme\src\com\sysgears\octopress\deploy\GHPagesDeployer.groovy__ script.
-It works fine with manual deployment process but needs some improvements to integrate fine with Travis.
+It works fine with manual deployment process but needs some improvements to integrate with Travis.
 You can take desired code here:
 
 ++++
@@ -290,16 +289,18 @@ ${gist id:'ed573c2c93e1ed69d6a9c552a7cf8898'}
 ++++
 
 __GHPagesDeployer__ script is instantiated in __SiteConfig__ script we already seen.
-You need to configure it, by providing one parameter in __SiteConfig.groovy__ file:
+You need to configure it, by providing single parameter inside __SiteConfig.groovy__ file:
 
 ++++
 ${gist id:'f5f2d9d09a9f52a842e25517f963be01'}
 ++++
 
-The last thing you should do is go to the setting of your Travis job and enable __Build only if .travis.yml is present__ to prevent its running from __gh-pages__ branch.
-Not you can push your latest changes to GitHub and watch how they will be processed by Travis job.
+The last thing you should do is to go to the setting of your Travis job and enable __Build only if .travis.yml is present__ to prevent Travis from running build for __gh-pages__ branch.
+Now you can push your latest changes to GitHub and watch how they will be processed by Travis job.
 
-If you've done everything correctly, you should get the same result as I have here - https://yermilov.github.io/grain-example/.
+image::${r '/images/2017-06-27-groovy-static-sites-with-grain/19ae2.png'}[]
+
+If you've done everything correctly, you should get the same result as I have here - link:https://yermilov.github.io/grain-example/[https://yermilov.github.io/grain-example, window="_blank"] (sources can be examined link:https://github.com/yermilov/grain-example[here, window="_blank"]).
 
 == Links
 
