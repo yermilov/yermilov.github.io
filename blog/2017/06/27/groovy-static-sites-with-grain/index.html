@@ -1,4 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title><![CDATA[Development notes by Yaroslav Yermilov]]></title><link href="https://yermilov.github.io/categories/groovy/atom.xml" rel="self"/><link href="https://yermilov.github.io/"/><updated>2017-06-26T22:07:14+00:00</updated><id>https://yermilov.github.io/</id><author><name><![CDATA[Yaroslav Yermilov]]></name></author><generator uri="http://sysgears.com/grain/">Grain</generator><entry><title type="html"><![CDATA[Groovy static sites with Grain]]></title><link href="https://yermilov.github.io/blog/2017/06/27/groovy-static-sites-with-grain/"/><updated>2017-06-27T01:04:00+00:00</updated><id>/blog/2017/06/27/groovy-static-sites-with-grain/</id><content type="html"><![CDATA[<div class="paragraph">
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <title>Groovy static sites with Grain - Development notes by Yaroslav Yermilov</title>
+  <meta name="author" content="Yaroslav Yermilov">
+  
+  
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="canonical" href="https://yermilov.github.io/blog/2017/06/27/groovy-static-sites-with-grain/">
+  <link href="/images/favicon-c3f2f3fa8e9a91ca5d10ec78e55f1de3.png" rel="icon">
+  <link href="/stylesheets/screen-cf4a1a1132f018198f3439a322a5948b.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="atom.xml" rel="alternate" title="Development notes by Yaroslav Yermilov" type="application/atom+xml">
+  
+    <script src="/javascripts/libs/jquery.min-663628f795cb62444143fde1ebdf2b5b.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/modernizr-2.0-f86b862d5ee138da61daf47f24116ed7.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/octopress-52bd0860c81b8af484852d75380d38f3.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/github-2c23ec60bbc7e962f6324b25d8b2ae44.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/jquery.tweet-408e79928ca077df30b72fe36df5754e.js" type="text/javascript"></script>
+  
+    <script src="/javascripts/twitter-options-3c532dad65b529c40ef8d69d7a22e4b2.js" type="text/javascript"></script>
+  
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-91383043-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+</head>
+
+
+<body 
+   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Development notes by Yaroslav Yermilov</a></h1>
+  
+    <h2>remember kids, the only difference between screwing around and science is writing it down</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss ">
+  <li><a href="https://yermilov.github.io/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+
+<ul class="main-navigation">
+  
+    <li><a href="/">Home</a></li>
+  
+    <li><a href="/archives/">Archives</a></li>
+  
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      
+<div class="blog-index">
+<article class="hentry" role="article">
+  <article>
+
+  <header>
+    
+      <h1 class="entry-title">Groovy Static Sites With Grain</h1>
+    
+    
+      <p class="meta">
+        
+
+
+    <time datetime="2017-06-27T01:04:00+00:00" pubdate >
+      <span class="month">Jun</span>
+      <span class="day">27</span>,
+      <span class="year">2017</span>
+    </time>
+  
+
+
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class="paragraph">
 <p>The first option I considered when I decided to start up this blog was to use static site generator, and Jekyll as the most popular one was an obvious choice.
 Shortly after I was ready with the first version of this blog and first post - <a href="/blog/2017/02/20/using-jekyll-asciidoctor-and-github-pages-for-static-site-creation/" target="_blank">Using Jekyll, Asciidoctor and GitHub Pages for static site creation</a>, I&#8217;ve noticed a link in <a href="https://twitter.com/sdelamo" target="_blank">@sdelamo</a> <a href="http://groovycalamari.com/issues/68" target="_blank">Groovy Calamary #68</a> to the static site generator from Groovy world - <a href="https://sysgears.com/grain/" target="_blank">Grain</a>.
 As I consider myself as a Groovy ecosystem fan, I could not resist it and quickly migrated this blog to Grain.</p>
@@ -482,198 +589,163 @@ Now you can push your latest changes to GitHub and watch how they will be proces
 <p><a href="https://travis-ci.org/" target="_blank">Travis CI</a></p>
 </div>
 </div>
-</div>]]></content></entry><entry><title type="html"><![CDATA[GPars, Eratosthenes and Sieve of Concurrency]]></title><link href="https://yermilov.github.io/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/"/><updated>2017-05-25T15:45:00+00:00</updated><id>/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/</id><content type="html"><![CDATA[<div class="paragraph">
-<p>When there is a need to make sequential code concurrent, there are two major options.
-First one is to take the original code as is, divide it between multiple executors, protect a mutable state from concurrent access, do all other "please don&#8217;t fail" multithreading stuff and hope for better.
-The alternative is to look through different concurrency concepts like data parallelism, actors, dataflows, CSP, etc., select the most appropriate one for your problem statement and write the solution on its basis.
-Luckily there is a library that provides DSLs for all major concurrency concepts called <a href="http://www.gpars.org/" target="_blank">GPars</a>.
-In this article I will tease how it can be used before my <a href="http://jeeconf.com/program/gpars-unsung-hero-of-concurrency-in-practice/" target="_blank">JEEConf talk</a>.</p>
-</div>
-<!--more-->
-<div class="sect1">
-<h2 id="_example_problem">Example problem</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>For demonstration purposes let&#8217;s take a problem of finding prime numbers and well-known algorithm to solve this problem - <a href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes" target="_blank">Sieve of Eratosthenes</a>.</p>
-</div>
-<div class="paragraph">
-<p>Just to remind it ourselves - a prime number is a natural number that has exactly two distinct natural number divisors: 1 and itself.</p>
-</div>
-<div class="paragraph">
-<p>Sieve of Eratosthenes suggests that primes can be found with the following algorithm:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Create a list of consecutive integers from 2 through n: (2, 3, 4, &#8230;&#8203;, n).</p>
-</li>
-<li>
-<p>Take the smallest number from the list - it is prime.</p>
-</li>
-<li>
-<p>Iterate through the list of remaining numbers and keep only those that can&#8217;t be divided by number found in previous step (that&#8217;s why it&#8217;s called sieve).</p>
-</li>
-<li>
-<p>Repeat previous two steps until the desired number of primes is generated.</p>
-</li>
-</ol>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="/images/2017-05-25-gpars-eratosthenes-and-sieve-of-concurrency/f6ca8-6420e3488e509dce176a1e957ea07ff5.gif" alt="f6ca8 6420e3488e509dce176a1e957ea07ff5">
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sequential_solution">Sequential solution</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Optimized sequential solution may look like following:</p>
+</div></div>
+
+</article>
+
+  <footer>
+    <p class="meta">
+      
+
+
+    <time datetime="2017-06-27T01:04:00+00:00" pubdate >
+      <span class="month">Jun</span>
+      <span class="day">27</span>,
+      <span class="year">2017</span>
+    </time>
+  
+
+
+      
+<div class="categories">
+  <p class="meta">Tags:</p>
+  
+     <a class="category" href="/categories/grain/">grain</a>
+  
+     <a class="category" href="/categories/groovy/">groovy</a>
+  
+     <a class="category" href="/categories/asciidoctor/">asciidoctor</a>
+  
+     <a class="category" href="/categories/github-pages/">github pages</a>
+  
+     <a class="category" href="/categories/static-sites/">static sites</a>
+  
 </div>
 
 
-<div id="gistd1f54e1e8887c090a38d29eb92cee17a">
-  <script src="https://gist.github.com/d1f54e1e8887c090a38d29eb92cee17a.js"></script>
+    </p>
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/" title="Next Post: GPars, Eratosthenes and Sieve of Concurrency">GPars, Eratosthenes and Sieve of Concurrency &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-<div class="paragraph">
-<p>Turning this code into concurrent solution may become a challenge.
-Especially, turning into bug-free one.
-But even if it&#8217;s not a challenge for an experienced developer, if we check original algorithm description, we can find that there are concurrency concepts that fit it much more naturally that trivial migration from sequential to the concurrent solution.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_meet_gpars">Meet GPars</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>That&#8217;s when GPars comes into the game.
-First of all, add it to your project as following dependency:</p>
+  </section>
+
 </div>
 
+    <aside class="sidebar">
+      
+        <section>
+    
+        <h1>Share</h1>
+        <div class="sharing">
+          
+            <div>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-via="yermilov17" data-show-count="false">Tweet</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+          
+          
+          <!-- Load Facebook SDK for JavaScript -->
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
 
-<div id="gistba20b04041a16c74a143645815885028">
-  <script src="https://gist.github.com/ba20b04041a16c74a143645815885028.js"></script>
-</div>
-<div class="paragraph">
-<p>Now let&#8217;s go through original algorithm step by step and implement it using the most powerful GPars concept - dataflows:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Create a list of consecutive integers from 2 through n: (2, 3, 4, &#8230;&#8203;, n).</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>This one can easily be translated into asynchronous task:</p>
-</div>
+            <!-- Your share button code -->
+            <div class="fb-share-button" data-layout="button_count" data-size="large">
+            </div>
+          
+        </div>
+    
+</section>
+      
+
+      
+        <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/06/27/groovy-static-sites-with-grain/">Groovy Static Sites With Grain</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/25/gpars-eratosthenes-and-sieve-of-concurrency/">GPars, Eratosthenes and Sieve of Concurrency</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/02/24/tiebreaker-regarding-java-hashmap-treenode-and-tiebreakorder/">Tiebreaker Regarding Java HashMap, TreeNode and TieBreakOrder</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/02/20/using-jekyll-asciidoctor-and-github-pages-for-static-site-creation/">Using Jekyll, Asciidoctor and GitHub Pages for Static Site Creation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/27/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-javaday-kharkiv-2016/">'What Mr. Spock Would Possibly Say About Modern Unit Testing: Pragmatic and Emotional Overview' Talk at JavaDay Kharkiv 2016</a>
+      </li>
+    
+  </ul>
+</section>
+
+      
+        
+      
+        
+    <section>
+        <a class="twitter-timeline" data-height="1000" href="https://twitter.com/yermilov17">Tweets by yermilov17</a>
+        <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </section>
 
 
-<div id="gist5e154bc336ac0fed66b3497687536cbe">
-  <script src="https://gist.github.com/5e154bc336ac0fed66b3497687536cbe.js"></script>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="2">
-<li>
-<p>Take the smallest number from the list - it is prime.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Again, it&#8217;s trivial:</p>
-</div>
+      
+    </aside>
 
 
-<div id="gist40eadcbafaa4e173553f735a929b1ba0">
-  <script src="https://gist.github.com/40eadcbafaa4e173553f735a929b1ba0.js"></script>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="3">
-<li>
-<p>Iterate through the list of remaining numbers and keep only those that can&#8217;t be divided by number found in the previous step.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Here, we define the asynchronous operator, that takes each number from <em>remainingNumbers</em> queue and push it into <em>sievedNumbers</em> queue if it can&#8217;t be divided by the number found in the previous step.</p>
-</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - Yaroslav Yermilov -
+  <span class="credit">Sources at <a href="https://github.com/yermilov/yermilov.github.io">GitHub</a></span> -
+  <span class="credit">Powered by <a href="http://sysgears.com/grain/">Grain</a></span>
+</p>
+
+</footer>
+  <!-- Load script if disquss comments are enabled and `page.comments` is either empty (index) or set to true -->
+
+<script type="text/javascript">
+  var disqus_shortname = "yermilov-github-io";
+  
+    // `page.comments` can only be set to true on pages/posts, so we embed the comments here.
+    // var disqus_developer = 1;
+    var disqus_identifier = "https://yermilov.github.io/blog/2017/06/27/groovy-static-sites-with-grain/";
+    var disqus_url = "https://yermilov.github.io/blog/2017/06/27/groovy-static-sites-with-grain/";
+    var disqus_script = 'embed.js';
+  
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'https://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
 
 
-<div id="gist5273479e8e5a4aa626237f14a1ff996f">
-  <script src="https://gist.github.com/5273479e8e5a4aa626237f14a1ff996f.js"></script>
-</div>
-<div class="olist arabic">
-<ol class="arabic" start="4">
-<li>
-<p>Repeat previous two steps until the desired number of primes is generated.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Complete code looks like following:</p>
-</div>
+<!-- Place your javascript or css declarations here so that they will be placed after footer -->
 
 
-<div id="gist3bb1310bfb59af0fe1fb473ef5ad2166">
-  <script src="https://gist.github.com/3bb1310bfb59af0fe1fb473ef5ad2166.js"></script>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_conclusion">Conclusion</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>I can see several immediate benefits from choosing GPars Dataflows as a basic concept for implementing Sieve of Eratosthenes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>source code almost 100% matches original algorithm text script</p>
-</li>
-<li>
-<p>zero lines of excessive concurrency infrastructure in the source code</p>
-</li>
-<li>
-<p>safe and reliable execution in the concurrent environment provided by framework out-of-the-box</p>
-</li>
-</ul>
-</div>
-</div>
-</div>]]></content></entry><entry><title type="html"><![CDATA['What Mr. Spock would possibly say about modern unit testing: pragmatic and emotional overview' talk at JavaDay Kharkiv 2016]]></title><link href="https://yermilov.github.io/blog/2016/09/27/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-javaday-kharkiv-2016/"/><updated>2016-09-27T00:00:00+00:00</updated><id>/blog/2016/09/27/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-javaday-kharkiv-2016/</id><content type="html"><![CDATA[<div class="paragraph">
-<p>Venue: <a href="http://javaday.org.ua/kharkiv/" target="_blank">JavaDay Kharkiv 2016</a></p>
-</div>
-<div class="paragraph">
-<p>Sources: <a href="https://github.com/yermilov/spock-talk/tree/c295e4d81483ac12604e8380415146299e49e9eb" target="_blank">https://github.com/yermilov/spock-talk</a></p>
-</div>
-<div class="paragraph">
-<p>Slides: <a href="https://www.slideshare.net/yaroslavyermilov/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-62280211" target="_blank">slideshare</a></p>
-</div>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/9GwQg_4MX7o?ecver=1" frameborder="0" allowfullscreen></iframe>]]></content></entry><entry><title type="html"><![CDATA['What Mr. Spock would possibly say about modern unit testing: pragmatic and emotional overview' talk at JEEConf 2016]]></title><link href="https://yermilov.github.io/blog/2016/07/12/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-jeeconf-2016/"/><updated>2016-07-12T00:00:00+00:00</updated><id>/blog/2016/07/12/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-talk-at-jeeconf-2016/</id><content type="html"><![CDATA[<div class="paragraph">
-<p>Venue: <a href="http://jeeconf.com/program/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview/" target="_blank">JEEConf 2016</a></p>
-</div>
-<div class="paragraph">
-<p>Sources: <a href="https://github.com/yermilov/spock-talk/tree/99f52d5c41b09dca50a7c360f919363ed7484f40" target="_blank">https://github.com/yermilov/spock-talk</a></p>
-</div>
-<div class="paragraph">
-<p>Slides: <a href="https://www.slideshare.net/yaroslavyermilov/what-mr-spock-would-possibly-say-about-modern-unit-testing-pragmatic-and-emotional-overview-62280211" target="_blank">slideshare</a></p>
-</div>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/3nSXDEj7sKM?ecver=1" frameborder="0" allowfullscreen></iframe>]]></content></entry><entry><title type="html"><![CDATA['Building domain-specific languages with Groovy' talk at JEEConf 2015]]></title><link href="https://yermilov.github.io/blog/2015/07/22/building-domain-specific-languages-with-groovy-talk-at-jeeconf-2015/"/><updated>2015-07-22T00:00:00+00:00</updated><id>/blog/2015/07/22/building-domain-specific-languages-with-groovy-talk-at-jeeconf-2015/</id><content type="html"><![CDATA[<div class="paragraph">
-<p>Venue: <a href="http://jeeconf.com/materials/building-dsl-with-groovy/" target="_blank">JEEConf 2015</a></p>
-</div>
-<div class="paragraph">
-<p>Sources: <a href="https://github.com/yermilov/groovy-dsl" target="_blank">https://github.com/yermilov/groovy-dsl</a></p>
-</div>
-<div class="paragraph">
-<p>Slides: <a href="https://www.slideshare.net/yaroslavyermilov/groovy-dsl-48630799" target="_blank">slideshare</a></p>
-</div>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ft3XrFrGiuA?ecver=1" frameborder="0" allowfullscreen></iframe>]]></content></entry><entry><title type="html"><![CDATA['Groovy for Domain-Specific Languages' talk at JUGUA]]></title><link href="https://yermilov.github.io/blog/2015/02/18/groovy-for-domain-specific-languages-talk-at-jugua/"/><updated>2015-02-18T00:00:00+00:00</updated><id>/blog/2015/02/18/groovy-for-domain-specific-languages-talk-at-jugua/</id><content type="html"><![CDATA[<div class="paragraph">
-<p>Venue: <a href="http://jug.ua/2015/02/dsl-with-groovy-clojure/" target="_blank">JUGUA</a></p>
-</div>
-<div class="paragraph">
-<p>Sources: <a href="https://github.com/yermilov/groovy-dsl" target="_blank">https://github.com/yermilov/groovy-dsl</a></p>
-</div>
-<div class="paragraph">
-<p>Slides: <a href="https://www.slideshare.net/yaroslavyermilov/groovy-dsl-44945972" target="_blank">slideshare</a></p>
-</div>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Cue5B11UfDU?ecver=1" frameborder="0" allowfullscreen></iframe>]]></content></entry></feed>
+</body>
+
+</html>
