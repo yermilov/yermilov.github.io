@@ -10,7 +10,7 @@ sharing: true
 ---
 :linkattrs:
 
-The first option I considered when I decided to start up this blog was to use static site generator and Jekyll as the most popular one was an obvious option.
+The first option I considered when I decided to start up this blog was to use static site generator, and Jekyll as the most popular one was an obvious choice.
 Shortly after I was ready with the first version of this blog and first post - link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}['Using Jekyll, Asciidoctor and GitHub Pages for static site creation', window="_blank"], I've noticed a link in link:https://twitter.com/sdelamo[@sdelamo, window="_blank"] link:http://groovycalamari.com/issues/68[Groovy Calamary #68, window="_blank"] to the static site generator from Groovy world - link:https://sysgears.com/grain/[Grain, window="_blank"].
 As I consider myself as a Groovy ecosystem fan, I could not resist it and quickly migrated this blog to Grain.
 
@@ -30,21 +30,21 @@ Typical web resource after you request a page from it does something like follow
 Many of them do not require dedicated data storage or data itself is changing relatively rarely.
 It means that web pages can be generated once and served without no additional processing for every request.
 
-It's very important that we should not return to the boring Web 1.0 world.
+It's important that we should not return to the boring Web 1.0 world.
 If client state on your site is not persisted, it can be handled by JavaScript locally.
 If the content is changing relatively rarely, you can just redeploy it with every change.
 If you need something like commenting feature, you can rely on external resources (for example link:https://disqus.com[disqus.com, window="_blank"] in this case).
 
-And if you get rid of all heavy dynamic weapons like databases and server-side code and express your site as a collection of HMTL, CSS and JavaScript files you can gain some very worthy benefits: ease of site deployment, content caching and delivering (which leads to better performance) and security management.
+And if you get rid of all heavy dynamic weapons like databases and server-side code and express your site as a collection of HMTL, CSS and JavaScript files you can gain some good benefits: ease of site deployment, content caching and delivering (which leads to better performance) and security management.
 
 Typical static site generator takes your content (it can be plain text file, markdown, asciidoc, etc.) along with bunch of configuration parameters and the desired layout (usually HTML with some kind of template DSL) and transform them into a collection of HTML, CSS and JavaScript files ready for deployment and servicing as a static web resource.
-According to link:https://www.staticgen.com/[staticgen.com, window="_blank"], there are dozens of different static sites generators and link:https://jekyllrb.com[Jekyll, window="_blank"] is the most popular from them.
-I've already posted an link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}[article, window="_blank"] about Jekyll, and today we will look closely at link:https://sysgears.com/grain/[Grain, window="_blank"], which is actually a workhorse of this blog itself.
+According to link:https://www.staticgen.com/[staticgen.com, window="_blank"], there are dozens of different static sites generators, and link:https://jekyllrb.com[Jekyll, window="_blank"] is the most popular from them.
+I've already posted an link:${r '/blog/2017-02-20-jekyll-githubpages-asciidoc.adoc'}[article, window="_blank"] about Jekyll, and today we will look closely at link:https://sysgears.com/grain/[Grain, window="_blank"], which is a workhorse of this blog itself.
 
 == So, Grain
 
 Grain is an open source static website generator for Groovy.
-It provides all usual static site generator features and moreover has a very specific killer feature - Groovy is a privileged citizen for all kinds of source files (configuration, layout, content and more).
+It provides all usual static site generator features and moreover has a particular killer feature - Groovy is a privileged citizen for all kinds of source files (configuration, layout, content and more).
 
 Starting Grain blog is as easy as downloading one of its link:https://sysgears.com/grain/themes/[themes, window="_blank"].
 Let's examine it with yet another blog example, which means link:https://sysgears.com/grain/themes/octopress/[Grain Octopress Theme, window="_blank"] is theme of our choice.
@@ -60,7 +60,7 @@ image::${r '/images/2017-03-20-groovy-static-sites-with-grain/3600d.png'}[]
 
 == Now some housekeeping
 
-Before start actually using Grain, you need to perform some housekeeping.
+Before start using Grain, you need to perform some housekeeping.
 For example, as Grain try to rely on Groovy ecosystem tool as much as possible, it uses Gradle as build tool.
 But distribution that we've just download uses version 1.8 of Gradle wrapper (for the moment of writing this article 4.0 is actual version).
 You can easily update it by applying following change to __build.gradle__ file:
@@ -161,7 +161,7 @@ Now, your blog should look a little bit more personal:
 
 image::${r '/images/2017-03-20-groovy-static-sites-with-grain/0cc17.png'}[]
 
-Moreover, you can use special ``commands`` object to create custom commands for grain cli.
+Moreover, you can use individual ``commands`` object to create custom commands for grain cli.
 
 ++++
 ${gist id:'83914dd6bc422569d7ecb9ef21ebfb30'}
@@ -194,16 +194,16 @@ ${gist id:'472a52e4be5bbfab967715a2d8d90cca'}
 
 Following lines of front matter are passed into special ``page`` object and can be used to parametrize layout behavior.
 
-After front matter, we see kind of usual HTML code with addition of Groovy.
+After front matter, we see kind of normal HTML code with addition of Groovy.
 It can be one-liner, just like in lines 19 and 36.
 In these concrete example special implicit method ``include`` is used, which takes another HTML file and optionally parameters map, renders their content and insert into original page.
 
 The more sophisticated option is multi-line Groovy code, which is, however, very natural and clear.
 You can use ``if`` statement (like in line 8) to control which parts of page layout should be rendered and which not.
-As a result, you do not need any special constructions like many other static site generators have.
-For example, if you need to render collection of elements, you can use Groovy Collection API like in line 16.
+As a result, you do not need any special constructions as many other static site generators have.
+For example, if you require rendering collection of elements, you can use Groovy Collection API like in line 16.
 
-With such approach you can easily implement some very interesting features like in line 17, where you loop through list of blog posts, render content of each one, extract briefs and put them on your home page.
+With such approach you can quickly implement some interesting features like in line 17, where you loop through list of blog posts, render content of each one, extract briefs and put them on your home page.
 
 == Site content
 
@@ -225,10 +225,10 @@ If you need dynamic behavior you will probable need something like:
 ${gist id:'ac9904062cbeb91196034b423e4c1247'}
 ++++
 
-If you need to reuse some code in multiple places, there is a nice feature called code custom tags in Grain.
+If you need to reuse some code in multiple places, there is an excellent feature called code custom tags in Grain.
 If you have an experience with template frameworks like JSP, you can find something familiar in it.
 As reference, open file __\theme\src\com\sysgears\octopress\taglibs\OctopressTagLib.groovy__ which already contains several very useful tags like ``gist`` or ``img``.
-As you can see, custom tag is as simple as Groovy closure and HTML template, so we can implement our own in 3 minutes.
+As you can see, custom tag is as simple as Groovy closure and HTML template so that we can implement our own in 3 minutes.
 
 First, add following closure to __\theme\src\com\sysgears\octopress\taglibs\OctopressTagLib.groovy__:
 
@@ -260,7 +260,7 @@ If you put some static resources to your repository branch named __gh-pages__ Gi
 
 So, first obvious option is to run ``./grainw generate`` and push content of __dist__ folder to the __gh-pages__ branch of your repository.
 
-But this option is really boring.
+But this option is boring.
 Let's rather set up automatic pipeline: link:https://travis-ci.org/[Travis CI job, window="_blank"] which will be started automatically by each commit to __develop__ branch, and actually do the same: run ``./grainw generate`` and push content of __dist__ folder to the __gh-pages__ branch from the same repository.
 
 The first thing we need to do - generate key pair, so Travis job will be able to push to your repository - just run ``ssh-keygen -t rsa``.
@@ -275,7 +275,7 @@ ${gist id:'06601cf711422ecc791d3cd85c5cc3c0'}
 Don't forget to enable your repository build at link:https://travis-ci.org/profile/[Travis dashboard, window="_blank"].
 
 As you can see, Travis is supposed to take private part of your generated key from __.travis/__ directory.
-But surely it's not safe to really put is there.
+But surely it's not safe to put is there.
 Luckily enough, Travis supports file encryption.
 You just need to run following command ``travis encrypt-file .travis/id_rsa --add``.
 But it's important to know two tweaks regarding this command: first, be careful enough to commit encrypted file __id_rsa.enc__ instead of original __.travis/id_rsa__ and second - this command does not work on Windows boxes, you need a *nix one.
