@@ -16,6 +16,7 @@ build/
 /.sass-cache/
 *.dep
 /target/
+.cache/
 
 # GitHub #
 .travis
