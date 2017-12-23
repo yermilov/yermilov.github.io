@@ -17,5 +17,5 @@ Sources: link:https://github.com/yermilov/gpars-talk[github, window="_blank"]
 Slides: link:https://docs.google.com/presentation/d/1zWXwr0bNeVhsPou9ZsxVSxvm80zEtDDESXHPTKRMcoU/pub?start=false&loop=false&delayms=3000&slide=id.g21f97de995_0_38[google slides, window="_blank"]
 
 ++++
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=angDXZBp1zc" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/angDXZBp1zc" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>
 ++++
