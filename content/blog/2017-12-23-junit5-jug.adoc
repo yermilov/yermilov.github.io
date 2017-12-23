@@ -17,5 +17,5 @@ Sources: link:https://github.com/yermilov/junit5-talk[github, window="_blank"]
 Slides: link:https://docs.google.com/presentation/d/e/2PACX-1vRec1YyNnFFEefYNPxYm-O6pmBdVuNPq4V3tNWbAUJucF8hqvwilXhwL1UbaFU7ltCAnKd8uesjvUXM/pub?start=false&loop=false&delayms=3000[google slides, window="_blank"]
 
 ++++
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=2lSyw4-K1cw&feature=youtu.be&t=15m" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=2lSyw4-K1cw" frameborder="0" allowfullscreen></iframe>
 ++++
