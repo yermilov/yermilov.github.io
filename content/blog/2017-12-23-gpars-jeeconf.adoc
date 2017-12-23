@@ -1,0 +1,21 @@
+---
+layout: post
+title: "'GPars: Unsung Hero of Concurrency in Practice' talk at JEEConf 2017"
+date: "2017-12-23 14:57"
+updated: "2017-12-23 14:57"
+categories: [groovy, gpars, concurrency, talk]
+comments: true
+published: true
+sharing: true
+---
+:linkattrs:
+
+Venue: link:http://jeeconf.com/program/gpars-unsung-hero-of-concurrency-in-practice/[JEEConf 2017, window="_blank"]
+
+Sources: link:https://github.com/yermilov/gpars-talk[github, window="_blank"]
+
+Slides: link:https://docs.google.com/presentation/d/1zWXwr0bNeVhsPou9ZsxVSxvm80zEtDDESXHPTKRMcoU/pub?start=false&loop=false&delayms=3000&slide=id.g21f97de995_0_38[google slides, window="_blank"]
+
+++++
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=angDXZBp1zc" frameborder="0" allowfullscreen></iframe>
+++++
