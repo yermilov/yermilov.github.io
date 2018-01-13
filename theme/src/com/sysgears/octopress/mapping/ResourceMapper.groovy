@@ -39,21 +39,6 @@ class ResourceMapper {
     }
 
     /**
-     * Creates URL for a post page relative to postUrlBasePath.
-     * Replace with your own implementation to customize.
-     * The default URL format is '{year}/{month}/{day}/{post name}'.
-     *
-     * @param resource the blog post resource
-     *
-     * @return formatted url to the post page
-     */
-    def createPostUrl = { Map resource ->
-        def date = resource.date.format('yyyy/MM/dd/')
-        def title = resource.title.encodeAsSlug()
-        "$date$title/"
-    }
-
-    /**
      * Excludes resources with published property set to false,
      * unless it is allowed to show unpublished resources in SiteConfig.
      */
@@ -215,8 +200,7 @@ class ResourceMapper {
     }
 
     /**
-     * Creates URL for a post page. Delegates to createPostUrl() to provide the URL format
-     * relative to the basePath.
+     * Creates URL for a post page.
      *
      * @param basePath base path to the page
      * @param location location of the file
@@ -224,7 +208,7 @@ class ResourceMapper {
      * @return formatted url to the post page
      */
     private String getPostUrl(String basePath, Map resource) {
-        resource.external_url ? resource.external_url : "$basePath${createPostUrl(resource)}"
+      resource.external_url != null ? resource.external_url : "${basePath}${resource.date.format('yyyy/MM/dd/')}${resource.title.encodeAsSlug()}/"
     }
 
     /**

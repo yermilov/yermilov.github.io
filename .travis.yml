@@ -20,7 +20,7 @@ before_install:
 - chmod +x grainw
 
 install:
-- "./grainw generate || true"
+- "./grainw generate"
 
 before_script:
 - eval "$(ssh-agent -s)"
