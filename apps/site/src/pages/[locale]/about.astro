@@ -1,0 +1,40 @@
+---
+import { LOCALES, t, type Locale } from '@lib/i18n';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const strings = t(locale);
+---
+
+<BaseLayout locale={locale} title={strings.nav.about} alternatePath="about">
+  <article class="page-frame about">
+    <div class="prose-column">
+      <p class="workbench">/ ABOUT</p>
+      <h1>{strings.site.title}</h1>
+      <p class="lede">{strings.site.tagline}</p>
+      <p>
+        {locale === 'uk'
+          ? 'Я Ярослав. Розробник, дописувач, доповідач. Цей сайт — мій робочий верстак: тут я записую те, що зрозумів, демонструю невеликі експерименти й тримаю архів колишнього блогу.'
+          : "I'm Yaroslav. I write code, sometimes essays, occasionally talks. This site is my workbench: notes I’ve worked out, small experiments, and an archive of the old blog."}
+      </p>
+
+      <h2>{strings.archive.heading}</h2>
+      <p>{strings.archive.body}</p>
+      <p><a href="/old-blog/">{strings.archive.link}</a></p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .about {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+  .lede {
+    font-size: 1.2rem;
+    color: var(--ink-muted);
+  }
+</style>

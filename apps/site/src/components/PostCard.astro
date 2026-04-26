@@ -1,0 +1,44 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Locale } from '@lib/i18n';
+import { localePath } from '@lib/i18n';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  locale: Locale;
+}
+const { post, locale } = Astro.props;
+const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'medium' });
+const href = localePath(locale, `blog/${post.data.slug}`);
+---
+
+<article class="card">
+  <a href={href}>
+    <p class="workbench"><time datetime={post.data.publishedAt.toISOString()}>{fmt.format(post.data.publishedAt)}</time></p>
+    <h3>{post.data.title}</h3>
+    <p class="summary">{post.data.summary}</p>
+  </a>
+</article>
+
+<style>
+  .card a {
+    display: block;
+    padding: var(--space-3) 0;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .card a:hover {
+    background: transparent;
+  }
+  .card a:hover h3 {
+    color: var(--orange-accent);
+  }
+  h3 {
+    font-size: 1.4rem;
+    margin: 0.3rem 0 0.4rem;
+  }
+  .summary {
+    color: var(--ink-muted);
+    margin: 0;
+  }
+</style>

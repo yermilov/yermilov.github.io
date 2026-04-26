@@ -1,0 +1,202 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/newsreader';
+@import '@fontsource-variable/newsreader/wght-italic.css';
+@import '@fontsource-variable/jetbrains-mono';
+@import '@yermilov/shared-tokens/tokens.css';
+
+/*
+ * Tailwind v4 theme bridge.
+ * Tokens above are the source of truth (so future game apps share them).
+ * Below we expose them as Tailwind theme variables so utility classes
+ * (text-ink, bg-paper, etc.) just work.
+ */
+@theme {
+  --color-paper: var(--bg-paper);
+  --color-elevated: var(--bg-elevated);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-rule: var(--rule);
+
+  --color-green: var(--green-primary);
+  --color-green-deep: var(--green-deep);
+  --color-green-soft: var(--green-soft);
+
+  --color-orange: var(--orange-accent);
+  --color-orange-bright: var(--orange-bright);
+  --color-orange-soft: var(--orange-soft);
+
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+}
+
+/* ── Base reset + reading surface ────────────────────────────────── */
+
+html {
+  background: var(--bg-paper);
+  color: var(--ink);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'ss01' 1;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.075rem;
+  line-height: var(--leading-body);
+  background: var(--bg-paper);
+  color: var(--ink);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--orange-accent);
+  text-underline-offset: 4px;
+  transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+a:hover {
+  background: var(--orange-soft);
+  color: var(--green-deep);
+}
+@media (prefers-color-scheme: dark) {
+  a:hover {
+    color: var(--ink);
+  }
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--orange-soft);
+  color: var(--green-deep);
+}
+@media (prefers-color-scheme: dark) {
+  ::selection {
+    background: var(--orange-accent);
+    color: var(--bg-paper);
+  }
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: var(--space-4) 0;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+
+pre {
+  background: var(--bg-elevated);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: var(--space-3);
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+:not(pre) > code {
+  background: var(--bg-elevated);
+  border: 1px solid var(--rule);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.015em;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 2.85rem);
+  font-weight: 700;
+  margin: 0 0 var(--space-3);
+}
+
+h2 {
+  font-size: 1.65rem;
+  margin: var(--space-5) 0 var(--space-2);
+}
+
+h3 {
+  font-size: 1.25rem;
+  margin: var(--space-4) 0 var(--space-1);
+}
+
+p,
+ul,
+ol,
+blockquote {
+  margin: 0 0 var(--space-3);
+}
+
+blockquote {
+  border-left: 3px solid var(--green-primary);
+  padding: 0 var(--space-3);
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+/* ── Layout primitives ───────────────────────────────────────────── */
+
+.prose-column {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.page-frame {
+  max-width: 64rem;
+  margin-inline: auto;
+  padding: 0 var(--space-3);
+}
+
+/* ── Lab / game theme inversion ─────────────────────────────────── */
+
+body.theme-lab {
+  background: var(--bg-paper);
+  color: var(--ink);
+}
+body.theme-lab a {
+  border-bottom-color: var(--orange-bright);
+}
+body.theme-lab ::selection {
+  background: var(--orange-bright);
+  color: var(--bg-paper);
+}
+
+/* ── Workbench metadata (mono labels, dates, tags) ──────────────── */
+
+.workbench {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+}

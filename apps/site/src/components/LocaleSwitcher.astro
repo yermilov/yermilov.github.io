@@ -1,0 +1,69 @@
+---
+import type { Locale } from '@lib/i18n';
+import { t, otherLocale, localePath } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+  /** sub-path (no locale) of the alternate translation */
+  alternatePath?: string | undefined;
+  /** when true, no counterpart exists — render disabled */
+  alternateMissing?: boolean;
+}
+
+const { locale, alternatePath, alternateMissing = false } = Astro.props;
+const other = otherLocale(locale);
+const strings = t(locale);
+const otherStrings = t(other);
+const href = alternatePath ? localePath(other, alternatePath) : localePath(other);
+---
+
+{
+  alternateMissing ? (
+    <span class="locale-switch locale-switch-disabled" aria-disabled="true" title={strings.labels.switchLanguage}>
+      <span class="current">{locale.toUpperCase()}</span>
+      <span class="sep">/</span>
+      <span class="other muted">{other.toUpperCase()}</span>
+    </span>
+  ) : (
+    <a class="locale-switch" href={href} aria-label={strings.labels.switchLanguage} title={otherStrings.site.languageName}>
+      <span class="current">{locale.toUpperCase()}</span>
+      <span class="sep">/</span>
+      <span class="other">{other.toUpperCase()}</span>
+    </a>
+  )
+}
+
+<style>
+  .locale-switch {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 4px 10px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    color: var(--ink-muted);
+    background: var(--bg-elevated);
+  }
+  .locale-switch:hover {
+    background: var(--green-soft);
+    color: var(--green-deep);
+    border-color: var(--green-primary);
+  }
+  .locale-switch .current {
+    color: var(--green-primary);
+    font-weight: 600;
+  }
+  .locale-switch .sep {
+    color: var(--ink-muted);
+  }
+  .locale-switch-disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .locale-switch-disabled .other.muted {
+    text-decoration: line-through;
+  }
+</style>

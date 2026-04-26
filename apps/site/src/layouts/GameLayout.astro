@@ -1,0 +1,108 @@
+---
+import type { Locale } from '@lib/i18n';
+import { t } from '@lib/i18n';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string | undefined;
+  controls?: string | undefined;
+  width: number;
+  height: number;
+  /** game slug — must match apps/game-<slug> and public/games/<slug>/ */
+  slug: string;
+  publishedAt: Date;
+  alternatePath?: string | undefined;
+  alternateMissing?: boolean;
+}
+
+const {
+  locale,
+  title,
+  description,
+  controls,
+  width,
+  height,
+  slug,
+  publishedAt,
+  alternatePath,
+  alternateMissing = false,
+} = Astro.props;
+
+const strings = t(locale);
+const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'long' });
+const aspect = `${width} / ${height}`;
+const src = `/games/${slug}/`;
+---
+
+<BaseLayout
+  locale={locale}
+  title={title}
+  description={description}
+  alternatePath={alternatePath}
+  alternateMissing={alternateMissing}
+  themeLab
+>
+  <section class="page-frame game">
+    <header class="game-header">
+      <p class="workbench"><time datetime={publishedAt.toISOString()}>{fmt.format(publishedAt)}</time> · GAME</p>
+      <h1>{title}</h1>
+      {description && <p class="lede">{description}</p>}
+    </header>
+    <div class="game-frame" style={`aspect-ratio: ${aspect};`}>
+      <iframe
+        src={src}
+        title={title}
+        loading="lazy"
+        sandbox="allow-scripts allow-pointer-lock allow-fullscreen allow-same-origin"
+        allow="autoplay; fullscreen; gamepad"
+        referrerpolicy="no-referrer"
+      ></iframe>
+    </div>
+    {controls && (
+      <aside class="game-controls">
+        <p class="workbench">{strings.labels.controls}</p>
+        <p>{controls}</p>
+      </aside>
+    )}
+    <slot />
+  </section>
+</BaseLayout>
+
+<style>
+  .game {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+  .game-header {
+    max-width: var(--measure);
+    margin: 0 auto var(--space-4);
+  }
+  .lede {
+    color: var(--ink-muted);
+    font-size: 1.15rem;
+  }
+  .game-frame {
+    width: 100%;
+    max-width: 64rem;
+    margin: 0 auto;
+    background: #000;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .game-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .game-controls {
+    max-width: var(--measure);
+    margin: var(--space-4) auto 0;
+    padding: var(--space-3);
+    background: var(--bg-elevated);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import type { Locale } from '@lib/i18n';
+import { t } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const strings = t(locale);
+---
+
+<div id="search-root" data-locale={locale} aria-label={strings.labels.search}>
+  <input
+    id="search-input"
+    type="search"
+    placeholder={`${strings.labels.search}…`}
+    autocomplete="off"
+    spellcheck="false"
+  />
+  <div id="search-results" hidden></div>
+</div>
+
+<script is:inline>
+  // Pagefind is generated at build time into /pagefind/. In dev it 404s; we
+  // handle that gracefully and show a hint. The query → results loop is hand
+  // rolled so the field can match the site's typography exactly.
+  (function () {
+    const root = document.getElementById('search-root');
+    const input = document.getElementById('search-input');
+    const results = document.getElementById('search-results');
+    if (!root || !input || !results) return;
+    const locale = root.dataset.locale || 'en';
+
+    let pagefindPromise = null;
+    function loadPagefind() {
+      if (pagefindPromise) return pagefindPromise;
+      pagefindPromise = import('/pagefind/pagefind.js').catch(() => null);
+      return pagefindPromise;
+    }
+
+    let timer = null;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      const query = input.value.trim();
+      if (!query) {
+        results.hidden = true;
+        results.innerHTML = '';
+        return;
+      }
+      timer = setTimeout(async () => {
+        const pagefind = await loadPagefind();
+        if (!pagefind) {
+          results.hidden = false;
+          results.innerHTML = '<p class="search-hint">Search index not available in dev. Run a production build to enable.</p>';
+          return;
+        }
+        const search = await pagefind.search(query, {
+          filters: { language: locale },
+        });
+        const top = await Promise.all(search.results.slice(0, 8).map((r) => r.data()));
+        results.hidden = false;
+        results.innerHTML = top.length
+          ? top
+              .map(
+                (d) =>
+                  `<a class="search-hit" href="${d.url}"><strong>${d.meta.title || d.url}</strong><span>${d.excerpt}</span></a>`,
+              )
+              .join('')
+          : '<p class="search-hint">No matches.</p>';
+      }, 120);
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!root.contains(event.target)) {
+        results.hidden = true;
+      }
+    });
+  })();
+</script>
+
+<style>
+  #search-root {
+    position: relative;
+    display: inline-block;
+  }
+  #search-input {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: var(--bg-elevated);
+    color: var(--ink);
+    width: 12rem;
+  }
+  #search-input:focus {
+    border-color: var(--green-primary);
+  }
+  #search-results {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    background: var(--bg-elevated);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    width: 22rem;
+    max-width: 90vw;
+    padding: 8px;
+    z-index: 60;
+    box-shadow: 0 6px 18px color-mix(in oklab, black 15%, transparent);
+  }
+  #search-results :global(.search-hit) {
+    display: block;
+    padding: 8px;
+    border-radius: 4px;
+    border: none;
+  }
+  #search-results :global(.search-hit:hover) {
+    background: var(--green-soft);
+  }
+  #search-results :global(.search-hit strong) {
+    display: block;
+    color: var(--green-primary);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+  }
+  #search-results :global(.search-hit span) {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+  #search-results :global(.search-hint) {
+    margin: 0;
+    padding: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+</style>

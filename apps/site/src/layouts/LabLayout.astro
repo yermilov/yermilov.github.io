@@ -1,0 +1,62 @@
+---
+import type { Locale } from '@lib/i18n';
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string | undefined;
+  publishedAt: Date;
+  alternatePath?: string | undefined;
+  alternateMissing?: boolean;
+}
+
+const {
+  locale,
+  title,
+  description,
+  publishedAt,
+  alternatePath,
+  alternateMissing = false,
+} = Astro.props;
+
+const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'long' });
+---
+
+<BaseLayout
+  locale={locale}
+  title={title}
+  description={description}
+  alternatePath={alternatePath}
+  alternateMissing={alternateMissing}
+  themeLab
+>
+  <article class="page-frame lab" data-pagefind-body>
+    <header class="lab-header prose-column">
+      <p class="workbench"><time datetime={publishedAt.toISOString()}>{fmt.format(publishedAt)}</time> · LAB</p>
+      <h1>{title}</h1>
+      {description && <p class="lede">{description}</p>}
+    </header>
+    <div class="lab-body">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .lab {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+  .lab-header {
+    margin-bottom: var(--space-4);
+  }
+  .lede {
+    font-size: 1.2rem;
+    color: var(--ink-muted);
+  }
+  .lab-body {
+    /* Lab content is allowed to break the prose column for full-bleed visualizations. */
+    max-width: 80rem;
+    margin-inline: auto;
+  }
+</style>

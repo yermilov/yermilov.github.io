@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import { LOCALES, type Locale } from '@lib/i18n';
+import LabLayout from '@layouts/LabLayout.astro';
+
+export async function getStaticPaths() {
+  const all = await getCollection('labs');
+  const paths: Array<{ params: { locale: Locale; slug: string }; props: { entry: (typeof all)[number]; alternatePath: string | undefined; alternateMissing: boolean } }> = [];
+  for (const entry of all) {
+    const locale = entry.data.language;
+    const counterpart = all.find(
+      (other) => other.data.slug === entry.data.slug && other.data.language !== locale,
+    );
+    paths.push({
+      params: { locale, slug: entry.data.slug },
+      props: {
+        entry,
+        alternatePath: counterpart ? `lab/${counterpart.data.slug}` : undefined,
+        alternateMissing: !counterpart,
+      },
+    });
+  }
+  void LOCALES;
+  return paths;
+}
+
+const { entry, alternatePath, alternateMissing } = Astro.props;
+const locale = Astro.params.locale as Locale;
+const { Content } = await entry.render();
+---
+
+<LabLayout
+  locale={locale}
+  title={entry.data.title}
+  description={entry.data.summary}
+  publishedAt={entry.data.publishedAt}
+  alternatePath={alternatePath}
+  alternateMissing={alternateMissing}
+>
+  <Content />
+</LabLayout>

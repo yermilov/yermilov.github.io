@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import { LOCALES, type Locale } from '@lib/i18n';
+import PostLayout from '@layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  // We pre-render every (locale × canonicalSlug) pair so that the locale switcher
+  // always lands on a real URL, even when only one language has been written.
+  // For pairs where the requested language is missing, we render the original-language
+  // body inside the requested-locale shell with a "translation pending" banner.
+  const all = await getCollection('posts');
+  const byCanonical = new Map<string, typeof all>();
+  for (const post of all) {
+    const list = byCanonical.get(post.data.canonicalSlug) ?? [];
+    list.push(post);
+    byCanonical.set(post.data.canonicalSlug, list);
+  }
+  const paths: Array<{
+    params: { locale: Locale; slug: string };
+    props: {
+      post: (typeof all)[number];
+      sourceLocale: Locale;
+      translationPending: boolean;
+      alternatePath: string | undefined;
+      alternateMissing: boolean;
+    };
+  }> = [];
+  for (const [canonical, group] of byCanonical) {
+    const byLocale = new Map<Locale, (typeof all)[number]>();
+    for (const p of group) byLocale.set(p.data.language, p);
+    for (const locale of LOCALES) {
+      const owned = byLocale.get(locale);
+      const fallback = owned ?? group[0];
+      if (!fallback) continue;
+      const slug = fallback.data.slug;
+      const otherLocale: Locale = locale === 'en' ? 'uk' : 'en';
+      const otherEntry = byLocale.get(otherLocale);
+      paths.push({
+        params: { locale, slug },
+        props: {
+          post: fallback,
+          sourceLocale: fallback.data.language,
+          translationPending: !owned,
+          alternatePath: otherEntry ? `blog/${otherEntry.data.slug}` : undefined,
+          alternateMissing: !otherEntry,
+        },
+      });
+    }
+    void canonical;
+  }
+  return paths;
+}
+
+const { post, translationPending, alternatePath, alternateMissing } = Astro.props;
+const locale = Astro.params.locale as Locale;
+const { Content } = await post.render();
+---
+
+<PostLayout
+  locale={locale}
+  title={post.data.title}
+  description={post.data.summary}
+  publishedAt={post.data.publishedAt}
+  updatedAt={post.data.updatedAt}
+  tags={post.data.tags}
+  alternatePath={alternatePath}
+  alternateMissing={alternateMissing}
+  translationPending={translationPending}
+>
+  <Content />
+</PostLayout>

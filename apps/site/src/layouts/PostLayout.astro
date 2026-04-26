@@ -1,0 +1,113 @@
+---
+import type { Locale } from '@lib/i18n';
+import { t } from '@lib/i18n';
+import BaseLayout from './BaseLayout.astro';
+import TranslationPendingBanner from '@components/TranslationPendingBanner.astro';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string | undefined;
+  publishedAt: Date;
+  updatedAt?: Date | undefined;
+  tags?: string[];
+  alternatePath?: string | undefined;
+  alternateMissing?: boolean;
+  /** the original-language post body is being shown as a fallback */
+  translationPending?: boolean;
+}
+
+const {
+  locale,
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  tags = [],
+  alternatePath,
+  alternateMissing = false,
+  translationPending = false,
+} = Astro.props;
+
+const strings = t(locale);
+const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'long' });
+---
+
+<BaseLayout
+  locale={locale}
+  title={title}
+  description={description}
+  alternatePath={alternatePath}
+  alternateMissing={alternateMissing}
+>
+  <article class="page-frame post" data-pagefind-body>
+    <header class="post-header prose-column">
+      {translationPending && <TranslationPendingBanner locale={locale} />}
+      <p class="workbench post-meta">
+        <time datetime={publishedAt.toISOString()}>{fmt.format(publishedAt)}</time>
+        {updatedAt && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>{strings.labels.updated}: {fmt.format(updatedAt)}</span>
+          </>
+        )}
+      </p>
+      <h1>{title}</h1>
+      {description && <p class="lede">{description}</p>}
+    </header>
+    <div class="post-body prose-column">
+      <slot />
+    </div>
+    {tags.length > 0 && (
+      <footer class="post-footer prose-column">
+        <p class="workbench">{strings.labels.tags}</p>
+        <ul class="tag-list">
+          {tags.map((tag) => <li>#{tag}</li>)}
+        </ul>
+      </footer>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+  .post-header {
+    margin-bottom: var(--space-4);
+  }
+  .post-meta {
+    margin-bottom: var(--space-2);
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .lede {
+    font-size: 1.2rem;
+    color: var(--ink-muted);
+    margin-top: var(--space-2);
+  }
+  .post-body :global(img),
+  .post-body :global(video) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+  }
+  .post-footer {
+    margin-top: var(--space-5);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--rule);
+  }
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-1) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--green-primary);
+  }
+</style>

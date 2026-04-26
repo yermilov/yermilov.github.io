@@ -1,0 +1,49 @@
+---
+import { LOCALES, t, type Locale } from '@lib/i18n';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import TalkCard from '@components/TalkCard.astro';
+import { getTalks } from '@lib/content';
+
+export async function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const strings = t(locale);
+const talks = await getTalks();
+---
+
+<BaseLayout locale={locale} title={strings.nav.talks} alternatePath="talks">
+  <section class="page-frame index">
+    <header class="prose-column">
+      <p class="workbench">/ {strings.nav.talks.toUpperCase()}</p>
+      <h1>{strings.nav.talks}</h1>
+    </header>
+    <div class="prose-column">
+      {talks.length === 0 ? (
+        <p class="empty">{strings.empty.talks}</p>
+      ) : (
+        <ul class="talk-list" role="list">
+          {talks.map((talk) => (
+            <li><TalkCard talk={talk} locale={locale} /></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .index {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+  .empty {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+  .talk-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+</style>
