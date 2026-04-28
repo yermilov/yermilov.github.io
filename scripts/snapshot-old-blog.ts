@@ -26,6 +26,13 @@ const target = join(repoRoot, 'apps', 'site', 'public', 'old-blog');
 
 const LEGACY_REF = process.env['OLD_BLOG_REF'] ?? 'origin/legacy/master';
 
+// GitHub Pages silently refuses to deploy subtrees whose path components
+// contain characters like `:`. The legacy Grain build accidentally produced
+// a directory `https:/yermilov.github.io/`, which broke the first /old-blog/
+// deploy (Pages kept serving the previous build's files). Strip such paths
+// from the extracted archive before the build copies it into dist/.
+const FORBIDDEN_NAME = /[:?*<>|]/;
+
 const BANNER = `
 <style>
   #yk-archive-banner{
@@ -74,6 +81,20 @@ function extractArchive(): void {
   });
 }
 
+function pruneForbidden(dir: string): number {
+  let removed = 0;
+  for (const name of readdirSync(dir)) {
+    const full = join(dir, name);
+    if (FORBIDDEN_NAME.test(name)) {
+      rmSync(full, { recursive: true, force: true });
+      removed += 1;
+      continue;
+    }
+    if (statSync(full).isDirectory()) removed += pruneForbidden(full);
+  }
+  return removed;
+}
+
 function* walk(dir: string): Generator<string> {
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
@@ -106,6 +127,10 @@ function main(): void {
   extractArchive();
   if (!existsSync(target) || readdirSync(target).length === 0) {
     throw new Error('[old-blog] archive extracted but target directory is empty');
+  }
+  const pruned = pruneForbidden(target);
+  if (pruned > 0) {
+    console.log(`[old-blog] pruned ${pruned} forbidden path(s) (e.g. names with ':')`);
   }
   const touched = injectBanner();
   console.log(`[old-blog] done; injected banner into ${touched} HTML file(s).`);
