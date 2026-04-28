@@ -10,9 +10,8 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "pnpm --filter site dev",
-    "build": "pnpm snapshot:old-blog && pnpm build:games && pnpm --filter site build && pnpm --filter site postbuild",
+    "build": "pnpm build:games && pnpm --filter site build && pnpm --filter site postbuild",
     "preview": "pnpm --filter site preview",
-    "snapshot:old-blog": "tsx scripts/snapshot-old-blog.ts",
     "build:games": "tsx scripts/build-games.ts",
     "lint": "pnpm --filter site lint",
     "typecheck": "pnpm --filter site typecheck"

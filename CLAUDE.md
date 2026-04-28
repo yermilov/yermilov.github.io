@@ -142,20 +142,26 @@ inverted-theme `LabLayout`.
 ## Files NEVER edit by hand
 
 - `apps/site/public/games/` — build artifact (from `apps/game-*`)
-- `apps/site/public/old-blog/` — snapshot of `origin/legacy/master`
 - `apps/site/public/pagefind/` — Pagefind index
 
-All three are gitignored and rebuilt every CI run.
+Both are gitignored and rebuilt every CI run.
+
+## /old-blog/ lives elsewhere
+
+The `/old-blog/` archive is **not** built or deployed from this repo. It's a
+separate repo, [`yermilov/old-blog`](https://github.com/yermilov/old-blog),
+with its own Pages deploy. Same-owner project Pages mount under the user
+site at `/<repo>/`, so any `/old-blog/*` paths in this site's artifact would
+be silently shadowed. Don't put anything at that path.
 
 ## Common commands
 
 ```
 pnpm install                        # install all workspaces
 pnpm dev                            # start Astro dev (apps/site only)
-pnpm build                          # full prod build (snapshot + games + site + pagefind)
+pnpm build                          # full prod build (games + site + pagefind)
 pnpm --filter site dev              # equivalent to `pnpm dev`
 pnpm --filter site typecheck        # astro check
-pnpm tsx scripts/snapshot-old-blog.ts   # populate /old-blog/ from legacy/master
 pnpm tsx scripts/build-games.ts          # build apps/game-* into public/games/
 ```
 
@@ -172,6 +178,3 @@ pnpm tsx scripts/build-games.ts          # build apps/game-* into public/games/
   `astro.config.ts`. Pagefind and the GH Pages 404 handler depend on this.
 - **Drafts**: `draft: true` posts are rendered in dev but skipped in prod.
   Don't rely on this for sensitive material.
-- **Old blog branch**: lives at `origin/legacy/master`. CI fetches it; locally
-  run `git fetch origin legacy/master:legacy/master` once before
-  running `scripts/snapshot-old-blog.ts`.
