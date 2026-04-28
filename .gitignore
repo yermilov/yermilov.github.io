@@ -6,7 +6,6 @@ dist
 .cache
 
 apps/site/public/games
-apps/site/public/old-blog
 apps/site/public/pagefind
 
 .env

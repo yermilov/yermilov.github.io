@@ -18,16 +18,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (with full history for legacy ref)
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Make legacy ref available locally
-        run: |
-          git fetch origin 'refs/heads/legacy/master:refs/remotes/origin/legacy/master' || \
-            git fetch origin '+refs/heads/legacy/*:refs/remotes/origin/legacy/*'
-          git rev-parse --verify origin/legacy/master
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -42,9 +34,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Snapshot old blog into public/old-blog/
-        run: pnpm tsx scripts/snapshot-old-blog.ts
 
       - name: Build Tier-3 games
         run: pnpm tsx scripts/build-games.ts
