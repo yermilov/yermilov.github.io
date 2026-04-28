@@ -1,0 +1,50 @@
+---
+import type { Locale } from '@lib/i18n';
+import { localePath } from '@lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="page-frame footer-row">
+    <span class="copy">© {year} Yaroslav Yermilov</span>
+    <ul class="links" role="list">
+      <li><a href="https://github.com/yermilov" rel="me">github</a></li>
+      <li><a href="https://twitter.com/yermilov17" rel="me">twitter</a></li>
+      <li><a href={`${localePath(locale)}rss.xml`}>rss</a></li>
+      <li><a href={localePath(locale, 'about')}>about</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    margin-top: var(--space-6);
+    padding: var(--space-4) 0 var(--space-5);
+    background: var(--bg-elevated);
+  }
+  .footer-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+</style>

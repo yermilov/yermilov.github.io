@@ -1,0 +1,140 @@
+---
+import type { Locale } from '@lib/i18n';
+import { t, localePath } from '@lib/i18n';
+import LocaleSwitcher from './LocaleSwitcher.astro';
+import Search from './Search.astro';
+
+interface Props {
+  locale: Locale;
+  /** path within current locale where the alternate translation lives, e.g. "blog/foo" */
+  alternatePath?: string | undefined;
+  /** if true, the alternate locale has no equivalent of this page */
+  alternateMissing?: boolean;
+}
+
+const { locale, alternatePath, alternateMissing = false } = Astro.props;
+const strings = t(locale);
+const homeHref = localePath(locale);
+
+const navItems = [
+  { href: localePath(locale, 'blog'), label: strings.nav.blog },
+  { href: localePath(locale, 'lab'), label: strings.nav.lab },
+  { href: localePath(locale, 'games'), label: strings.nav.games },
+  { href: localePath(locale, 'talks'), label: strings.nav.talks },
+  { href: localePath(locale, 'about'), label: strings.nav.about },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="page-frame header-row">
+    <a class="brand" href={homeHref} aria-label={strings.site.title}>
+      <span class="brand-mark">y/</span>
+      <span class="brand-name">{strings.site.title}</span>
+    </a>
+    <nav aria-label="Primary">
+      <ul>
+        {
+          navItems.map((item) => {
+            const active = currentPath === item.href || currentPath.startsWith(item.href);
+            return (
+              <li>
+                <a href={item.href} class:list={['nav-link', { 'nav-link-active': active }]}>
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+    <div class="header-end">
+      <div class="search-slot"><Search locale={locale} /></div>
+      <LocaleSwitcher
+        locale={locale}
+        alternatePath={alternatePath}
+        alternateMissing={alternateMissing}
+      />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg-paper);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: saturate(140%) blur(6px);
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--ink);
+    border: none;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+  }
+  .brand:hover {
+    background: transparent;
+    color: var(--orange-accent);
+  }
+  .brand-mark {
+    color: var(--green-primary);
+    font-weight: 700;
+  }
+  .brand-name {
+    color: var(--ink-muted);
+  }
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+    color: var(--ink-muted);
+    border: none;
+    padding: 4px 0;
+    border-bottom: 1.5px solid transparent;
+  }
+  .nav-link:hover {
+    background: transparent;
+    color: var(--orange-accent);
+    border-bottom-color: var(--orange-accent);
+  }
+  .nav-link-active {
+    color: var(--green-primary);
+    border-bottom-color: var(--green-primary);
+  }
+  .header-end {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+  .search-slot {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .search-slot {
+      display: inline-block;
+    }
+  }
+</style>

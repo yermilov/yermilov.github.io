@@ -1,0 +1,70 @@
+/*
+ * Design tokens — Tactile Workbench (green + orange).
+ * Re-exported so a future apps/game-* can import the same identity.
+ *   import "@yermilov/shared-tokens/tokens.css";
+ */
+
+:where(:root) {
+  --bg-paper: #f7f3ea;
+  --bg-elevated: #fbf8f1;
+  --ink: #10241b;
+  --ink-muted: #516257;
+  --rule: #dcd5c4;
+
+  --green-primary: #1f5d3b;
+  --green-deep: #0f3a23;
+  --green-soft: #cfe2d4;
+
+  --orange-accent: #d9621b;
+  --orange-bright: #f08a3c;
+  --orange-soft: #f6dac1;
+
+  --focus-ring: 0 0 0 3px color-mix(in oklab, var(--orange-accent) 55%, transparent);
+
+  --font-body: 'Newsreader Variable', 'Newsreader', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-display: 'Newsreader Variable', 'Newsreader', ui-serif, Georgia, serif;
+
+  --measure: 68ch;
+  --leading-body: 1.65;
+  --leading-tight: 1.2;
+
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1.25rem;
+  --space-4: 2rem;
+  --space-5: 3.25rem;
+  --space-6: 5.25rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :where(:root) {
+    --bg-paper: #0f1410;
+    --bg-elevated: #161d18;
+    --ink: #e8e4d8;
+    --ink-muted: #9aa69d;
+    --rule: #26302a;
+
+    --green-primary: #5fb682;
+    --green-deep: #87cf9f;
+    --green-soft: #1c3526;
+
+    --orange-accent: #ff9248;
+    --orange-bright: #ffb37a;
+    --orange-soft: #3a2114;
+  }
+}
+
+:where(.theme-lab) {
+  --bg-paper: #0a120d;
+  --bg-elevated: #111a13;
+  --ink: #ecf6ee;
+  --ink-muted: #9bb6a3;
+  --rule: #1d2a21;
+
+  --green-primary: #7af0a3;
+  --green-deep: #c5ffd5;
+
+  --orange-accent: #ff9248;
+  --orange-bright: #ffc28a;
+}

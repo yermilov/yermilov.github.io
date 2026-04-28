@@ -1,0 +1,19 @@
+---
+// Root /  →  /en/. Implemented as a meta-refresh + JS redirect so static
+// hosting (GitHub Pages) handles it without SSR. The same fallback path is
+// also declared in astro.config.ts under `redirects` for completeness.
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=/en/" />
+    <link rel="canonical" href="https://yermilov.github.io/en/" />
+    <title>yermilov.github.io</title>
+    <script>window.location.replace('/en/');</script>
+  </head>
+  <body>
+    <p>Redirecting to <a href="/en/">/en/</a>…</p>
+  </body>
+</html>

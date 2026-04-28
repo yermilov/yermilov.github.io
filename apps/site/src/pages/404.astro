@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { localePath, t } from '@lib/i18n';
+const locale = 'en';
+const strings = t(locale);
+---
+
+<BaseLayout locale={locale} title="404" noindex>
+  <section class="page-frame not-found">
+    <div class="prose-column">
+      <p class="workbench">/ 404</p>
+      <h1>Lost in the workshop.</h1>
+      <p>This page is not here. It may have moved, or never existed.</p>
+      <p><a href={localePath(locale)}>{strings.labels.backToHome}</a></p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding: var(--space-6) var(--space-3);
+  }
+</style>

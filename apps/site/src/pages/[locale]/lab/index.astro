@@ -1,0 +1,72 @@
+---
+import { LOCALES, t, localePath, type Locale } from '@lib/i18n';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getLabsByLocale } from '@lib/content';
+
+export async function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const strings = t(locale);
+const labs = await getLabsByLocale(locale);
+const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'medium' });
+---
+
+<BaseLayout locale={locale} title={strings.nav.lab} alternatePath="lab" themeLab>
+  <section class="page-frame index">
+    <header class="prose-column">
+      <p class="workbench">/ {strings.nav.lab.toUpperCase()}</p>
+      <h1>{strings.nav.lab}</h1>
+    </header>
+    <div class="prose-column">
+      {labs.length === 0 ? (
+        <p class="empty">{strings.empty.lab}</p>
+      ) : (
+        <ul class="lab-list" role="list">
+          {labs.map((lab) => (
+            <li>
+              <a href={localePath(locale, `lab/${lab.data.slug}`)}>
+                <p class="workbench"><time datetime={lab.data.publishedAt.toISOString()}>{fmt.format(lab.data.publishedAt)}</time></p>
+                <h3>{lab.data.title}</h3>
+                <p class="summary">{lab.data.summary}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .index {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+  .empty {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+  .lab-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .lab-list a {
+    display: block;
+    padding: var(--space-3) 0;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+  }
+  .lab-list a:hover h3 {
+    color: var(--orange-bright);
+  }
+  h3 {
+    margin: 0.3rem 0 0.4rem;
+    font-size: 1.4rem;
+  }
+  .summary {
+    color: var(--ink-muted);
+    margin: 0;
+  }
+</style>
