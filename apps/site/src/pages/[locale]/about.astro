@@ -16,11 +16,60 @@ const strings = t(locale);
       <p class="workbench">/ ABOUT</p>
       <h1>{strings.site.title}</h1>
       <p class="lede">{strings.site.tagline}</p>
-      <p>
-        {locale === 'uk'
-          ? 'Я Ярослав. Розробник, дописувач, доповідач. Цей сайт — мій робочий верстак: тут я записую те, що зрозумів, демонструю невеликі експерименти й тримаю архів колишнього блогу.'
-          : "I'm Yaroslav. I write code, sometimes essays, occasionally talks. This site is my workbench: notes I’ve worked out, small experiments, and an archive of the old blog."}
-      </p>
+
+      {locale === 'uk' ? (
+        <>
+          <p>
+            Я Ярослав. Розробник, дописувач, доповідач. Цей сайт — мій робочий
+            верстак: тут я записую те, що зрозумів, демонструю невеликі
+            експерименти й тримаю архів колишнього блогу.
+          </p>
+          <p>
+            Зараз — Principal Software Engineer у Superhuman, живу і працюю в
+            Києві. Розбираюсь, як насправді виглядає AI-first інженерія
+            всередині продуктової команди і як нам туди дійти. Типове 0 → 1.
+          </p>
+          <p>
+            До Superhuman провів майже дев'ять років у Grammarly: від software
+            engineer до тех-ліда групи Cloud Platform (~50 інженерів у ~10
+            командах), а потім повернувся в окопи як Principal Software
+            Engineer і мостив дорогу AI coding agents всередині компанії. До
+            цього близько п'яти років в EPAM, переважно в Hadoop-екосистемі.
+          </p>
+          <p>
+            Думаю і розповідаю про AI-first інженерію, продуктивність
+            розробників і людську сторону розробки софту в масштабі. Більшість
+            цих думок поступово опиняється тут.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            I'm Yaroslav. I write code, sometimes essays, occasionally talks.
+            This site is my workbench: notes I've worked out, small
+            experiments, and an archive of the old blog.
+          </p>
+          <p>
+            These days I'm a Principal Software Engineer at Superhuman, based
+            in Kyiv. Working on 0 → 1 — figuring out what AI-first engineering
+            actually looks like inside a real product team and helping us get
+            there.
+          </p>
+          <p>
+            Before Superhuman I spent close to nine years at Grammarly: started
+            as a software engineer, ended up leading the Cloud Platform area
+            (~50 engineers across ~10 teams), then went back to the trenches as
+            a Principal Software Engineer paving the path for AI coding agents
+            inside the company. Before that, ~5 years at EPAM, mostly in the
+            Hadoop ecosystem.
+          </p>
+          <p>
+            I think and talk a lot about AI-first engineering, developer
+            productivity, and the messy human side of building software at
+            scale. Most of that ends up here — eventually.
+          </p>
+        </>
+      )}
 
       <h2>{strings.archive.heading}</h2>
       <p>{strings.archive.body}</p>

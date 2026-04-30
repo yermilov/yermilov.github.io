@@ -32,11 +32,14 @@ const talks = defineCollection({
     title: z.string(),
     event: z.string(),
     date: z.coerce.date(),
-    language: localeEnum,
+    language: localeEnum.optional(),
     abstract: z.string(),
     videoUrl: z.string().url().optional(),
     slidesUrl: z.string().url().optional(),
     repoUrl: z.string().url().optional(),
+    eventUrl: z.string().url().optional(),
+    /** paths under apps/site/public/, e.g. "/talks/<slug>/01.jpg" */
+    photos: z.array(z.string()).default([]),
     tags: z.array(z.string()).default([]),
   }),
 });
