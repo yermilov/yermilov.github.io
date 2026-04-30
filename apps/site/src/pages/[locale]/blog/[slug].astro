@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { LOCALES, type Locale } from '@lib/i18n';
+import { postSlug } from '@lib/content';
 import PostLayout from '@layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
@@ -32,7 +33,7 @@ export async function getStaticPaths() {
       const owned = byLocale.get(locale);
       const fallback = owned ?? group[0];
       if (!fallback) continue;
-      const slug = fallback.data.slug;
+      const slug = postSlug(fallback);
       const otherLocale: Locale = locale === 'en' ? 'ua' : 'en';
       const otherEntry = byLocale.get(otherLocale);
       paths.push({
@@ -41,7 +42,7 @@ export async function getStaticPaths() {
           post: fallback,
           sourceLocale: fallback.data.language,
           translationPending: !owned,
-          alternatePath: otherEntry ? `blog/${otherEntry.data.slug}` : undefined,
+          alternatePath: otherEntry ? `blog/${postSlug(otherEntry)}` : undefined,
           alternateMissing: !otherEntry,
         },
       });

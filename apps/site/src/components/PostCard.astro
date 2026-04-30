@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { bcp47Locale, type Locale } from '@lib/i18n';
 import { localePath } from '@lib/i18n';
+import { postSlug } from '@lib/content';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -9,7 +10,7 @@ interface Props {
 }
 const { post, locale } = Astro.props;
 const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'medium' });
-const href = localePath(locale, `blog/${post.data.slug}`);
+const href = localePath(locale, `blog/${postSlug(post)}`);
 ---
 
 <article class="card">
