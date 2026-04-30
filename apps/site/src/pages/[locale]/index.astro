@@ -1,7 +1,6 @@
 ---
-import { LOCALES, t, localePath, type Locale } from '@lib/i18n';
+import { LOCALES, t, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
-import { getPostsByLocale } from '@lib/content';
 
 export async function getStaticPaths() {
   return LOCALES.map((locale) => ({ params: { locale } }));
@@ -9,8 +8,6 @@ export async function getStaticPaths() {
 
 const locale = Astro.params.locale as Locale;
 const strings = t(locale);
-const posts = (await getPostsByLocale(locale)).slice(0, 5);
-const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'medium' });
 ---
 
 <BaseLayout locale={locale}>
@@ -18,28 +15,6 @@ const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateS
     <p class="workbench mark">y/ {locale.toUpperCase()}</p>
     <h1 class="display">{strings.site.title}</h1>
     <p class="lede">{strings.site.tagline}</p>
-  </section>
-
-  <section class="page-frame recent">
-    <header class="section-header">
-      <h2>{strings.nav.blog}</h2>
-      <a href={localePath(locale, 'blog')} class="see-all">→ {strings.labels.readMore}</a>
-    </header>
-    {posts.length === 0 ? (
-      <p class="empty">{strings.empty.blog}</p>
-    ) : (
-      <ul class="post-list">
-        {posts.map((post) => (
-          <li>
-            <a href={localePath(locale, `blog/${post.data.slug}`)}>
-              <p class="workbench"><time datetime={post.data.publishedAt.toISOString()}>{fmt.format(post.data.publishedAt)}</time></p>
-              <h3>{post.data.title}</h3>
-              <p class="summary">{post.data.summary}</p>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
   </section>
 </BaseLayout>
 
@@ -61,62 +36,5 @@ const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateS
     font-size: 1.35rem;
     color: var(--ink-muted);
     max-width: 36rem;
-  }
-  .recent {
-    padding: 0 var(--space-3) var(--space-5);
-  }
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: var(--space-1);
-    margin-bottom: var(--space-3);
-  }
-  .section-header h2 {
-    margin: 0;
-    font-size: 1.05rem;
-    font-family: var(--font-mono);
-    text-transform: lowercase;
-    letter-spacing: 0.04em;
-    color: var(--ink-muted);
-    font-weight: 500;
-  }
-  .see-all {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    border: none;
-    color: var(--orange-accent);
-  }
-  .empty {
-    color: var(--ink-muted);
-    font-style: italic;
-  }
-  .post-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: var(--space-3);
-  }
-  .post-list a {
-    display: block;
-    padding: var(--space-2) 0;
-    border: none;
-    border-bottom: 1px solid var(--rule);
-  }
-  .post-list a:hover {
-    background: transparent;
-  }
-  .post-list a:hover h3 {
-    color: var(--orange-accent);
-  }
-  .post-list h3 {
-    font-size: 1.4rem;
-    margin: 0.25rem 0 0.4rem;
-  }
-  .post-list .summary {
-    color: var(--ink-muted);
-    margin: 0;
   }
 </style>
