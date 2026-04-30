@@ -36,6 +36,9 @@ export interface Strings {
     slides: string;
     repo: string;
     eventPage: string;
+    close: string;
+    previousPhoto: string;
+    nextPhoto: string;
   };
   archive: { heading: string; body: string; link: string };
 }
@@ -77,6 +80,9 @@ const STRINGS: Record<Locale, Strings> = {
       slides: 'slides',
       repo: 'repo',
       eventPage: 'event',
+      close: 'Close',
+      previousPhoto: 'Previous photo',
+      nextPhoto: 'Next photo',
     },
     archive: {
       heading: 'Old blog (2017 archive)',
@@ -120,6 +126,9 @@ const STRINGS: Record<Locale, Strings> = {
       slides: 'слайди',
       repo: 'репо',
       eventPage: 'подія',
+      close: 'Закрити',
+      previousPhoto: 'Попереднє фото',
+      nextPhoto: 'Наступне фото',
     },
     archive: {
       heading: 'Старий блог (архів 2017)',
