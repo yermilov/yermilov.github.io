@@ -3,17 +3,15 @@ title: "Full control over Spotless Java code style"
 canonicalSlug: "full-control-over-spotless-java-code"
 language: "en"
 publishedAt: 2023-08-25
-summary: "Spotless has become a more and more popular and standard tool for Java code formatting at Grammarly. It is usually trivial to set up, but it has some quite opinionated defaults. I want to share an interesting way we've f"
+summary: "Spotless ships with two opinionated defaults — Google's and Palantir's Java style. Here's how to skip both and get full control over every formatter knob via Eclipse-exported configuration."
 tags: []
 translations:
   en: "full-control-over-spotless-java-code"
 coverImage: "/blog/full-control-over-spotless-java-code/01.png"
 ---
-![](/blog/full-control-over-spotless-java-code/01.png)
-
 Spotless has become a more and more popular and standard tool for Java code formatting at Grammarly. It is usually trivial to set up, but it has some quite opinionated defaults. I want to share an interesting way we've found to go all the way in the opposite direction and make every possible parameter of code style configurable.
 
-### 🙂 What are defaults?[​](https://core.gpages.io/common-api/blog/2023/08/18/2023-08-18-spotless-full-control/spotless-full-control#-what-are-defaults)
+### 🙂 What are defaults?
 
 Spotless has built-in support for two popular style guides: from Google and Palantir.
 
@@ -61,7 +59,7 @@ This fork become pretty popular and is also available as a built-in formatter in
 
 My team also was not 100% happy with either Google or Palantir style guides. Is there a way for us to tune one of them for our preference? Of course, except for publishing our own fork of the style guide and waiting until Spotless adopts it :)
 
-### 👘 Personal style guide[​](https://core.gpages.io/common-api/blog/2023/08/18/2023-08-18-spotless-full-control/spotless-full-control#-capi-style-guide)
+### 👘 Personal style guide
 
 Here is a step-by-step guide on creating your own Spotless style guide. We can do it with the help of an old friend no one is ever supposed to see again in their life:
 
@@ -108,7 +106,7 @@ spotless {
 
 ![](/blog/full-control-over-spotless-java-code/10.png)
 
-### 👮 Enforcing code style[​](https://core.gpages.io/common-api/blog/2023/08/18/2023-08-18-spotless-full-control/spotless-full-control#-enforcing-code-style)
+### 👮 Enforcing code style
 
 How do we ensure that everyone uses the style guide (always runs `./gradlew spotlessApply` after every change)? A note in documentation? A checklist item in the merge request review process? Relying on human action is prone to people forgetting, being in a hurry to release something, etc.
 
@@ -184,14 +182,10 @@ check code style:
 
 What is essential for developer experience is that if it fails, we print the message with instructions on how to fix it. Now we can be 100% sure all code in the main branch is formatted according to our style guide.
 
-### 👹 Introducing code style[​](https://core.gpages.io/common-api/blog/2023/08/18/2023-08-18-spotless-full-control/spotless-full-control#-introducing-code-style)
+### 👹 Introducing code style
 
 If you set up formatting for an existing project, you will probably not feel the pain of introducing code style to the project for the first time after a couple of years of development. Spotless allows to apply code style only to changed files using [ratchet mode](https://github.com/diffplug/spotless/tree/main/plugin-gradle#how-can-i-enforce-formatting-gradually-aka-ratchet). It is pretty helpful for the first week or two of introducing code style to the project to make sure your custom style guide actually matches your expectations. But with time, it becomes a problem: every merge request mixes actual changes and applying code style to new files. So my final recommendation is after a week or two, rip off the band-aid and apply code style to the whole project:
 
 ![](/blog/full-control-over-spotless-java-code/13.png)
 
 Bonus point: you have just become the top contributor of your project :)
-
-Thanks for reading! If you find my writing useful or entertaining, please buy me a coffee [via donation to 🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly) and subscribe for free to receive new posts.
-
-Subscribe

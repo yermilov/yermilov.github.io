@@ -11,6 +11,7 @@ interface Props {
   publishedAt: Date;
   updatedAt?: Date | undefined;
   tags?: string[];
+  coverImage?: string | undefined;
   alternatePath?: string | undefined;
   alternateMissing?: boolean;
   /** the original-language post body is being shown as a fallback */
@@ -24,6 +25,7 @@ const {
   publishedAt,
   updatedAt,
   tags = [],
+  coverImage,
   alternatePath,
   alternateMissing = false,
   translationPending = false,
@@ -55,6 +57,11 @@ const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
       <h1>{title}</h1>
       {description && <p class="lede">{description}</p>}
     </header>
+    {coverImage && (
+      <figure class="post-cover prose-column">
+        <img src={coverImage} alt="" loading="eager" />
+      </figure>
+    )}
     <div class="post-body prose-column">
       <slot />
     </div>
@@ -86,6 +93,16 @@ const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
     font-size: 1.2rem;
     color: var(--ink-muted);
     margin-top: var(--space-2);
+  }
+  .post-cover {
+    margin: 0 0 var(--space-4);
+  }
+  .post-cover img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
   }
   .post-body :global(img),
   .post-body :global(video) {

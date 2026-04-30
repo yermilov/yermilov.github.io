@@ -9,13 +9,7 @@ translations:
   en: "chatops-that-was-lost-and-found-in"
 coverImage: "/blog/chatops-that-was-lost-and-found-in/01.png"
 ---
-![](/blog/chatops-that-was-lost-and-found-in/01.png)
-
 Automations for development processes unveil hidden complexity in such trivial things you could never imagine there would be any problems. Believe me, today I will talk about a task to print a date and a time.
-
-Subscribe to get an update when my new post comes out every other Friday
-
-Subscribe
 
 ### 🕰️ So when?
 
@@ -320,7 +314,3 @@ So the final results:
 ![](/blog/chatops-that-was-lost-and-found-in/10.png)
 
 ![](/blog/chatops-that-was-lost-and-found-in/11.png)
-
-Thanks for reading! If you find my writing useful or entertaining, please help to share it further or even thank me by “buying me a coffee” [via donation to 🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly)!
-
-[Share](https://greenflamingo.substack.com/p/chatops-that-was-lost-and-found-in?utm_source=substack&utm_medium=email&utm_content=share&action=share)

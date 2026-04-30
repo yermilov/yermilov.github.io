@@ -3,20 +3,12 @@ title: "Halloween special: Two development detective stories with mystery, polic
 canonicalSlug: "halloween-special-two-development"
 language: "en"
 publishedAt: 2023-10-31
-summary: "🎃 Let's not waste time on an intro, just subscribe to get an email when my new post comes out …"
+summary: "Two debugging detective stories — one suspicious log line, one mysterious slowdown — and the surprise villains they revealed."
 tags: []
 translations:
   en: "halloween-special-two-development"
 coverImage: "/blog/halloween-special-two-development/01.png"
 ---
-![](/blog/halloween-special-two-development/01.png)
-
-🎃 Let's not waste time on an intro, just subscribe to get an email when my new post comes out …
-
-Subscribe
-
-… and let's jump right into …
-
 ### 👮 Crime scene 1
 
 It was a rainy May day. I was debugging the production incident and looking through logs. Suddenly something caught my eye. At first, it was not even clear why one of the lines looked so suspicious. Can you see it too?
@@ -116,7 +108,3 @@ Of course, people will not run some Gradle command for every change they make. T
 ![](/blog/halloween-special-two-development/08.png)
 
 Now the town can sleep well knowing that there is no `System.out.println` or `org.junit.Test` in the main branch code with zero effort required to actively control it!
-
-Thanks for reading! If you find my writing useful or entertaining, please help to share it further or even thank me by “buying me a coffee” [via donation to 🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly)!
-
-[Share](https://greenflamingo.substack.com/p/halloween-special-two-development?utm_source=substack&utm_medium=email&utm_content=share&action=share)
