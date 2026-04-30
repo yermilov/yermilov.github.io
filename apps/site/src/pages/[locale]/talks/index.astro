@@ -11,6 +11,25 @@ export async function getStaticPaths() {
 const locale = Astro.params.locale as Locale;
 const strings = t(locale);
 const talks = await getTalks();
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+function atMidnight(d: Date): Date {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+
+const upcoming = talks.filter((talk) => atMidnight(talk.data.date) >= today);
+const past = talks.filter((talk) => atMidnight(talk.data.date) < today);
+upcoming.reverse(); // soonest first
+
+const rtf = new Intl.RelativeTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', {
+  numeric: 'auto',
+});
+const daysFromToday = (date: Date): number =>
+  Math.round((atMidnight(date).getTime() - today.getTime()) / 86_400_000);
 ---
 
 <BaseLayout locale={locale} title={strings.nav.talks} alternatePath="talks">
@@ -19,17 +38,40 @@ const talks = await getTalks();
       <p class="workbench">/ {strings.nav.talks.toUpperCase()}</p>
       <h1>{strings.nav.talks}</h1>
     </header>
-    <div class="prose-column">
-      {talks.length === 0 ? (
+
+    {talks.length === 0 ? (
+      <div class="prose-column">
         <p class="empty">{strings.empty.talks}</p>
-      ) : (
-        <ul class="talk-list" role="list">
-          {talks.map((talk) => (
-            <li><TalkCard talk={talk} locale={locale} /></li>
-          ))}
-        </ul>
-      )}
-    </div>
+      </div>
+    ) : (
+      <>
+        {upcoming.length > 0 && (
+          <div class="prose-column upcoming">
+            <p class="workbench upcoming-tag">
+              ▸ {strings.talks.nextUp} · {rtf.format(daysFromToday(upcoming[0].data.date), 'day')}
+            </p>
+            <ul class="talk-list" role="list">
+              {upcoming.map((talk) => (
+                <li><TalkCard talk={talk} locale={locale} /></li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {past.length > 0 && (
+          <div class="prose-column past">
+            {upcoming.length > 0 && (
+              <p class="workbench past-tag">/ {strings.talks.past}</p>
+            )}
+            <ul class="talk-list" role="list">
+              {past.map((talk) => (
+                <li><TalkCard talk={talk} locale={locale} /></li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </>
+    )}
   </section>
 </BaseLayout>
 
@@ -45,5 +87,25 @@ const talks = await getTalks();
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+  .upcoming {
+    border-left: 3px solid var(--green-primary);
+    padding-left: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+  .upcoming-tag {
+    color: var(--green-primary);
+    margin: 0 0 0.4rem;
+  }
+  /* The single upcoming talk has no peers below it; drop its bottom rule
+     so the green-bordered block ends cleanly. */
+  .upcoming :global(.talk:last-child) {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .past-tag {
+    border-top: 1px solid var(--rule);
+    padding-top: var(--space-3);
+    margin: 0 0 var(--space-2);
   }
 </style>

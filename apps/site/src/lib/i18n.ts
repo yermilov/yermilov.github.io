@@ -14,6 +14,7 @@ export interface Strings {
   nav: { blog: string; lab: string; games: string; talks: string; about: string };
   site: { title: string; tagline: string; languageName: string; otherLanguageName: string };
   empty: { blog: string; lab: string; games: string; talks: string };
+  talks: { nextUp: string; past: string };
   labels: {
     published: string;
     updated: string;
@@ -43,6 +44,7 @@ const STRINGS: Record<Locale, Strings> = {
       games: 'No games yet.',
       talks: 'No talks yet.',
     },
+    talks: { nextUp: 'Next up', past: 'Past' },
     labels: {
       published: 'Published',
       updated: 'Updated',
@@ -74,6 +76,7 @@ const STRINGS: Record<Locale, Strings> = {
       games: 'Поки нема ігор.',
       talks: 'Поки нема доповідей.',
     },
+    talks: { nextUp: 'Далі', past: 'Минулі' },
     labels: {
       published: 'Опубліковано',
       updated: 'Оновлено',
