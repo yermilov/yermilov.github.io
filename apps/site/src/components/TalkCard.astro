@@ -14,12 +14,31 @@ const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { year:
   <p class="workbench when">
     <time datetime={talk.data.date.toISOString()}>{fmt.format(talk.data.date)}</time>
     <span aria-hidden="true">·</span>
-    <span>{talk.data.event}</span>
-    <span aria-hidden="true">·</span>
-    <span>{talk.data.language.toUpperCase()}</span>
+    {talk.data.eventUrl ? (
+      <a href={talk.data.eventUrl} rel="noopener">{talk.data.event}</a>
+    ) : (
+      <span>{talk.data.event}</span>
+    )}
+    {talk.data.language && (
+      <>
+        <span aria-hidden="true">·</span>
+        <span>{talk.data.language.toUpperCase()}</span>
+      </>
+    )}
   </p>
   <h3>{talk.data.title}</h3>
-  <p class="abstract">{talk.data.abstract}</p>
+  {talk.data.abstract.split(/\n\n+/).map((para) => <p class="abstract">{para}</p>)}
+  {talk.data.photos.length > 0 && (
+    <ul class="photos" role="list">
+      {talk.data.photos.map((src) => (
+        <li>
+          <a href={src} target="_blank" rel="noopener">
+            <img src={src} alt="" loading="lazy" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
   <ul class="links" role="list">
     {talk.data.videoUrl && <li><a href={talk.data.videoUrl} rel="noopener">video</a></li>}
     {talk.data.slidesUrl && <li><a href={talk.data.slidesUrl} rel="noopener">slides</a></li>}
@@ -45,6 +64,31 @@ const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { year:
   .abstract {
     color: var(--ink-muted);
     margin: 0 0 var(--space-2);
+  }
+  .photos {
+    list-style: none;
+    margin: 0 0 var(--space-2);
+    padding: 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .photos img {
+    height: 120px;
+    width: auto;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+    display: block;
+  }
+  .photos a {
+    border: none;
+  }
+  .photos a:hover {
+    background: transparent;
+  }
+  .photos a:hover img {
+    border-color: var(--orange-accent);
   }
   .links {
     list-style: none;

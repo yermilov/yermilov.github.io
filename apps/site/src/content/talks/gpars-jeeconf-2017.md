@@ -1,0 +1,18 @@
+---
+title: "GPars: Unsung Hero of Concurrency in Practice"
+event: "JEEConf 2017, Kyiv"
+eventUrl: "http://jeeconf.com/program/gpars-unsung-hero-of-concurrency-in-practice/"
+date: 2017-05-26
+abstract: |
+  When it comes to concurrency and parallelism, first things to appear in someone's mind may be "Java Concurrency in Practice" by Brian Göetz, threads, java.util.concurrent, Fork-Join, parallel streams, reactive, Akka or MapReduce. When it comes to Groovy, first things to appear in someone's mind may be Gradle, Grails, Spock, DSLs or scripting.
+
+  Great injustice is that you rarely meet GPars in both these lists. Framework that provides high-level APIs and DSLs for writing concurrent and parallel code both in Java and Groovy and support for concepts of map/reduce, fork/join, asynchronous code, actors, agents, dataflows (not all mentioned) deserves a little more attention, isn't it?
+
+  In this talk we will try to fix it. One by one, we will explore various use cases of GPars with all its pragmatism and conciseness. Not forgetting neither plain Java nor Groovy adepts, we will use Groovy to empower our solutions and ensure that everything works from Java the same way.
+slidesUrl: "https://github.com/yermilov/gpars-talk/blob/develop/presentations/GPars%20-%20Unsung%20Hero%20of%20Concurrency%20in%20Practice.pdf"
+repoUrl: "https://github.com/yermilov/gpars-talk"
+tags:
+  - concurrency
+  - groovy
+  - jvm
+---
