@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { localePath, t, type Locale } from '@lib/i18n';
+import { languageBadge, localePath, t, bcp47Locale, type Locale } from '@lib/i18n';
 
 interface Props {
   talk: CollectionEntry<'talks'>;
@@ -8,7 +8,7 @@ interface Props {
 }
 const { talk, locale } = Astro.props;
 const strings = t(locale);
-const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { year: 'numeric', month: 'short' });
+const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { year: 'numeric', month: 'short' });
 const detailHref = localePath(locale, `talks/${talk.slug}`);
 ---
 
@@ -24,7 +24,7 @@ const detailHref = localePath(locale, `talks/${talk.slug}`);
     {talk.data.language && (
       <>
         <span aria-hidden="true">·</span>
-        <span>{talk.data.language.toUpperCase()}</span>
+        <span>{languageBadge(talk.data.language)}</span>
       </>
     )}
   </p>

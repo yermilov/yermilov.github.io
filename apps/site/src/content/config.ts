@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 
-const localeEnum = z.enum(['en', 'uk']);
+const localeEnum = z.enum(['en', 'ua']);
 
 const posts = defineCollection({
   type: 'content',
@@ -15,7 +15,7 @@ const posts = defineCollection({
     translations: z
       .object({
         en: z.string().optional(),
-        uk: z.string().optional(),
+        ua: z.string().optional(),
       })
       .default({}),
     canonicalSlug: z.string(),

@@ -11,7 +11,7 @@ export default defineConfig({
     format: 'directory',
   },
   i18n: {
-    locales: ['en', 'uk'],
+    locales: ['en', 'ua'],
     defaultLocale: 'en',
     routing: {
       prefixDefaultLocale: true,
@@ -24,7 +24,7 @@ export default defineConfig({
     sitemap({
       i18n: {
         defaultLocale: 'en',
-        locales: { en: 'en', uk: 'uk' },
+        locales: { en: 'en', ua: 'uk' },
       },
     }),
   ],

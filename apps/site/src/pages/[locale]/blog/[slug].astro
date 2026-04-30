@@ -33,7 +33,7 @@ export async function getStaticPaths() {
       const fallback = owned ?? group[0];
       if (!fallback) continue;
       const slug = fallback.data.slug;
-      const otherLocale: Locale = locale === 'en' ? 'uk' : 'en';
+      const otherLocale: Locale = locale === 'en' ? 'ua' : 'en';
       const otherEntry = byLocale.get(otherLocale);
       paths.push({
         params: { locale, slug },

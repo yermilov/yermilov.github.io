@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '@lib/i18n';
+import { bcp47Locale, type Locale } from '@lib/i18n';
 import BaseLayout from './BaseLayout.astro';
 
 interface Props {
@@ -20,7 +20,7 @@ const {
   alternateMissing = false,
 } = Astro.props;
 
-const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'long' });
+const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
 ---
 
 <BaseLayout

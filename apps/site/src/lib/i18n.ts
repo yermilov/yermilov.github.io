@@ -1,4 +1,4 @@
-export const LOCALES = ['en', 'uk'] as const;
+export const LOCALES = ['en', 'ua'] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = 'en';
 
@@ -8,6 +8,26 @@ export function isLocale(value: string | undefined): value is Locale {
 
 export function pickLocale(value: string | undefined): Locale {
   return isLocale(value) ? value : DEFAULT_LOCALE;
+}
+
+/**
+ * URL/content uses `ua` (since "UK" reads as United Kingdom to Ukrainian
+ * readers), but BCP 47 / hreflang / Intl APIs require ISO 639-1 `uk`.
+ * These helpers map between the two.
+ */
+const LANG_TAGS: Record<Locale, { bcp47: string; og: string; html: string }> = {
+  en: { bcp47: 'en-US', og: 'en_US', html: 'en' },
+  ua: { bcp47: 'uk-UA', og: 'uk_UA', html: 'uk' },
+};
+
+export function bcp47Locale(locale: Locale): string {
+  return LANG_TAGS[locale].bcp47;
+}
+export function ogLocale(locale: Locale): string {
+  return LANG_TAGS[locale].og;
+}
+export function htmlLang(locale: Locale): string {
+  return LANG_TAGS[locale].html;
 }
 
 export interface Strings {
@@ -36,6 +56,9 @@ export interface Strings {
     slides: string;
     repo: string;
     eventPage: string;
+    close: string;
+    previousPhoto: string;
+    nextPhoto: string;
   };
   archive: { heading: string; body: string; link: string };
 }
@@ -77,6 +100,9 @@ const STRINGS: Record<Locale, Strings> = {
       slides: 'slides',
       repo: 'repo',
       eventPage: 'event',
+      close: 'Close',
+      previousPhoto: 'Previous photo',
+      nextPhoto: 'Next photo',
     },
     archive: {
       heading: 'Old blog (2017 archive)',
@@ -84,7 +110,7 @@ const STRINGS: Record<Locale, Strings> = {
       link: 'Visit /old-blog/',
     },
   },
-  uk: {
+  ua: {
     nav: { blog: 'Блог', lab: 'Лаб', games: 'Ігри', talks: 'Доповіді', about: 'Про' },
     site: {
       title: 'Ярослав Єрмілов',
@@ -120,6 +146,9 @@ const STRINGS: Record<Locale, Strings> = {
       slides: 'слайди',
       repo: 'репо',
       eventPage: 'подія',
+      close: 'Закрити',
+      previousPhoto: 'Попереднє фото',
+      nextPhoto: 'Наступне фото',
     },
     archive: {
       heading: 'Старий блог (архів 2017)',
@@ -138,6 +167,11 @@ export function localePath(locale: Locale, path = ''): string {
   return trimmed ? `/${locale}/${trimmed}/` : `/${locale}/`;
 }
 
+/** Display badge for a content language. */
+export function languageBadge(language: Locale): string {
+  return language.toUpperCase();
+}
+
 export function otherLocale(locale: Locale): Locale {
-  return locale === 'en' ? 'uk' : 'en';
+  return locale === 'en' ? 'ua' : 'en';
 }

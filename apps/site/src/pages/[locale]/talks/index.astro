@@ -1,5 +1,5 @@
 ---
-import { LOCALES, t, type Locale } from '@lib/i18n';
+import { LOCALES, t, bcp47Locale, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import TalkCard from '@components/TalkCard.astro';
 import { getTalks } from '@lib/content';
@@ -25,7 +25,7 @@ const upcoming = talks.filter((talk) => atMidnight(talk.data.date) >= today);
 const past = talks.filter((talk) => atMidnight(talk.data.date) < today);
 upcoming.reverse(); // soonest first
 
-const rtf = new Intl.RelativeTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', {
+const rtf = new Intl.RelativeTimeFormat(bcp47Locale(locale), {
   numeric: 'auto',
 });
 const daysFromToday = (date: Date): number =>

@@ -1,5 +1,5 @@
 ---
-import { LOCALES, t, localePath, type Locale } from '@lib/i18n';
+import { LOCALES, t, localePath, languageBadge, bcp47Locale, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getTalks } from '@lib/content';
 
@@ -23,10 +23,10 @@ const upcoming = allTalks
   .filter((talk) => atMidnight(talk.data.date) >= today)
   .reverse(); // soonest first
 
-const monthFmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', {
+const monthFmt = new Intl.DateTimeFormat(bcp47Locale(locale), {
   month: 'short',
 });
-const rtf = new Intl.RelativeTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', {
+const rtf = new Intl.RelativeTimeFormat(bcp47Locale(locale), {
   numeric: 'auto',
 });
 const daysFromToday = (date: Date): number =>
@@ -73,7 +73,7 @@ function calMonth(date: Date): string {
                   {talk.data.language && (
                     <>
                       <span aria-hidden="true">·</span>
-                      <span>{talk.data.language.toUpperCase()}</span>
+                      <span>{languageBadge(talk.data.language)}</span>
                     </>
                   )}
                 </p>

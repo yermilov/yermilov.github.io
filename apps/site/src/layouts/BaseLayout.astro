@@ -1,8 +1,9 @@
 ---
 import type { Locale } from '@lib/i18n';
-import { t } from '@lib/i18n';
+import { t, htmlLang, ogLocale, otherLocale } from '@lib/i18n';
 import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
+import PhotoLightbox from '@components/PhotoLightbox.astro';
 import '@styles/tokens.css';
 
 interface Props {
@@ -35,7 +36,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <!doctype html>
-<html lang={locale} data-pagefind-filter={`language:${locale}`} data-pagefind-meta={`language:${locale}`}>
+<html lang={htmlLang(locale)} data-pagefind-filter={`language:${locale}`} data-pagefind-meta={`language:${locale}`}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,11 +49,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:description" content={meta} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content={locale === 'uk' ? 'uk_UA' : 'en_US'} />
+    <meta property="og:locale" content={ogLocale(locale)} />
     <meta name="twitter:card" content="summary" />
     <link rel="alternate" type="application/rss+xml" title={`${strings.site.title} (${locale.toUpperCase()})`} href={`/${locale}/rss.xml`} />
     {alternatePath !== undefined && !alternateMissing && (
-      <link rel="alternate" hreflang={locale === 'en' ? 'uk' : 'en'} href={`/${locale === 'en' ? 'uk' : 'en'}/${alternatePath.replace(/^\/+/, '')}/`} />
+      <link rel="alternate" hreflang={htmlLang(otherLocale(locale))} href={`/${otherLocale(locale)}/${alternatePath.replace(/^\/+/, '')}/`} />
     )}
   </head>
   <body class:list={[{ 'theme-lab': themeLab }]}>
@@ -61,5 +62,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       <slot />
     </main>
     <Footer locale={locale} />
+    <PhotoLightbox locale={locale} />
   </body>
 </html>

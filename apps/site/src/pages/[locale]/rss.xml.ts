@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
-import { LOCALES, t, type Locale } from '@lib/i18n';
+import { LOCALES, t, bcp47Locale, type Locale } from '@lib/i18n';
 import { getPostsByLocale } from '@lib/content';
 
 export async function getStaticPaths() {
@@ -22,7 +22,7 @@ export const GET: APIRoute = async ({ params, site }) => {
       link: `/${locale}/blog/${post.data.slug}/`,
       categories: post.data.tags,
     })),
-    customData: `<language>${locale === 'uk' ? 'uk-UA' : 'en-US'}</language>`,
+    customData: `<language>${bcp47Locale(locale)}</language>`,
     trailingSlash: true,
   });
 };
