@@ -14,7 +14,13 @@ export interface Strings {
   nav: { blog: string; lab: string; games: string; talks: string; about: string };
   site: { title: string; tagline: string; languageName: string; otherLanguageName: string };
   empty: { blog: string; lab: string; games: string; talks: string };
-  talks: { nextUp: string; past: string };
+  talks: {
+    nextUp: string;
+    past: string;
+    recording: string;
+    photos: string;
+    backToTalks: string;
+  };
   labels: {
     published: string;
     updated: string;
@@ -25,6 +31,10 @@ export interface Strings {
     search: string;
     controls: string;
     translationPending: string;
+    video: string;
+    slides: string;
+    repo: string;
+    eventPage: string;
   };
   archive: { heading: string; body: string; link: string };
 }
@@ -44,7 +54,13 @@ const STRINGS: Record<Locale, Strings> = {
       games: 'No games yet.',
       talks: 'No talks yet.',
     },
-    talks: { nextUp: 'Next up', past: 'Past' },
+    talks: {
+      nextUp: 'Next up',
+      past: 'Past',
+      recording: 'Recording',
+      photos: 'Photos',
+      backToTalks: '← Back to talks',
+    },
     labels: {
       published: 'Published',
       updated: 'Updated',
@@ -55,6 +71,10 @@ const STRINGS: Record<Locale, Strings> = {
       search: 'Search',
       controls: 'Controls',
       translationPending: 'This post is not yet translated to Ukrainian. Showing the English original.',
+      video: 'video',
+      slides: 'slides',
+      repo: 'repo',
+      eventPage: 'event',
     },
     archive: {
       heading: 'Old blog (2017 archive)',
@@ -76,7 +96,13 @@ const STRINGS: Record<Locale, Strings> = {
       games: 'Поки нема ігор.',
       talks: 'Поки нема доповідей.',
     },
-    talks: { nextUp: 'Далі', past: 'Минулі' },
+    talks: {
+      nextUp: 'Далі',
+      past: 'Минулі',
+      recording: 'Запис',
+      photos: 'Фото',
+      backToTalks: '← До доповідей',
+    },
     labels: {
       published: 'Опубліковано',
       updated: 'Оновлено',
@@ -87,6 +113,10 @@ const STRINGS: Record<Locale, Strings> = {
       search: 'Пошук',
       controls: 'Керування',
       translationPending: 'Цей текст ще не перекладено українською. Показано англійський оригінал.',
+      video: 'відео',
+      slides: 'слайди',
+      repo: 'репо',
+      eventPage: 'подія',
     },
     archive: {
       heading: 'Старий блог (архів 2017)',

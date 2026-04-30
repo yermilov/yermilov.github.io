@@ -45,7 +45,7 @@ const daysFromToday = (date: Date): number =>
       </div>
     ) : (
       <>
-        {upcoming.length > 0 && (
+        {upcoming[0] && (
           <div class="prose-column upcoming">
             <p class="workbench upcoming-tag">
               ▸ {strings.talks.nextUp} · {rtf.format(daysFromToday(upcoming[0].data.date), 'day')}

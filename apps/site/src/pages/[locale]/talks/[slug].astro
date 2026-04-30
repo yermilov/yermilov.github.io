@@ -1,0 +1,300 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { LOCALES, t, localePath, type Locale } from '@lib/i18n';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const talks = await getCollection('talks');
+  return talks.flatMap((talk) =>
+    LOCALES.map((locale) => ({
+      params: { locale, slug: talk.slug },
+      props: { talk },
+    })),
+  );
+}
+
+const { talk } = Astro.props as { talk: CollectionEntry<'talks'> };
+const locale = Astro.params.locale as Locale;
+const strings = t(locale);
+
+const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+function parseStart(t: string | null): number | undefined {
+  if (!t) return undefined;
+  const m = t.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/);
+  if (!m) return undefined;
+  const [, h, mn, s] = m;
+  const total =
+    parseInt(h || '0') * 3600 + parseInt(mn || '0') * 60 + parseInt(s || '0');
+  return total > 0 ? total : undefined;
+}
+
+function parseYouTube(url: string | undefined): { id: string; start?: number } | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    const start = parseStart(u.searchParams.get('t'));
+    if (u.hostname === 'youtu.be') {
+      return { id: u.pathname.slice(1), start };
+    }
+    if (u.hostname.endsWith('youtube.com')) {
+      const v = u.searchParams.get('v');
+      if (v) return { id: v, start };
+      const m = u.pathname.match(/\/(?:live|embed|shorts)\/([^/?]+)/);
+      if (m && m[1]) return { id: m[1], start };
+    }
+  } catch {
+    /* fall through */
+  }
+  return null;
+}
+
+const yt = parseYouTube(talk.data.videoUrl);
+const embedUrl = yt
+  ? `https://www.youtube-nocookie.com/embed/${yt.id}${yt.start ? `?start=${yt.start}` : ''}`
+  : null;
+
+const paragraphs = talk.data.abstract.split(/\n\n+/);
+---
+
+<BaseLayout
+  locale={locale}
+  title={talk.data.title}
+  description={paragraphs[0]}
+  alternatePath={`talks/${talk.slug}`}
+>
+  <article class="page-frame talk-detail">
+    <div class="prose-column">
+      <p class="workbench breadcrumb">
+        / <a href={localePath(locale, 'talks')}>{strings.nav.talks.toUpperCase()}</a> /
+      </p>
+
+      <h1>{talk.data.title}</h1>
+
+      <p class="workbench meta">
+        <time datetime={talk.data.date.toISOString()}>{fmt.format(talk.data.date)}</time>
+        <span aria-hidden="true">·</span>
+        {talk.data.eventUrl ? (
+          <a href={talk.data.eventUrl} rel="noopener">{talk.data.event}</a>
+        ) : (
+          <span>{talk.data.event}</span>
+        )}
+        {talk.data.language && (
+          <>
+            <span aria-hidden="true">·</span>
+            <span>{talk.data.language.toUpperCase()}</span>
+          </>
+        )}
+      </p>
+
+      <div class="abstract">
+        {paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+
+      {embedUrl && (
+        <section class="block">
+          <p class="workbench section-label">▸ {strings.talks.recording}</p>
+          <div class="video">
+            <iframe
+              src={embedUrl}
+              title={talk.data.title}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </section>
+      )}
+
+      {talk.data.photos.length > 0 && (
+        <section class="block">
+          <p class="workbench section-label">▸ {strings.talks.photos}</p>
+          <ul class="photo-strip" role="list">
+            {talk.data.photos.map((src) => (
+              <li>
+                <a href={src} target="_blank" rel="noopener">
+                  <img src={src} alt="" loading="lazy" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {talk.data.tags.length > 0 && (
+        <section class="block">
+          <p class="workbench section-label">▸ {strings.labels.tags}</p>
+          <ul class="tag-list" role="list">
+            {talk.data.tags.map((tag) => <li>{tag}</li>)}
+          </ul>
+        </section>
+      )}
+
+      <hr />
+
+      <ul class="footer-links" role="list">
+        {talk.data.videoUrl && (
+          <li><a href={talk.data.videoUrl} rel="noopener">{strings.labels.video}</a></li>
+        )}
+        {talk.data.slidesUrl && (
+          <li><a href={talk.data.slidesUrl} rel="noopener">{strings.labels.slides}</a></li>
+        )}
+        {talk.data.repoUrl && (
+          <li><a href={talk.data.repoUrl} rel="noopener">{strings.labels.repo}</a></li>
+        )}
+        {talk.data.eventUrl && (
+          <li><a href={talk.data.eventUrl} rel="noopener">{strings.labels.eventPage}</a></li>
+        )}
+      </ul>
+
+      <p class="workbench back-link">
+        <a href={localePath(locale, 'talks')}>{strings.talks.backToTalks}</a>
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .talk-detail {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+  .breadcrumb {
+    margin: 0 0 var(--space-3);
+  }
+  .breadcrumb a {
+    border-bottom: none;
+    color: var(--ink-muted);
+  }
+  .breadcrumb a:hover {
+    background: transparent;
+    color: var(--orange-accent);
+  }
+
+  h1 {
+    margin: 0 0 var(--space-2);
+  }
+
+  .meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0 0 var(--space-4);
+  }
+
+  .abstract {
+    margin: 0 0 var(--space-4);
+  }
+  .abstract p {
+    margin: 0 0 var(--space-3);
+  }
+  .abstract p:last-child {
+    margin-bottom: 0;
+  }
+
+  .block {
+    margin: var(--space-5) 0;
+  }
+  .section-label {
+    color: var(--green-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .video {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border: 1px solid var(--rule);
+    background: #000;
+  }
+  .video iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .photo-strip {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .photo-strip a {
+    border: none;
+    display: block;
+  }
+  .photo-strip a:hover {
+    background: transparent;
+  }
+  .photo-strip img {
+    height: 240px;
+    width: auto;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+    display: block;
+    transition: border-color 120ms ease;
+  }
+  .photo-strip a:hover img {
+    border-color: var(--orange-accent);
+  }
+  @media (max-width: 600px) {
+    .photo-strip img {
+      height: 160px;
+    }
+  }
+
+  .tag-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .tag-list li {
+    background: var(--orange-soft);
+    color: var(--green-deep);
+    padding: 2px 8px;
+    text-transform: lowercase;
+    letter-spacing: 0.01em;
+  }
+  .tag-list li::before {
+    content: '#';
+    color: var(--ink-muted);
+    margin-right: 1px;
+  }
+
+  hr {
+    margin: var(--space-5) 0 var(--space-3);
+  }
+
+  .footer-links {
+    list-style: none;
+    margin: 0 0 var(--space-4);
+    padding: 0;
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+
+  .back-link {
+    margin: 0;
+  }
+  .back-link a {
+    border-bottom: none;
+    color: var(--ink-muted);
+  }
+  .back-link a:hover {
+    background: transparent;
+    color: var(--orange-accent);
+  }
+</style>
