@@ -1,13 +1,15 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import type { Locale } from '@lib/i18n';
+import { localePath, t, type Locale } from '@lib/i18n';
 
 interface Props {
   talk: CollectionEntry<'talks'>;
   locale: Locale;
 }
 const { talk, locale } = Astro.props;
+const strings = t(locale);
 const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { year: 'numeric', month: 'short' });
+const detailHref = localePath(locale, `talks/${talk.slug}`);
 ---
 
 <article class="talk">
@@ -26,7 +28,7 @@ const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { year:
       </>
     )}
   </p>
-  <h3>{talk.data.title}</h3>
+  <h3><a class="title-link" href={detailHref}>{talk.data.title}</a></h3>
   {talk.data.abstract.split(/\n\n+/).map((para) => <p class="abstract">{para}</p>)}
   {talk.data.photos.length > 0 && (
     <ul class="photos" role="list">
@@ -40,9 +42,10 @@ const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { year:
     </ul>
   )}
   <ul class="links" role="list">
-    {talk.data.videoUrl && <li><a href={talk.data.videoUrl} rel="noopener">video</a></li>}
-    {talk.data.slidesUrl && <li><a href={talk.data.slidesUrl} rel="noopener">slides</a></li>}
-    {talk.data.repoUrl && <li><a href={talk.data.repoUrl} rel="noopener">repo</a></li>}
+    {talk.data.videoUrl && <li><a href={talk.data.videoUrl} rel="noopener">{strings.labels.video}</a></li>}
+    {talk.data.slidesUrl && <li><a href={talk.data.slidesUrl} rel="noopener">{strings.labels.slides}</a></li>}
+    {talk.data.repoUrl && <li><a href={talk.data.repoUrl} rel="noopener">{strings.labels.repo}</a></li>}
+    <li><a class="more" href={detailHref}>→</a></li>
   </ul>
 </article>
 
@@ -60,6 +63,14 @@ const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { year:
   h3 {
     font-size: 1.35rem;
     margin: 0 0 0.4rem;
+  }
+  .title-link {
+    border-bottom: none;
+    color: inherit;
+  }
+  .title-link:hover {
+    background: transparent;
+    color: var(--orange-accent);
   }
   .abstract {
     color: var(--ink-muted);

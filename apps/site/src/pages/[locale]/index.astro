@@ -1,6 +1,7 @@
 ---
-import { LOCALES, t, type Locale } from '@lib/i18n';
+import { LOCALES, t, localePath, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import { getTalks } from '@lib/content';
 
 export async function getStaticPaths() {
   return LOCALES.map((locale) => ({ params: { locale } }));
@@ -8,6 +9,32 @@ export async function getStaticPaths() {
 
 const locale = Astro.params.locale as Locale;
 const strings = t(locale);
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+function atMidnight(d: Date): Date {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+
+const allTalks = await getTalks();
+const upcoming = allTalks
+  .filter((talk) => atMidnight(talk.data.date) >= today)
+  .reverse(); // soonest first
+
+const monthFmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', {
+  month: 'short',
+});
+const rtf = new Intl.RelativeTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', {
+  numeric: 'auto',
+});
+const daysFromToday = (date: Date): number =>
+  Math.round((atMidnight(date).getTime() - today.getTime()) / 86_400_000);
+
+function calMonth(date: Date): string {
+  return monthFmt.format(date).replace(/\.$/, '').toUpperCase();
+}
 ---
 
 <BaseLayout locale={locale}>
@@ -16,6 +43,47 @@ const strings = t(locale);
     <h1 class="display">{strings.site.title}</h1>
     <p class="lede">{strings.site.tagline}</p>
   </section>
+
+  {upcoming.length > 0 && (
+    <section class="page-frame programme">
+      <p class="workbench programme-label">→ {strings.home.catchMeAt}</p>
+      <ul class="programme-list" role="list">
+        {upcoming.map((talk) => {
+          const detailHref = localePath(locale, `talks/${talk.slug}`);
+          return (
+            <li class="programme-item">
+              <div class="cal-tile" aria-hidden="true">
+                <span class="cal-mo">{calMonth(talk.data.date)}</span>
+                <span class="cal-day">{talk.data.date.getDate()}</span>
+                <span class="cal-yr">{talk.data.date.getFullYear()}</span>
+              </div>
+              <div class="programme-content">
+                <p class="workbench event">
+                  ▸ {talk.data.eventUrl ? (
+                    <a class="event-link" href={talk.data.eventUrl} rel="noopener">{talk.data.event}</a>
+                  ) : (
+                    <span>{talk.data.event}</span>
+                  )}
+                </p>
+                <h2 class="programme-title">
+                  <a href={detailHref}>{talk.data.title}</a>
+                </h2>
+                <p class="workbench meta">
+                  <span>{rtf.format(daysFromToday(talk.data.date), 'day')}</span>
+                  {talk.data.language && (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span>{talk.data.language.toUpperCase()}</span>
+                    </>
+                  )}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  )}
 </BaseLayout>
 
 <style>
@@ -36,5 +104,138 @@ const strings = t(locale);
     font-size: 1.35rem;
     color: var(--ink-muted);
     max-width: 36rem;
+  }
+
+  /* PROGRAMME — printed-flyer announcement of upcoming talks.
+     Differentiates from the talks-index "next up" callout (left-bordered)
+     by using a 2px green top rule and a stacked-calendar tile metaphor. */
+  .programme {
+    border-top: 2px solid var(--green-primary);
+    padding: var(--space-4) var(--space-3) var(--space-6);
+    margin-top: var(--space-3);
+  }
+  .programme-label {
+    color: var(--green-primary);
+    margin: 0 0 var(--space-3);
+  }
+  .programme-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .programme-item {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: flex-start;
+  }
+  .programme-item:first-child {
+    padding-top: 0;
+  }
+  .programme-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .cal-tile {
+    flex: 0 0 auto;
+    width: 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--rule);
+    background: var(--bg-elevated);
+    padding: var(--space-2) 0.5rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+    user-select: none;
+  }
+  .cal-mo {
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+  .cal-day {
+    font-family: var(--font-display);
+    font-size: 2.85rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0.15rem 0;
+    color: var(--ink);
+  }
+  .cal-yr {
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    border-top: 1px dashed var(--rule);
+    padding-top: 0.35rem;
+    margin-top: 0.15rem;
+    width: 100%;
+  }
+
+  .programme-content {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .event {
+    margin: 0 0 0.4rem;
+    color: var(--green-primary);
+  }
+  .event-link {
+    border-bottom: none;
+    color: var(--green-primary);
+  }
+  .event-link:hover {
+    background: transparent;
+    color: var(--orange-accent);
+  }
+  .programme-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 1.85rem);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    margin: 0 0 0.5rem;
+  }
+  .programme-title a {
+    border-bottom: none;
+    color: inherit;
+  }
+  .programme-title a:hover {
+    background: transparent;
+    color: var(--orange-accent);
+  }
+  .meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+
+  @media (max-width: 540px) {
+    .programme-item {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .cal-tile {
+      width: auto;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 0.6rem;
+      padding: 0.45rem 0.7rem;
+    }
+    .cal-day {
+      font-size: 1.6rem;
+      margin: 0;
+    }
+    .cal-yr {
+      border-top: none;
+      border-left: 1px dashed var(--rule);
+      padding: 0 0 0 0.6rem;
+      margin: 0;
+      width: auto;
+    }
   }
 </style>
