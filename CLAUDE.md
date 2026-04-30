@@ -7,7 +7,7 @@ costs more than following them.
 ## What this repo is
 
 A long-lived personal site (5+ year horizon) for Yaroslav Yermilov. Hosts
-blog posts in EN + UK, embedded interactive demos, occasional canvas/WebGL
+blog posts in EN + UA, embedded interactive demos, occasional canvas/WebGL
 games, and a list of conference talks. Co-developed with Claude Code, so the
 architecture intentionally favors the lowest-magic path.
 
@@ -70,8 +70,11 @@ Always reference these instead of relative paths from outside `apps/site/src/`:
 ## URL convention — frozen
 
 `/{locale}/{section}/{stable-slug}/` with trailing slash. Locales:
-`en` (default), `uk`. Slugs are forever — never derive them from titles
-or dates.
+`en` (default), `ua`. (We use `ua` rather than the ISO 639-1 `uk`
+because "UK" reads as United Kingdom to Ukrainian readers. The
+`uk-UA` BCP 47 tag still lives behind `bcp47Locale()` for `<html lang>`,
+hreflang, og:locale, and Intl APIs — see `apps/site/src/lib/i18n.ts`.)
+Slugs are forever — never derive them from titles or dates.
 
 ## Content schemas
 
@@ -79,10 +82,10 @@ Defined in `apps/site/src/content/config.ts`. Every post carries:
 
 - `slug` (stable, forever)
 - `canonicalSlug` (joins translations across languages)
-- `language` (`en` | `uk`)
-- `translations` (`{ en?: slug, uk?: slug }`) — explicit cross-language map
+- `language` (`en` | `ua`)
+- `translations` (`{ en?: slug, ua?: slug }`) — explicit cross-language map
 
-A post can exist in EN, UK, or both. Joining is by `canonicalSlug`, not by
+A post can exist in EN, UA, or both. Joining is by `canonicalSlug`, not by
 file path. If only one language exists, the locale switcher disables the
 other side and the missing-locale URL renders the original-language body
 inside the requested-locale shell with a "Translation pending" banner.
@@ -90,7 +93,7 @@ inside the requested-locale shell with a "Translation pending" banner.
 ## How to add a new blog post
 
 ```
-apps/site/src/content/posts/{en|uk}/<stable-slug>.mdx
+apps/site/src/content/posts/{en|ua}/<stable-slug>.mdx
 ```
 
 Frontmatter (minimal):
@@ -100,13 +103,13 @@ Frontmatter (minimal):
 title: "..."
 slug: "stable-slug"
 canonicalSlug: "stable-slug"   # same across translations
-language: "en"                  # or "uk"
+language: "en"                  # or "ua"
 publishedAt: 2026-04-27
 summary: "One sentence."
 tags: []
 translations:
   en: "stable-slug"
-  uk: "stable-slug-uk"          # only if a UK version exists
+  ua: "stable-slug-ua"          # only if a UA version exists
 ---
 ```
 

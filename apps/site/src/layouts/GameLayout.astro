@@ -1,5 +1,5 @@
 ---
-import type { Locale } from '@lib/i18n';
+import { bcp47Locale, type Locale } from '@lib/i18n';
 import { t } from '@lib/i18n';
 import BaseLayout from './BaseLayout.astro';
 
@@ -31,7 +31,7 @@ const {
 } = Astro.props;
 
 const strings = t(locale);
-const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'long' });
+const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
 const aspect = `${width} / ${height}`;
 const src = `/games/${slug}/`;
 ---

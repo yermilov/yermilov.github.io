@@ -1,6 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { LOCALES, t, localePath, type Locale } from '@lib/i18n';
+import { LOCALES, t, localePath, languageBadge, bcp47Locale, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -17,7 +17,7 @@ const { talk } = Astro.props as { talk: CollectionEntry<'talks'> };
 const locale = Astro.params.locale as Locale;
 const strings = t(locale);
 
-const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', {
+const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -86,7 +86,7 @@ const paragraphs = talk.data.abstract.split(/\n\n+/);
         {talk.data.language && (
           <>
             <span aria-hidden="true">·</span>
-            <span>{talk.data.language.toUpperCase()}</span>
+            <span>{languageBadge(talk.data.language)}</span>
           </>
         )}
       </p>

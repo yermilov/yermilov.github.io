@@ -1,5 +1,5 @@
 ---
-import { LOCALES, t, localePath, type Locale } from '@lib/i18n';
+import { LOCALES, t, localePath, bcp47Locale, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getGamesByLocale } from '@lib/content';
 
@@ -10,7 +10,7 @@ export async function getStaticPaths() {
 const locale = Astro.params.locale as Locale;
 const strings = t(locale);
 const games = await getGamesByLocale(locale);
-const fmt = new Intl.DateTimeFormat(locale === 'uk' ? 'uk-UA' : 'en-US', { dateStyle: 'medium' });
+const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'medium' });
 ---
 
 <BaseLayout locale={locale} title={strings.nav.games} alternatePath="games" themeLab>

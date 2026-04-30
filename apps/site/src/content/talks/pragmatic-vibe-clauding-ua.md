@@ -3,7 +3,7 @@ title: "Прагматичний вайб клодінг"
 event: "MVP Camp — KSE × Genesis (Winter School)"
 eventUrl: "https://winter-school.kse.ua/"
 date: 2026-01-11
-language: "uk"
+language: "ua"
 abstract: "Воркшоп для студентів MVP Camp KSE × Genesis: як виглядає щоденний AI-first процес розробки з Claude Code. Які прийоми працюють, які ні, і чому AI-кодінг для студента — це не зрада навчанню, а доповнення до нього."
 videoUrl: "https://www.youtube.com/live/ZSWhYtAprzE?t=180s"
 slidesUrl: "https://yermilov.github.io/pragmatic-vibe-clauding-ua/"
