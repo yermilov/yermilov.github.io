@@ -23,12 +23,15 @@ const upcoming = allTalks
   .filter((talk) => atMidnight(talk.data.date) >= today)
   .reverse(); // soonest first
 
-const monthFmt = new Intl.DateTimeFormat(bcp47Locale(locale), {
-  month: 'short',
-});
-const rtf = new Intl.RelativeTimeFormat(bcp47Locale(locale), {
-  numeric: 'auto',
-});
+const threeMonthsAgo = new Date(today);
+threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+const recent = allTalks.filter((talk) => {
+  const d = atMidnight(talk.data.date);
+  return d < today && d >= threeMonthsAgo;
+}); // already sorted desc by getTalks()
+
+const monthFmt = new Intl.DateTimeFormat(bcp47Locale(locale), { month: 'short' });
+const rtf = new Intl.RelativeTimeFormat(bcp47Locale(locale), { numeric: 'auto' });
 const daysFromToday = (date: Date): number =>
   Math.round((atMidnight(date).getTime() - today.getTime()) / 86_400_000);
 
@@ -38,10 +41,23 @@ function calMonth(date: Date): string {
 ---
 
 <BaseLayout locale={locale}>
-  <section class="page-frame hero">
-    <p class="workbench mark">y/ {locale.toUpperCase()}</p>
-    <h1 class="display">{strings.site.title}</h1>
-    <p class="lede">{strings.site.tagline}</p>
+  <section class="hero">
+    <div class="banner">
+      <img src="/home/banner.jpg" alt="" loading="eager" />
+    </div>
+    <div class="page-frame hero-body">
+      <div class="avatar-wrap">
+        <img class="avatar" src="/home/avatar.jpg" alt={strings.site.title} loading="eager" />
+      </div>
+      <div class="hero-text">
+        <h1 class="display">
+          {strings.site.title}
+          <span class="flag" aria-label="Ukraine">🇺🇦</span>
+        </h1>
+        <p class="role">{strings.home.role}</p>
+        <p class="workbench location">{strings.home.location}</p>
+      </div>
+    </div>
   </section>
 
   {upcoming.length > 0 && (
@@ -84,39 +100,148 @@ function calMonth(date: Date): string {
       </ul>
     </section>
   )}
+
+  {recent.length > 0 && (
+    <section class="page-frame programme programme-recent">
+      <p class="workbench programme-label programme-label-recent">/ {strings.home.recent}</p>
+      <ul class="programme-list" role="list">
+        {recent.map((talk) => {
+          const detailHref = localePath(locale, `talks/${talk.slug}`);
+          return (
+            <li class="programme-item">
+              <div class="cal-tile cal-tile-past" aria-hidden="true">
+                <span class="cal-mo">{calMonth(talk.data.date)}</span>
+                <span class="cal-day">{talk.data.date.getDate()}</span>
+                <span class="cal-yr">{talk.data.date.getFullYear()}</span>
+              </div>
+              <div class="programme-content">
+                <p class="workbench event event-muted">
+                  ▸ {talk.data.eventUrl ? (
+                    <a class="event-link event-link-muted" href={talk.data.eventUrl} rel="noopener">{talk.data.event}</a>
+                  ) : (
+                    <span>{talk.data.event}</span>
+                  )}
+                </p>
+                <h2 class="programme-title">
+                  <a href={detailHref}>{talk.data.title}</a>
+                </h2>
+                <p class="workbench meta">
+                  <span>{rtf.format(daysFromToday(talk.data.date), 'day')}</span>
+                  {talk.data.language && (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span>{languageBadge(talk.data.language)}</span>
+                    </>
+                  )}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  )}
 </BaseLayout>
 
 <style>
+  /* HERO — LinkedIn-inspired banner + avatar overlap, but with the site's
+     printed-paper typography (serif display, mono labels, sharp borders). */
   .hero {
-    padding: var(--space-6) var(--space-3) var(--space-5);
+    margin-bottom: var(--space-4);
   }
-  .mark {
-    margin-bottom: var(--space-2);
-    color: var(--green-primary);
+  .banner {
+    width: 100%;
+    aspect-ratio: 1400 / 350;
+    overflow: hidden;
+    border-bottom: 1px solid var(--rule);
+  }
+  .banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-body {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .avatar-wrap {
+    flex: 0 0 auto;
+    margin-top: -56px;
+  }
+  .avatar {
+    width: 144px;
+    height: 144px;
+    border-radius: 50%;
+    border: 4px solid var(--bg-paper);
+    object-fit: cover;
+    background: var(--bg-paper);
+    display: block;
+  }
+  .hero-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-top: var(--space-3);
   }
   .display {
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 700;
     letter-spacing: -0.02em;
-    margin: 0 0 var(--space-2);
+    margin: 0 0 0.25rem;
+    line-height: 1.1;
   }
-  .lede {
-    font-size: 1.35rem;
-    color: var(--ink-muted);
-    max-width: 36rem;
+  .flag {
+    display: inline-block;
+    margin-left: 0.3rem;
+    font-size: 0.7em;
+    vertical-align: middle;
+  }
+  .role {
+    font-size: 1.15rem;
+    color: var(--ink);
+    margin: 0 0 0.3rem;
+  }
+  .location {
+    margin: 0;
   }
 
-  /* PROGRAMME — printed-flyer announcement of upcoming talks.
-     Differentiates from the talks-index "next up" callout (left-bordered)
-     by using a 2px green top rule and a stacked-calendar tile metaphor. */
+  @media (max-width: 600px) {
+    .hero-body {
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .avatar-wrap {
+      margin-top: -48px;
+    }
+    .avatar {
+      width: 112px;
+      height: 112px;
+      border-width: 3px;
+    }
+    .hero-text {
+      padding-top: 0;
+    }
+  }
+
+  /* PROGRAMME — printed-flyer rows of upcoming talks. */
   .programme {
     border-top: 2px solid var(--green-primary);
-    padding: var(--space-4) var(--space-3) var(--space-6);
+    padding: var(--space-4) var(--space-3) var(--space-5);
     margin-top: var(--space-3);
+  }
+  .programme-recent {
+    border-top: 1px solid var(--rule);
+    padding-bottom: var(--space-6);
   }
   .programme-label {
     color: var(--green-primary);
     margin: 0 0 var(--space-3);
+  }
+  .programme-label-recent {
+    color: var(--ink-muted);
   }
   .programme-list {
     list-style: none;
@@ -154,6 +279,11 @@ function calMonth(date: Date): string {
     line-height: 1.05;
     user-select: none;
   }
+  .cal-tile-past {
+    background: var(--bg-paper);
+    border-style: dashed;
+    color: var(--ink-muted);
+  }
   .cal-mo {
     font-size: 0.78rem;
     color: var(--ink-muted);
@@ -165,6 +295,9 @@ function calMonth(date: Date): string {
     letter-spacing: -0.02em;
     margin: 0.15rem 0;
     color: var(--ink);
+  }
+  .cal-tile-past .cal-day {
+    color: var(--ink-muted);
   }
   .cal-yr {
     font-size: 0.7rem;
@@ -183,9 +316,15 @@ function calMonth(date: Date): string {
     margin: 0 0 0.4rem;
     color: var(--green-primary);
   }
+  .event-muted {
+    color: var(--ink-muted);
+  }
   .event-link {
     border-bottom: none;
     color: var(--green-primary);
+  }
+  .event-link-muted {
+    color: var(--ink-muted);
   }
   .event-link:hover {
     background: transparent;
