@@ -3,19 +3,13 @@ title: "Java version upgrade is quite simple. All you need to do is... (Part 3)"
 canonicalSlug: "java-version-upgrade-is-quite-simple"
 language: "en"
 publishedAt: 2023-10-20
-summary: "After Part 1 deconstructed what the “Java version” ishttps://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple and Part 2 covered the reasoning behind the upgrade / don’t upgrade decision in depthhttps:/"
+summary: "Part 3 of the Java upgrade series: a concise decision framework distilling Parts 1 and 2, and a worked example of how my team used it in practice."
 tags: []
 translations:
   en: "java-version-upgrade-is-quite-simple"
 coverImage: "/blog/java-version-upgrade-is-quite-simple/01.png"
 ---
-![](/blog/java-version-upgrade-is-quite-simple/01.png)
-
-After [Part 1 deconstructed what the “Java version” is](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple) and [Part 2 covered the reasoning behind the upgrade / don’t upgrade decision in depth](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple-af8), I feel I’ve finally explained you everything - the blog format that I find not very lightweight and enjoyable. Time for the “I had this problem, and here is how I solved it - short, fun, and incomplete story” format I like much more. *Part 3 summarizes Parts 1 and 2 into a concise decision framework, and shows examples of how my team uses it in practice.*
-
-Subscribe to get an update when my new post comes out every other Friday
-
-Subscribe
+After [Part 1 deconstructed what the “Java version” is](/en/blog/java-version-upgrade-is-not-as-simple/) and [Part 2 covered the reasoning behind the upgrade / don’t upgrade decision in depth](/en/blog/java-version-upgrade-is-not-as-simple-af8/), I feel I’ve finally explained you everything - the blog format that I find not very lightweight and enjoyable. Time for the “I had this problem, and here is how I solved it - short, fun, and incomplete story” format I like much more. *Part 3 summarizes Parts 1 and 2 into a concise decision framework, and shows examples of how my team uses it in practice.*
 
 ### 📐 How to select Java upgrade strategy?
 
@@ -175,51 +169,3 @@ So just a month after the release we are fully compatible with Java 21 and can s
 ### 😵 It wasn’t that simple!
 
 If you feel like you should not spend that much effort on the question about the Java version - just always use [Eclipse Temurin](https://adoptium.net/temurin/releases/) distribution of the LTS version that was actual one year ago, and you will always be good. Sorry for wasting your time for three weeks 🙈
-
-Thanks for reading! If you find my writing useful or entertaining, please help to share it further or even thank me by “buying me a coffee” [via donation to 🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly)!
-
-[Share](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple?utm_source=substack&utm_medium=email&utm_content=share&action=share)
-
-[
-
-## Java version upgrade is not as simple as "stay on LTS". Instead, you should... (Part 1)
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple)
-
-[Yarik Yermilov](https://substack.com/profile/136944163-yarik-yermilov)
-
-·
-
-October 6, 2023
-
-[![Java version upgrade is not as simple as "stay on LTS". Instead, you should... (Part 1)](/blog/java-version-upgrade-is-quite-simple/10.png)](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple)
-
-The format that I like to read most and try to follow as I write is “I had this problem and here is how I fixed it - short, fun, and incomplete story”, contrary to the pretty common “Now I'm going to explain you everything” format that sometimes is not that lightweight and enjoyable. Unfortunately when I started a
-
-[
-
-Read full story
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple)
-
-[
-
-## Java version upgrade is not as simple as "do it every six months". Instead, you should... (Part 2)
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple-af8)
-
-[Yarik Yermilov](https://substack.com/profile/136944163-yarik-yermilov)
-
-·
-
-October 13, 2023
-
-[![Java version upgrade is not as simple as "do it every six months". Instead, you should... (Part 2)](/blog/java-version-upgrade-is-quite-simple/11.png)](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple-af8)
-
-Java 21 is now available! Usually, it is a time for long internet discussions about whether to upgrade or not. Various evangelists and advocates try to convince everyone to upgrade to get newly released JEPs (JDK Enhancement Proposals). A small group follows, but most people either refuse to upgrade to non-LTS versions (21 is an LTS version that follows…
-
-[
-
-Read full story
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple-af8)

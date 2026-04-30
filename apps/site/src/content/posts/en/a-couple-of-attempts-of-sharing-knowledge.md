@@ -3,17 +3,15 @@ title: "A couple of attempts of sharing knowledge tips"
 canonicalSlug: "a-couple-of-attempts-of-sharing-knowledge"
 language: "en"
 publishedAt: 2023-09-08
-summary: "Consider a problem: there are a number of small bits of knowledge you want to share with your project developers. They are relatively small, so you probably won't create a new Wiki page for each of them. You can put them"
+summary: "How do you spread small, regular bits of team knowledge that don't deserve a wiki page each? Two experiments — a Slack bot and a Gradle build hook — and what worked."
 tags: []
 translations:
   en: "a-couple-of-attempts-of-sharing-knowledge"
 coverImage: "/blog/a-couple-of-attempts-of-sharing-knowledge/01.png"
 ---
-![](/blog/a-couple-of-attempts-of-sharing-knowledge/01.png)
-
 Consider a problem: there are a number of small bits of knowledge you want to share with your project developers. They are relatively small, so you probably won't create a new Wiki page for each of them. You can put them all into one Wiki page "Tips and tricks", but let's be honest - people may only read it once during onboarding and never get back, while there are probably new tips you come up with regularly. I have yet to find a proven solution for this problem, but here are two attempts I've tried recently.
 
-### 🏺 Prior research[​](https://core.gpages.io/common-api/blog/2023/09/06/2023-09-06-knowledge-sharing-tips-attempt/knowledge-sharing-tips-attempt#-prior-research)
+### 🏺 Prior research
 
 The first pattern that comes to my mind for this problem is "Tip of the Day":
 
@@ -36,7 +34,7 @@ Another great inspiration is [Google's "Testing on the Toilet"](https://testing.
 
 *Taken from [https://mike-bland.com/2011/10/25/testing-on-the-toilet.html](https://mike-bland.com/2011/10/25/testing-on-the-toilet.html)*
 
-### 📱 Attempt 1[​](https://core.gpages.io/common-api/blog/2023/09/06/2023-09-06-knowledge-sharing-tips-attempt/knowledge-sharing-tips-attempt#-attempt-1)
+### 📱 Attempt 1
 
 Where to look for developers? Where do they spend most of their time nowadays? My first thought was Slack. So I've written the first set of tips and wrote a simple Slack bot that would post them to our developers’ channel:
 
@@ -59,7 +57,7 @@ On the other hand, the tips are easily lost in the stream of messages. Practical
 
 But in other cases, people ask the question that was answered by the tip just a day ago.
 
-### 🦥 Attempt 2[​](https://core.gpages.io/common-api/blog/2023/09/06/2023-09-06-knowledge-sharing-tips-attempt/knowledge-sharing-tips-attempt#-attempt-2)
+### 🦥 Attempt 2
 
 Can we do better? What is the problem with the Slack approach? People don't really *spend* time there. They come to read incoming messages or write something and then leave. Where do developers really *waste* their time? I think the answer is obvious - it is during the build time (it is so painfully apparent that even GitHub Copilot knows it):
 
@@ -133,7 +131,7 @@ Now developers receive tips when the build is running, and nothing useful can be
 
 Compared to the Slack approach, I think the moment to reach developers is much better. However, it is hard to gather feedback or give an opportunity to explore more tips.
 
-### 🫴 Scaling[​](https://core.gpages.io/common-api/blog/2023/09/06/2023-09-06-knowledge-sharing-tips-attempt/knowledge-sharing-tips-attempt#-scaling)
+### 🫴 Scaling
 
 It is hard to collect hard evidence if people are really being educated with both these approaches, especially with the second one. However, I think it is a good start, and it is worth trying. Now, I encourage teammates to write down helpful knowledge bits to the tips library. With the library growing, we can continue to improve the toolset around tips sharing:
 
@@ -142,8 +140,3 @@ It is hard to collect hard evidence if people are really being educated with bot
 -   aggregate feedback from Slack automatically
     
 -   contextualize tips based on current action (for example, surface tips about writing tests during test task execution)
-    
-
-Thanks for reading! If you find my writing useful or entertaining, please buy me a coffee [via donation to 🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly) and subscribe for free to receive new posts.
-
-Subscribe

@@ -3,21 +3,15 @@ title: "Tips for Javadocs Publishers (including why publish?)"
 canonicalSlug: "7-tips-for-javadocs-publishers-plus"
 language: "en"
 publishedAt: 2023-11-17
-summary: "If you are a Java developer and you see this token /, you know that some serious wisdom is going to be dropped on you next. Similarly, when you press /   on your keyboard, you immediately put on your best writer's coat a"
+summary: "I had to publish Javadocs as a web page for the first time in my 12-year career. Here are seven tricks I picked up along the way — plus a take on when it's actually worth doing."
 tags: []
 translations:
   en: "7-tips-for-javadocs-publishers-plus"
 coverImage: "/blog/7-tips-for-javadocs-publishers-plus/01.png"
 ---
-![](/blog/7-tips-for-javadocs-publishers-plus/01.png)
-
 If you are a Java developer and you see this token `/**`, you know that some serious wisdom is going to be dropped on you next. Similarly, when you press `/ * *` on your keyboard, you immediately put on your best writer's coat and take your best goose feather pen to write the most precise, readable, and concise comment bits in your entire life. That's the everyday magic of Javadocs 🌈
 
 Recently, I have had to do something not-so-everyday - publish Javadocs as a web page. That indeed does not happen often in our engineering lives; at least, I've done it for the first time in my 12-year career. Since it was not as straightforward as adding one more star symbol to the comment, I want to share a couple of tricks I've used to make it work.
-
-But before the tricks, I want to take a second and ask you to subscribe to this blog. Of course, if you want to read more from me. That's exactly how I interpret this number - 28 people already want to read what I write regularly, and that's a great motivation to continue. You are more than welcome to join our little group - the subscription means that you will receive an email every time I publish a new story, which usually happens every other week. If you are already subscribed - my gratitude and Javadocs publishing tips are for you! 🤗
-
-Subscribe
 
 ![](/blog/7-tips-for-javadocs-publishers-plus/02.png)
 
@@ -112,33 +106,21 @@ application {
 }
 ```
 
-[](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)
-
 [
 
 ![Java version upgrade is quite simple. All you need to do is... (Part 3)](/blog/7-tips-for-javadocs-publishers-plus/05.png)
 
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)
+](/en/blog/java-version-upgrade-is-quite-simple/)
 
 [
 
 #### Java version upgrade is quite simple. All you need to do is... (Part 3)
 
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)
-
-[](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)
-
-[](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)[Yarik Yermilov](https://substack.com/profile/136944163-yarik-yermilov)
+](/en/blog/java-version-upgrade-is-quite-simple/)
 
 ·
 
 October 20, 2023
-
-[
-
-Read full story
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)
 
 Javadocs publish task needs to access them as well, although here it doesn't look as nice and orderly, but rather like you are trying to break into someone's property using dark magic and pure luck:
 
@@ -325,21 +307,3 @@ pages:
     paths:
       - public
 ```
-
-Thank you for reading! If you find my writing useful or entertaining, here are a couple of ways to express it:
-
--   subscribe to receive an email every time I publish a new story:  
-    
-    Subscribe
-    
-
--   donate $1 to the [🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly) and post a comment about it here:  
-    
-    [Leave a comment](https://greenflamingo.substack.com/p/7-tips-for-javadocs-publishers-plus/comments)
-    
--   share the post with your friends or colleagues:  
-    
-    [Share](https://greenflamingo.substack.com/p/7-tips-for-javadocs-publishers-plus?utm_source=substack&utm_medium=email&utm_content=share&action=share)
-    
-
--   press the like button 🤍 below

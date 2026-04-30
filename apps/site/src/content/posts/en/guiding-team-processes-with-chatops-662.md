@@ -3,43 +3,16 @@ title: "Guiding team processes with ChatOps: On-call (Part 2)"
 canonicalSlug: "guiding-team-processes-with-chatops-662"
 language: "en"
 publishedAt: 2023-12-08
-summary: "Last week, we talked about shaping team processes with ChatOps using a Slack on-call topic, Slack on-call group, and On-call schedule reminder as examples."
+summary: "Part 2 of the on-call ChatOps series: two more automations — On-call handoff and Process spotter — and the lessons each one taught us about scripting team behaviour."
 tags: []
 translations:
   en: "guiding-team-processes-with-chatops-662"
 coverImage: "/blog/guiding-team-processes-with-chatops-662/01.png"
 ---
-![](/blog/guiding-team-processes-with-chatops-662/01.png)
-
 Last week, we talked about shaping team processes with ChatOps using a *Slack on-call topic*, *Slack on-call group*, and *On-call schedule reminder as examples*.
-
-[
-
-## Guiding team processes with ChatOps: On-call (Part 1)
-
-](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops)
-
-[Yarik Yermilov](https://substack.com/profile/136944163-yarik-yermilov)
-
-·
-
-December 1, 2023
-
-[![Guiding team processes with ChatOps: On-call (Part 1) ](/blog/guiding-team-processes-with-chatops-662/02.png)](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops)
-
 As your team grows, you need to scale its culture. There is no doubt that things like a high hiring bar are critical, but still, there is a limit to what can be achieved by only smart people talking in the office kitchen and agreeing to do something. At a certain point, you need to transform culture into processes. Culture is something natural that sust…
 
-[
-
-Read full story
-
-](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops)
-
 Now let’s add two more ChatOps ideas accompanied by lessons learned from them: *On-call handoff* and *On-call engineer is out*.
-
-But before the new ideas, I want to take a second and ask you to subscribe to this blog. Of course, if you want to read more from me. That's exactly how I interpret this number - 30 people already want to read what I write regularly, and that's a great motivation to continue. You are more than welcome to join our little group - the subscription means that you will receive an email every time I publish a new story, which usually happens every other week. If you are already subscribed - my gratitude and ChatOps on-call ideas are for you! 🤗
-
-Subscribe
 
 ![](/blog/guiding-team-processes-with-chatops-662/03.png)
 
@@ -172,25 +145,3 @@ The lesson here is that **when you try to guide processes, remember that they gu
 -   It is impossible to avoid both false positives and false negatives, but it is okay to have one of them as long as your team agrees on which one.
     
 -   When you try to guide processes, remember that they guide people, so try to think about the psychology aspect a bit.
-    
-
----
-
-Thank you for reading! If you find my writing useful or entertaining, here are a couple of ways to express it:
-
--   subscribe to receive an email every time I publish a new story:
-    
-
-Subscribe
-
--   donate $1 to the [🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly) and post a comment about it here:
-    
-
-[Leave a comment](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops-662/comments)
-
--   share the post with your friends or colleagues:
-    
-
-[Share](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops-662?utm_source=substack&utm_medium=email&utm_content=share&action=share)
-
--   press the like button 🤍 below

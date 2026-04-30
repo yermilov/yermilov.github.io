@@ -3,19 +3,13 @@ title: "Java version upgrade is not as simple as \"do it every six months\". Ins
 canonicalSlug: "java-version-upgrade-is-not-as-simple-af8"
 language: "en"
 publishedAt: 2023-10-13
-summary: "Java 21 is now available!https://openjdk.org/projects/jdk/21 Usually, it is a time for long internet discussions about whether to upgrade or not. Various evangelists and advocates try to convince everyone to upgrade to g"
+summary: "Part 2 of the Java upgrade series: when an upgrade actually pays off — and when it doesn't. The reasoning behind the decision in depth, not just \"stay on LTS\"."
 tags: []
 translations:
   en: "java-version-upgrade-is-not-as-simple-af8"
 coverImage: "/blog/java-version-upgrade-is-not-as-simple-af8/01.png"
 ---
-![](/blog/java-version-upgrade-is-not-as-simple-af8/01.png)
-
-[Java 21 is now available!](https://openjdk.org/projects/jdk/21) Usually, it is a time for long internet discussions about whether to upgrade or not. Various evangelists and advocates try to convince everyone to upgrade to get newly released JEPs (JDK Enhancement Proposals). A small group follows, but most people either refuse to upgrade to non-LTS versions (21 is an LTS version that follows 17, 11, and 8, so you won't hear this argument this time) or even upgrade at all. Without context, none of these three strategies (never upgrade, always upgrade, upgrade to LTS only) is the right solution. Let's try to come up with a decision framework for them in this series. *[Part 1 deconstructs what the “Java version” is.](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple) Part 2 covers the reasoning behind the upgrade / don’t upgrade decision in depth. [Part 3 summarizes Parts 1 and 2 into a concise decision framework, and shows examples of how my team uses it in practice.](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)*
-
-Subscribe to get an update when my new post comes out every other Friday (and Part 3 next Friday)
-
-Subscribe
+[Java 21 is now available!](https://openjdk.org/projects/jdk/21) Usually, it is a time for long internet discussions about whether to upgrade or not. Various evangelists and advocates try to convince everyone to upgrade to get newly released JEPs (JDK Enhancement Proposals). A small group follows, but most people either refuse to upgrade to non-LTS versions (21 is an LTS version that follows 17, 11, and 8, so you won't hear this argument this time) or even upgrade at all. Without context, none of these three strategies (never upgrade, always upgrade, upgrade to LTS only) is the right solution. Let's try to come up with a decision framework for them in this series. *[Part 1 deconstructs what the “Java version” is.](/en/blog/java-version-upgrade-is-not-as-simple/) Part 2 covers the reasoning behind the upgrade / don’t upgrade decision in depth. [Part 3 summarizes Parts 1 and 2 into a concise decision framework, and shows examples of how my team uses it in practice.](/en/blog/java-version-upgrade-is-quite-simple/)*
 
 ### 😊 Reasons to upgrade
 
@@ -71,8 +65,6 @@ downgrade one version back and retry.
 
 The source version can't be higher than the target version. The only reason to set it lower I’m aware is to limit the usage of new language features the first couple weeks after migration to the new target version in case you will have to rollback because of `Unsupported class file major version`. Do you know any others?
 
-[Leave a comment](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple-af8/comments)
-
 The build-time JDK version can't be lower than the target version. For convenience, it makes sense to use the same version as the runtime JVM version or just the latest feature release version. One problem you can get here is that your build tool needs to support this JDK version. If it does not - use one version behind. The developer environment JDK version should be the same as the build-time JDK version.
 
 Test runs JDK version should be exactly the same version as the runtime JVM version to mimic the production environment better. If you are a library maintainer, it makes sense to run your tests on each feature version from your target to the latest available.
@@ -86,52 +78,3 @@ The last interesting question for today is how to select a JDK vendor. From my e
 -   If you don’t want to build your own Docker image with JDK - use the one provided by [Eclipse Temurin](https://hub.docker.com/_/eclipse-temurin).
     
 -   If you run your code using some cloud provider - learn about JDK distribution from this provider, it *might be* optimized for this cloud provider.
-    
-
-Thanks for reading! If you find my writing useful or entertaining, please help to share it further or even thank me by “buying me a coffee” [via donation to 🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly)!
-
-[Share](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple-af8?utm_source=substack&utm_medium=email&utm_content=share&action=share)
-
-[
-
-## Java version upgrade is not as simple as "stay on LTS". Instead, you should... (Part 1)
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple)
-
-[Yarik Yermilov](https://substack.com/profile/136944163-yarik-yermilov)
-
-·
-
-October 6, 2023
-
-[![Java version upgrade is not as simple as "stay on LTS". Instead, you should... (Part 1)](/blog/java-version-upgrade-is-not-as-simple-af8/08.png)](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple)
-
-The format that I like to read most and try to follow as I write is “I had this problem and here is how I fixed it - short, fun, and incomplete story”, contrary to the pretty common “Now I'm going to explain you everything” format that sometimes is not that lightweight and enjoyable. Unfortunately when I started a
-
-[
-
-Read full story
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-not-as-simple)
-
-[
-
-## Java version upgrade is quite simple. All you need to do is... (Part 3)
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)
-
-[Yarik Yermilov](https://substack.com/profile/136944163-yarik-yermilov)
-
-·
-
-October 20, 2023
-
-[![Java version upgrade is quite simple. All you need to do is... (Part 3)](/blog/java-version-upgrade-is-not-as-simple-af8/09.png)](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)
-
-After Part 1 deconstructed what the “Java version” is and Part 2 covered the reasoning behind the upgrade / don’t upgrade decision in depth, I feel I’ve finally explained you everything - the blog format that I find not very lightweight and enjoyable. Time for the “I had this problem, and here is how I solved it - short, fun, and incomplete story” forma…
-
-[
-
-Read full story
-
-](https://greenflamingo.substack.com/p/java-version-upgrade-is-quite-simple)

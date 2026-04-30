@@ -3,19 +3,13 @@ title: "Guiding team processes with ChatOps: On-call (Part 1)"
 canonicalSlug: "guiding-team-processes-with-chatops"
 language: "en"
 publishedAt: 2023-12-01
-summary: "As your team grows, you need to scale its culture. There is no doubt that things like a high hiring bar are critical, but still, there is a limit to what can be achieved by only smart people talking in the office kitchen"
+summary: "As a team grows, the kitchen-table culture has to turn into actual processes without losing what made it work. ChatOps is a useful lever. Part 1: three concrete on-call automations to start with."
 tags: []
 translations:
   en: "guiding-team-processes-with-chatops"
 coverImage: "/blog/guiding-team-processes-with-chatops/01.png"
 ---
-![](/blog/guiding-team-processes-with-chatops/01.png)
-
 As your team grows, you need to scale its culture. There is no doubt that things like a high hiring bar are critical, but still, there is a limit to what can be achieved by only smart people talking in the office kitchen and agreeing to do something. At a certain point, you need to transform culture into processes. Culture is something natural that sustains itself, but processes are man-made and often unfitting to the natural pace of things. One of the ways to guide processes in the right direction is by automating them using ChatOps. I want to share some lessons I’ve learned while doing it to establish good on-call processes on my team.
-
-But before the lessons learned, I want to take a second and ask you to subscribe to this blog. Of course, if you want to read more from me. That's exactly how I interpret this number - 28 people already want to read what I write regularly, and that's a great motivation to continue. You are more than welcome to join our little group - the subscription means that you will receive an email every time I publish a new story, which usually happens every other week (sometimes every week). If you are already subscribed - my gratitude and ChatOps on-call ideas are for you! 🤗
-
-Subscribe
 
 ![](/blog/guiding-team-processes-with-chatops/02.png)
 
@@ -134,46 +128,3 @@ String oncallScheduleMessage = ":calendar-fire-fine: *JFYI ONCALL SCHEDULE* :par
 The nice thing is that this message creates a natural place to discuss swaps and reschedules in case someone needs them. And the lesson to learn is that **you need to monitor secondary effects from your changes in processes and react to them. Then monitor secondary effects after your reaction and repeat it until it stabilizes around the state you are happy with.**
 
 *Next week, I continue with two more ChatOps ideas accompanied by lessons learned from them: On-call handoff and On-call engineer is out.*
-
-[
-
-## Guiding team processes with ChatOps: On-call (Part 2)
-
-](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops-662)
-
-[Yarik Yermilov](https://substack.com/profile/136944163-yarik-yermilov)
-
-·
-
-December 8, 2023
-
-[![Guiding team processes with ChatOps: On-call (Part 2)](/blog/guiding-team-processes-with-chatops/05.png)](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops-662)
-
-Last week, we talked about shaping team processes with ChatOps using a Slack on-call topic, Slack on-call group, and On-call schedule reminder as examples. Now let’s add two more ChatOps ideas accompanied by lessons learned from them: On-call handoff
-
-[
-
-Read full story
-
-](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops-662)
-
----
-
-Thank you for reading! If you find my writing useful or entertaining, here are a couple of ways to express it:
-
--   subscribe to receive an email every time I publish a new story:
-    
-
-Subscribe
-
--   donate $1 to the [🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly) and post a comment about it here:
-    
-
-[Leave a comment](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops/comments)
-
--   share the post with your friends or colleagues:
-    
-
-[Share](https://greenflamingo.substack.com/p/guiding-team-processes-with-chatops?utm_source=substack&utm_medium=email&utm_content=share&action=share)
-
--   press the like button 🤍 below

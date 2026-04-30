@@ -3,7 +3,7 @@ title: "All I Want For Christmas Is (Books Recommendations)"
 canonicalSlug: "all-i-want-for-christmas-is-books"
 language: "en"
 publishedAt: 2023-12-22
-summary: "You have probably heard one of the Christmas tunes a couple of times already during the last few weeks. What does it mean for us? Time to think about presents and time to think about how to spend your learning and develo"
+summary: "A curated list of books I've read and found useful or entertaining — software engineering, coding craft, project management, and tech-industry stories — for the end-of-year learning-budget season."
 tags: []
 translations:
   en: "all-i-want-for-christmas-is-books"
@@ -12,12 +12,6 @@ coverImage: "/blog/all-i-want-for-christmas-is-books/01.png"
 You have probably heard one of the Christmas tunes a couple of times already during the last few weeks. What does it mean for us? Time to think about presents and time to think about how to spend your learning and development budget before it goes to waste. Maybe buy a book? For me, the biggest challenge is to select a worthy one, considering how many options are available (a lot) and how many books I can read (unlikely double digits in a year). That's why I appreciate it a lot when my friends and colleagues recommend me a book they've read. That’s why I want to share with you all the list of books I've read and found useful or entertaining. And I hope to hear your recommendations in the comments to expand my backlog 🤞
 
 *On March 30, 1936, at New York’s Madison Square Garden, a student choir directed by the American conductor of Ukrainian heritage, Peter Wilhousky, presented today’s world-famous “Carol of the Bells”. It was an English lyrics adaptation of “Shchedryk”, a Ukrainian New Year's song, arranged by composer and teacher Mykola Leontovych. The US premiere of “Shchedryk” took place on October 5, 1922, at Carnegie Hall in New York City, but Mykola Leontovych was murdered by a soviet-russian occupation agent one year earlier, in 1921.*
-
-But before the books list, I want to take a second and ask you to subscribe to this blog. Of course, if you want to read more from me. That's exactly how I interpret this number - 33 people already want to read what I write regularly, and that's a great motivation to continue. You are more than welcome to join our little group - the subscription means that you will receive an email every time I publish a new story, which usually happens every other week. If you are already subscribed - you can send a link to your friend or colleague, but my gratitude is already for you! 🤗
-
-Subscribe
-
-![](/blog/all-i-want-for-christmas-is-books/01.png)
 
 ### 🕥 Programming + Time = Software Engineering
 
@@ -132,26 +126,3 @@ Story from US Navy officer that will inspire you to build autonomous teams that 
 ![](/blog/all-i-want-for-christmas-is-books/19.png)
 
 If you have something to recommend for me and others to read in 2024, please add it to the comments! Happy Holidays!
-
-[Leave a comment](https://greenflamingo.substack.com/p/all-i-want-for-christmas-is-books/comments)
-
----
-
-Thank you for reading! If you find my writing useful or entertaining, here are a couple of ways to express it:
-
--   subscribe to receive an email every time I publish a new story:
-    
-
-Subscribe
-
--   donate $1 to the [🇺🇦 The Come Back Alive Fund](https://savelife.in.ua/en/donate-en/#donate-army-card-monthly) and post a comment about it here:
-    
-
-[Leave a comment](https://greenflamingo.substack.com/p/all-i-want-for-christmas-is-books/comments)
-
--   share the post with your friends or colleagues:
-    
-
-[Share](https://greenflamingo.substack.com/p/all-i-want-for-christmas-is-books?utm_source=substack&utm_medium=email&utm_content=share&action=share)
-
--   press the like button 🤍 below
