@@ -11,6 +11,15 @@ function isPublished<T extends { data: { draft?: boolean } }>(entry: T): boolean
   return !(isProd && entry.data.draft);
 }
 
+/**
+ * URL slug for a post. Posts live under content/posts/{en,ua}/<slug>.mdx,
+ * so Astro auto-derives entry.slug as e.g. "en/2023-wrapped". The locale
+ * directory is a categorization device — strip it for URLs.
+ */
+export function postSlug(entry: PostEntry): string {
+  return entry.slug.split('/').pop() ?? entry.slug;
+}
+
 export async function getPostsByLocale(locale: Locale): Promise<PostEntry[]> {
   const all = await getCollection('posts', isPublished);
   return all

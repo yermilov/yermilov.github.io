@@ -6,7 +6,6 @@ const posts = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    slug: z.string(),
     language: localeEnum,
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
