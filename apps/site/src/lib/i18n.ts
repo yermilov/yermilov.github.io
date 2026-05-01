@@ -65,7 +65,6 @@ export interface Strings {
     previousPhoto: string;
     nextPhoto: string;
   };
-  archive: { heading: string; body: string; link: string };
 }
 
 const STRINGS: Record<Locale, Strings> = {
@@ -114,11 +113,6 @@ const STRINGS: Record<Locale, Strings> = {
       previousPhoto: 'Previous photo',
       nextPhoto: 'Next photo',
     },
-    archive: {
-      heading: 'Old blog (2017 archive)',
-      body: 'A snapshot of the Grain/Octopress blog as it stood in 2017. Preserved as-is.',
-      link: 'Visit /old-blog/',
-    },
   },
   ua: {
     nav: { blog: 'Блог', lab: 'Лаб', games: 'Ігри', talks: 'Доповіді', about: 'Про' },
@@ -164,11 +158,6 @@ const STRINGS: Record<Locale, Strings> = {
       close: 'Закрити',
       previousPhoto: 'Попереднє фото',
       nextPhoto: 'Наступне фото',
-    },
-    archive: {
-      heading: 'Старий блог (архів 2017)',
-      body: 'Знімок Grain/Octopress блогу станом на 2017 рік. Збережено як є.',
-      link: 'Відкрити /old-blog/',
     },
   },
 };

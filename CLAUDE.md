@@ -149,14 +149,6 @@ inverted-theme `LabLayout`.
 
 Both are gitignored and rebuilt every CI run.
 
-## /old-blog/ lives elsewhere
-
-The `/old-blog/` archive is **not** built or deployed from this repo. It's a
-separate repo, [`yermilov/old-blog`](https://github.com/yermilov/old-blog),
-with its own Pages deploy. Same-owner project Pages mount under the user
-site at `/<repo>/`, so any `/old-blog/*` paths in this site's artifact would
-be silently shadowed. Don't put anything at that path.
-
 ## Common commands
 
 ```
