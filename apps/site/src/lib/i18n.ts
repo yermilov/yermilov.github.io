@@ -44,6 +44,7 @@ export interface Strings {
     nextUp: string;
     past: string;
     recording: string;
+    slides: string;
     photos: string;
     backToTalks: string;
   };
@@ -93,6 +94,7 @@ const STRINGS: Record<Locale, Strings> = {
       nextUp: 'Next up',
       past: 'Past',
       recording: 'Recording',
+      slides: 'Slides',
       photos: 'Photos',
       backToTalks: '← Back to talks',
     },
@@ -140,6 +142,7 @@ const STRINGS: Record<Locale, Strings> = {
       nextUp: 'Далі',
       past: 'Минулі',
       recording: 'Запис',
+      slides: 'Слайди',
       photos: 'Фото',
       backToTalks: '← До доповідей',
     },
