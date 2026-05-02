@@ -73,4 +73,15 @@ const games = defineCollection({
   }),
 });
 
-export const collections = { posts, talks, labs, games };
+const gallery = defineCollection({
+  type: 'data',
+  schema: z.object({
+    date: z.coerce.date(),
+    caption: z.string().optional(),
+    location: z.string().optional(),
+    /** path under apps/site/public/, e.g. "/gallery/2018-08-15.jpg" */
+    src: z.string(),
+  }),
+});
+
+export const collections = { posts, talks, labs, games, gallery };

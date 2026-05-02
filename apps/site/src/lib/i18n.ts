@@ -31,9 +31,9 @@ export function htmlLang(locale: Locale): string {
 }
 
 export interface Strings {
-  nav: { blog: string; lab: string; games: string; talks: string; about: string };
+  nav: { blog: string; lab: string; games: string; talks: string; gallery: string; about: string };
   site: { title: string; tagline: string; languageName: string; otherLanguageName: string };
-  empty: { blog: string; lab: string; games: string; talks: string };
+  empty: { blog: string; lab: string; games: string; talks: string; gallery: string };
   home: {
     catchMeAt: string;
     recent: string;
@@ -69,7 +69,7 @@ export interface Strings {
 
 const STRINGS: Record<Locale, Strings> = {
   en: {
-    nav: { blog: 'Blog', lab: 'Lab', games: 'Games', talks: 'Talks', about: 'About' },
+    nav: { blog: 'Blog', lab: 'Lab', games: 'Games', talks: 'Talks', gallery: 'Gallery', about: 'About' },
     site: {
       title: 'Yaroslav Yermilov',
       tagline: 'Notes, experiments, talks.',
@@ -81,6 +81,7 @@ const STRINGS: Record<Locale, Strings> = {
       lab: 'No lab entries yet.',
       games: 'No games yet.',
       talks: 'No talks yet.',
+      gallery: 'No photos yet.',
     },
     home: {
       catchMeAt: 'Catch me at',
@@ -115,7 +116,7 @@ const STRINGS: Record<Locale, Strings> = {
     },
   },
   ua: {
-    nav: { blog: 'Блог', lab: 'Лаб', games: 'Ігри', talks: 'Доповіді', about: 'Про' },
+    nav: { blog: 'Блог', lab: 'Лаб', games: 'Ігри', talks: 'Доповіді', gallery: 'Галерея', about: 'Про' },
     site: {
       title: 'Ярослав Єрмілов',
       tagline: 'Нотатки, експерименти, доповіді.',
@@ -127,6 +128,7 @@ const STRINGS: Record<Locale, Strings> = {
       lab: 'Поки нема записів у лабі.',
       games: 'Поки нема ігор.',
       talks: 'Поки нема доповідей.',
+      gallery: 'Поки нема фото.',
     },
     home: {
       catchMeAt: 'Побачимося',
