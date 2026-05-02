@@ -2,7 +2,7 @@
 import { LOCALES, t, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import PostCard from '@components/PostCard.astro';
-import { getPostsByLocale } from '@lib/content';
+import { getPosts } from '@lib/content';
 
 export async function getStaticPaths() {
   return LOCALES.map((locale) => ({ params: { locale } }));
@@ -10,7 +10,7 @@ export async function getStaticPaths() {
 
 const locale = Astro.params.locale as Locale;
 const strings = t(locale);
-const posts = await getPostsByLocale(locale);
+const posts = await getPosts();
 ---
 
 <BaseLayout locale={locale} title={strings.nav.blog} alternatePath="blog">

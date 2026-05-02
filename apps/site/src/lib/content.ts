@@ -20,11 +20,16 @@ export function postSlug(entry: PostEntry): string {
   return entry.slug.split('/').pop() ?? entry.slug;
 }
 
-export async function getPostsByLocale(locale: Locale): Promise<PostEntry[]> {
+/**
+ * All published posts across both locales, newest first. Locale-agnostic on
+ * purpose: the same blog list is shown under /en/blog/ and /ua/blog/ so a
+ * Ukrainian visitor doesn't land on an empty page just because nothing has
+ * been translated yet. Per-post pages still respect the locale and surface
+ * a "Translation pending" banner when a post is shown in the other shell.
+ */
+export async function getPosts(): Promise<PostEntry[]> {
   const all = await getCollection('posts', isPublished);
-  return all
-    .filter((p) => p.data.language === locale)
-    .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+  return all.sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
 }
 
 export async function getPostByCanonicalSlug(canonicalSlug: string, locale: Locale): Promise<PostEntry | undefined> {
