@@ -84,4 +84,26 @@ const gallery = defineCollection({
   }),
 });
 
-export const collections = { posts, talks, labs, games, gallery };
+const books = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    author: z.string(),
+    /** path under apps/site/public/, e.g. "/books/<slug>/cover.jpg" */
+    cover: z.string(),
+    /** 1–5 stars; omit when unrated */
+    rating: z.number().min(1).max(5).optional(),
+    readAt: z.coerce.date(),
+    /** language of the review/notes, not the book itself */
+    language: localeEnum,
+    summary: z.string(),
+    tags: z.array(z.string()).default([]),
+    genre: z.string().optional(),
+    series: z.string().optional(),
+    /** external bookstore link (Amazon, publisher, etc.) */
+    affiliateUrl: z.string().url().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { posts, talks, labs, games, gallery, books };
