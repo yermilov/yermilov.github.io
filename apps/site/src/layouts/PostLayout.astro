@@ -108,6 +108,33 @@ const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
     border-radius: 6px;
     border: 1px solid var(--rule);
   }
+  /* Restore default list bullets/numbers — Tailwind Preflight strips them
+     globally and we don't use the typography plugin, so prose lists need
+     their own scoped re-enable. */
+  .post-body :global(ul) {
+    list-style: disc outside;
+    padding-inline-start: 1.4rem;
+  }
+  .post-body :global(ol) {
+    list-style: decimal outside;
+    padding-inline-start: 1.6rem;
+  }
+  .post-body :global(li) {
+    margin-bottom: 0.4rem;
+  }
+  .post-body :global(li:last-child) {
+    margin-bottom: 0;
+  }
+  .post-body :global(li > ul),
+  .post-body :global(li > ol) {
+    margin-top: 0.4rem;
+  }
+  .post-body :global(li > ul) {
+    list-style-type: circle;
+  }
+  .post-body :global(li > ul ul) {
+    list-style-type: square;
+  }
   .post-footer {
     margin-top: var(--space-5);
     padding-top: var(--space-3);
