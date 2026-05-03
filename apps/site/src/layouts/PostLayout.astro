@@ -16,6 +16,8 @@ interface Props {
   alternateMissing?: boolean;
   /** the original-language post body is being shown as a fallback */
   translationPending?: boolean;
+  /** language of the post body that is actually being shown */
+  sourceLocale: Locale;
 }
 
 const {
@@ -29,6 +31,7 @@ const {
   alternatePath,
   alternateMissing = false,
   translationPending = false,
+  sourceLocale,
 } = Astro.props;
 
 const strings = t(locale);
@@ -44,7 +47,7 @@ const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
 >
   <article class="page-frame post" data-pagefind-body>
     <header class="post-header prose-column">
-      {translationPending && <TranslationPendingBanner locale={locale} />}
+      {translationPending && <TranslationPendingBanner locale={locale} sourceLocale={sourceLocale} />}
       <p class="workbench post-meta">
         <time datetime={publishedAt.toISOString()}>{fmt.format(publishedAt)}</time>
         {updatedAt && (

@@ -4,14 +4,21 @@ import { t } from '@lib/i18n';
 
 interface Props {
   locale: Locale;
+  /** Language the original post body is written in. Drives banner copy
+      so we don't tell visitors of a UA-only post that it's an "English original". */
+  sourceLocale: Locale;
 }
-const { locale } = Astro.props;
+const { locale, sourceLocale } = Astro.props;
 const strings = t(locale);
+const message =
+  sourceLocale === 'en'
+    ? strings.labels.translationPendingFromEn
+    : strings.labels.translationPendingFromUa;
 ---
 
 <aside class="translation-pending" role="note">
   <span class="dot" aria-hidden="true"></span>
-  <p>{strings.labels.translationPending}</p>
+  <p>{message}</p>
 </aside>
 
 <style>
