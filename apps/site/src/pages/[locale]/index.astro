@@ -58,26 +58,17 @@ function calMonth(date: Date): string {
         <p class="workbench location">▸ {strings.home.location}</p>
       </div>
       <a
-        class="linkedin-stamp"
+        class="elsewhere"
         href="https://www.linkedin.com/in/yarik-yermilov/"
         rel="me noopener"
         target="_blank"
         aria-label={strings.home.followLinkedIn}
       >
-        <span class="stamp-eyebrow" aria-hidden="true">{strings.home.stampFollow}</span>
-        <svg
-          class="stamp-icon"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path
-            fill="currentColor"
-            d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"
-          />
-        </svg>
-        <span class="stamp-label" aria-hidden="true">LinkedIn</span>
-        <span class="stamp-arrow" aria-hidden="true">→</span>
+        <span class="elsewhere-eyebrow" aria-hidden="true">→ {strings.home.elsewhere}</span>
+        <span class="elsewhere-headline" aria-hidden="true">
+          LinkedIn<span class="elsewhere-arrow">↗</span>
+        </span>
+        <span class="elsewhere-handle" aria-hidden="true">in/yarik-yermilov</span>
       </a>
     </div>
   </section>
@@ -233,81 +224,65 @@ function calMonth(date: Date): string {
     color: var(--green-primary);
   }
 
-  /* LinkedIn "stamp" — postage-stamp / membership-card treatment that
-     rhymes with the .cal-tile system used in the talks list below. */
-  .linkedin-stamp {
-    align-self: center;
-    margin-top: var(--space-3);
-    width: 9.5rem;
-    display: grid;
-    grid-template-rows: auto auto auto auto;
-    justify-items: center;
-    text-align: center;
-    padding: 0.85rem 0.6rem 0.6rem;
-    border: 2px solid var(--green-primary);
-    background: var(--bg-elevated);
-    color: var(--green-primary);
+  /* "Elsewhere" callout — purely typographic. No box, no icon, no perforation.
+     Borrows the workbench label vocabulary (mono eyebrow with a → glyph,
+     serif headline, mono caption) so it reads as an editorial element rather
+     than a third-party badge. */
+  .elsewhere {
+    align-self: end;
+    padding-bottom: 0.2rem; /* baseline-align with the .location line */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    gap: 0.35rem;
+    line-height: 1.1;
+    color: var(--ink);
+    border-bottom: none;
+  }
+  .elsewhere:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+  .elsewhere-eyebrow {
     font-family: var(--font-mono);
+    font-size: 0.78rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    line-height: 1.05;
-    position: relative;
-    transition: background 140ms ease, color 140ms ease, border-color 140ms ease, transform 140ms ease;
+    letter-spacing: 0.05em;
+    color: var(--green-primary);
   }
-  /* Override the global a { border-bottom: ... } rule from tokens.css */
-  .linkedin-stamp,
-  .linkedin-stamp:hover {
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
-  }
-  /* Inner perforation hint — a dashed inset line evokes a stuck-on label
-     without going full kitsch. */
-  .linkedin-stamp::before {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    border: 1px dashed color-mix(in oklab, var(--green-primary) 35%, transparent);
-    pointer-events: none;
-  }
-  .linkedin-stamp:hover {
-    background: var(--green-primary);
-    color: var(--bg-elevated);
-    border-color: var(--green-primary);
-    transform: translate(-1px, -1px);
-  }
-  .linkedin-stamp:hover::before {
-    border-color: color-mix(in oklab, var(--bg-elevated) 60%, transparent);
-  }
-  .stamp-eyebrow {
-    font-size: 0.7rem;
-    color: var(--ink-muted);
-    margin-bottom: 0.5rem;
-  }
-  .linkedin-stamp:hover .stamp-eyebrow {
-    color: color-mix(in oklab, var(--bg-elevated) 75%, transparent);
-  }
-  .stamp-icon {
-    width: 2.4rem;
-    height: 2.4rem;
-    margin: 0 0 0.5rem;
-  }
-  .stamp-label {
+  .elsewhere-headline {
     font-family: var(--font-display);
-    font-size: 1.3rem;
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
     font-weight: 700;
     letter-spacing: -0.015em;
-    text-transform: none;
     line-height: 1;
+    color: var(--ink);
+    transition: color 140ms ease;
   }
-  .stamp-arrow {
-    margin-top: 0.45rem;
-    font-size: 0.95rem;
+  .elsewhere-arrow {
+    display: inline-block;
+    margin-left: 0.18em;
+    font-size: 0.65em;
     color: var(--orange-accent);
-    transition: transform 140ms ease;
+    transition: transform 160ms ease, color 160ms ease;
+    vertical-align: 0.4em;
   }
-  .linkedin-stamp:hover .stamp-arrow {
+  .elsewhere-handle {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.01em;
+  }
+  .elsewhere:hover .elsewhere-headline {
+    color: var(--orange-accent);
+  }
+  .elsewhere:hover .elsewhere-arrow {
+    transform: translate(2px, -2px);
     color: var(--orange-bright);
-    transform: translateX(3px);
+  }
+  .elsewhere:hover .elsewhere-handle {
+    color: var(--ink);
   }
 
   @media (max-width: 600px) {
@@ -330,36 +305,13 @@ function calMonth(date: Date): string {
     .hero-text {
       padding-top: 0;
     }
-    .linkedin-stamp {
+    .elsewhere {
       align-self: stretch;
-      justify-self: stretch;
-      width: auto;
-      margin-top: var(--space-2);
-      grid-template-columns: auto auto 1fr auto;
-      grid-template-rows: auto;
-      column-gap: 0.85rem;
-      padding: 0.7rem 0.9rem;
-      align-items: center;
+      align-items: flex-start;
       text-align: left;
-    }
-    .stamp-eyebrow {
-      grid-column: 1;
-      margin: 0;
-    }
-    .stamp-icon {
-      grid-column: 2;
-      width: 1.6rem;
-      height: 1.6rem;
-      margin: 0;
-    }
-    .stamp-label {
-      grid-column: 3;
-      justify-self: start;
-      font-size: 1.1rem;
-    }
-    .stamp-arrow {
-      grid-column: 4;
-      margin: 0;
+      padding: var(--space-2) 0 0;
+      margin-top: var(--space-1);
+      border-top: 1px solid var(--rule);
     }
   }
 
