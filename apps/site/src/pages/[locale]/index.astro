@@ -56,6 +56,25 @@ function calMonth(date: Date): string {
         </h1>
         <p class="role">{strings.home.role}</p>
         <p class="workbench location">{strings.home.location}</p>
+        <a
+          class="linkedin-cta"
+          href="https://www.linkedin.com/in/yarik-yermilov/"
+          rel="me noopener"
+          target="_blank"
+        >
+          <svg
+            class="linkedin-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              fill="currentColor"
+              d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"
+            />
+          </svg>
+          <span>{strings.home.followLinkedIn}</span>
+        </a>
       </div>
     </div>
   </section>
@@ -207,6 +226,31 @@ function calMonth(date: Date): string {
   }
   .location {
     margin: 0;
+  }
+  .linkedin-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: var(--space-2);
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--rule);
+    background: var(--bg-elevated);
+    color: var(--green-primary);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+  .linkedin-cta:hover {
+    background: var(--orange-soft);
+    color: var(--green-deep);
+    border-color: var(--orange-accent);
+  }
+  .linkedin-icon {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 auto;
   }
 
   @media (max-width: 600px) {
