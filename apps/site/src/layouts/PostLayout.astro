@@ -58,7 +58,6 @@ const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
         )}
       </p>
       <h1>{title}</h1>
-      {description && <p class="lede">{description}</p>}
     </header>
     {coverImage && (
       <figure class="post-cover prose-column">
@@ -91,11 +90,6 @@ const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
-  }
-  .lede {
-    font-size: 1.2rem;
-    color: var(--ink-muted);
-    margin-top: var(--space-2);
   }
   .post-cover {
     margin: 0 0 var(--space-4);
