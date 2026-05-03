@@ -55,27 +55,30 @@ function calMonth(date: Date): string {
           <span class="flag" aria-label="Ukraine">🇺🇦</span>
         </h1>
         <p class="role">{strings.home.role}</p>
-        <p class="workbench location">{strings.home.location}</p>
-        <a
-          class="linkedin-cta"
-          href="https://www.linkedin.com/in/yarik-yermilov/"
-          rel="me noopener"
-          target="_blank"
-        >
-          <svg
-            class="linkedin-icon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              fill="currentColor"
-              d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"
-            />
-          </svg>
-          <span>{strings.home.followLinkedIn}</span>
-        </a>
+        <p class="workbench location">▸ {strings.home.location}</p>
       </div>
+      <a
+        class="linkedin-stamp"
+        href="https://www.linkedin.com/in/yarik-yermilov/"
+        rel="me noopener"
+        target="_blank"
+        aria-label={strings.home.followLinkedIn}
+      >
+        <span class="stamp-eyebrow" aria-hidden="true">{strings.home.stampFollow}</span>
+        <svg
+          class="stamp-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            fill="currentColor"
+            d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"
+          />
+        </svg>
+        <span class="stamp-label" aria-hidden="true">LinkedIn</span>
+        <span class="stamp-arrow" aria-hidden="true">→</span>
+      </a>
     </div>
   </section>
 
@@ -182,8 +185,9 @@ function calMonth(date: Date): string {
     display: block;
   }
   .hero-body {
-    display: flex;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
     gap: var(--space-3);
     padding-top: 0;
     padding-bottom: 0;
@@ -225,32 +229,85 @@ function calMonth(date: Date): string {
     margin: 0 0 0.3rem;
   }
   .location {
-    margin: 0;
+    margin: var(--space-1) 0 0;
+    color: var(--green-primary);
   }
-  .linkedin-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    margin-top: var(--space-2);
-    padding: 0.5rem 0.9rem;
-    border: 1px solid var(--rule);
+
+  /* LinkedIn "stamp" — postage-stamp / membership-card treatment that
+     rhymes with the .cal-tile system used in the talks list below. */
+  .linkedin-stamp {
+    align-self: center;
+    margin-top: var(--space-3);
+    width: 9.5rem;
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+    justify-items: center;
+    text-align: center;
+    padding: 0.85rem 0.6rem 0.6rem;
+    border: 2px solid var(--green-primary);
     background: var(--bg-elevated);
     color: var(--green-primary);
     font-family: var(--font-mono);
-    font-size: 0.82rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    line-height: 1.05;
+    position: relative;
+    transition: background 140ms ease, color 140ms ease, border-color 140ms ease, transform 140ms ease;
+  }
+  /* Override the global a { border-bottom: ... } rule from tokens.css */
+  .linkedin-stamp,
+  .linkedin-stamp:hover {
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+  }
+  /* Inner perforation hint — a dashed inset line evokes a stuck-on label
+     without going full kitsch. */
+  .linkedin-stamp::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px dashed color-mix(in oklab, var(--green-primary) 35%, transparent);
+    pointer-events: none;
+  }
+  .linkedin-stamp:hover {
+    background: var(--green-primary);
+    color: var(--bg-elevated);
+    border-color: var(--green-primary);
+    transform: translate(-1px, -1px);
+  }
+  .linkedin-stamp:hover::before {
+    border-color: color-mix(in oklab, var(--bg-elevated) 60%, transparent);
+  }
+  .stamp-eyebrow {
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    margin-bottom: 0.5rem;
+  }
+  .linkedin-stamp:hover .stamp-eyebrow {
+    color: color-mix(in oklab, var(--bg-elevated) 75%, transparent);
+  }
+  .stamp-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    margin: 0 0 0.5rem;
+  }
+  .stamp-label {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    text-transform: none;
     line-height: 1;
   }
-  .linkedin-cta:hover {
-    background: var(--orange-soft);
-    color: var(--green-deep);
-    border-color: var(--orange-accent);
+  .stamp-arrow {
+    margin-top: 0.45rem;
+    font-size: 0.95rem;
+    color: var(--orange-accent);
+    transition: transform 140ms ease;
   }
-  .linkedin-icon {
-    width: 1rem;
-    height: 1rem;
-    flex: 0 0 auto;
+  .linkedin-stamp:hover .stamp-arrow {
+    color: var(--orange-bright);
+    transform: translateX(3px);
   }
 
   @media (max-width: 600px) {
@@ -259,7 +316,7 @@ function calMonth(date: Date): string {
       aspect-ratio: 1400 / 420;
     }
     .hero-body {
-      flex-direction: column;
+      grid-template-columns: 1fr;
       gap: var(--space-2);
     }
     .avatar-wrap {
@@ -272,6 +329,37 @@ function calMonth(date: Date): string {
     }
     .hero-text {
       padding-top: 0;
+    }
+    .linkedin-stamp {
+      align-self: stretch;
+      justify-self: stretch;
+      width: auto;
+      margin-top: var(--space-2);
+      grid-template-columns: auto auto 1fr auto;
+      grid-template-rows: auto;
+      column-gap: 0.85rem;
+      padding: 0.7rem 0.9rem;
+      align-items: center;
+      text-align: left;
+    }
+    .stamp-eyebrow {
+      grid-column: 1;
+      margin: 0;
+    }
+    .stamp-icon {
+      grid-column: 2;
+      width: 1.6rem;
+      height: 1.6rem;
+      margin: 0;
+    }
+    .stamp-label {
+      grid-column: 3;
+      justify-self: start;
+      font-size: 1.1rem;
+    }
+    .stamp-arrow {
+      grid-column: 4;
+      margin: 0;
     }
   }
 
