@@ -40,6 +40,7 @@ export interface Strings {
     role: string;
     location: string;
     followLinkedIn: string;
+    stampFollow: string;
   };
   talks: {
     nextUp: string;
@@ -91,6 +92,7 @@ const STRINGS: Record<Locale, Strings> = {
       role: 'Principal Software Engineer @ Superhuman',
       location: 'Kyiv, Ukraine',
       followLinkedIn: 'Follow me on LinkedIn',
+      stampFollow: 'Follow on',
     },
     talks: {
       nextUp: 'Next up',
@@ -140,6 +142,7 @@ const STRINGS: Record<Locale, Strings> = {
       role: 'Principal Software Engineer @ Superhuman',
       location: 'Київ, Україна',
       followLinkedIn: 'Підписатися в LinkedIn',
+      stampFollow: 'Підпишись у',
     },
     talks: {
       nextUp: 'Далі',
