@@ -59,7 +59,8 @@ export interface Strings {
     backToHome: string;
     search: string;
     controls: string;
-    translationPending: string;
+    translationPendingFromEn: string;
+    translationPendingFromUa: string;
     video: string;
     slides: string;
     repo: string;
@@ -111,7 +112,8 @@ const STRINGS: Record<Locale, Strings> = {
       backToHome: 'Back to home',
       search: 'Search',
       controls: 'Controls',
-      translationPending: 'This post is not yet translated to Ukrainian. Showing the English original.',
+      translationPendingFromEn: 'This post is not yet translated to Ukrainian. Showing the English original.',
+      translationPendingFromUa: 'This post is not yet translated to English. Showing the Ukrainian original.',
       video: 'video',
       slides: 'slides',
       repo: 'repo',
@@ -161,7 +163,8 @@ const STRINGS: Record<Locale, Strings> = {
       backToHome: 'На головну',
       search: 'Пошук',
       controls: 'Керування',
-      translationPending: 'Цей текст ще не перекладено українською. Показано англійський оригінал.',
+      translationPendingFromEn: 'Цей текст ще не перекладено українською. Показано англійський оригінал.',
+      translationPendingFromUa: 'Цей текст ще не перекладено англійською. Показано український оригінал.',
       video: 'відео',
       slides: 'слайди',
       repo: 'репо',

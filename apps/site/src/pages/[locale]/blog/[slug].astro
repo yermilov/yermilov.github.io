@@ -52,7 +52,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { post, translationPending, alternatePath, alternateMissing } = Astro.props;
+const { post, sourceLocale, translationPending, alternatePath, alternateMissing } = Astro.props;
 const locale = Astro.params.locale as Locale;
 const { Content } = await post.render();
 ---
@@ -68,6 +68,7 @@ const { Content } = await post.render();
   alternatePath={alternatePath}
   alternateMissing={alternateMissing}
   translationPending={translationPending}
+  sourceLocale={sourceLocale}
 >
   <Content />
 </PostLayout>
