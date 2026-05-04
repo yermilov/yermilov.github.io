@@ -31,9 +31,18 @@ export function htmlLang(locale: Locale): string {
 }
 
 export interface Strings {
-  nav: { blog: string; lab: string; games: string; talks: string; gallery: string; about: string };
+  nav: { blog: string; lab: string; games: string; talks: string; gallery: string; books: string; about: string };
   site: { title: string; tagline: string; languageName: string; otherLanguageName: string };
-  empty: { blog: string; lab: string; games: string; talks: string; gallery: string };
+  empty: { blog: string; lab: string; games: string; talks: string; gallery: string; books: string };
+  books: {
+    indexTitle: string;
+    indexLede: string;
+    backToBooks: string;
+    by: string;
+    rating: string;
+    read: string;
+    buy: string;
+  };
   home: {
     catchMeAt: string;
     recent: string;
@@ -73,7 +82,7 @@ export interface Strings {
 
 const STRINGS: Record<Locale, Strings> = {
   en: {
-    nav: { blog: 'Blog', lab: 'Lab', games: 'Games', talks: 'Talks', gallery: 'Gallery', about: 'About' },
+    nav: { blog: 'Blog', lab: 'Lab', games: 'Games', talks: 'Talks', gallery: 'Gallery', books: 'Books', about: 'About' },
     site: {
       title: 'Yaroslav Yermilov',
       tagline: 'Notes, experiments, talks.',
@@ -86,6 +95,7 @@ const STRINGS: Record<Locale, Strings> = {
       games: 'No games yet.',
       talks: 'No talks yet.',
       gallery: 'No photos yet.',
+      books: 'No books yet.',
     },
     home: {
       catchMeAt: 'Catch me at',
@@ -94,6 +104,15 @@ const STRINGS: Record<Locale, Strings> = {
       location: 'Kyiv, Ukraine',
       followLinkedIn: 'Follow me on LinkedIn',
       elsewhere: 'Elsewhere',
+    },
+    books: {
+      indexTitle: 'Books',
+      indexLede: 'Books I’ve read — software engineering, leadership, fiction, the occasional weird gem. Newest first.',
+      backToBooks: '← Back to books',
+      by: 'by',
+      rating: 'Rating',
+      read: 'Read',
+      buy: 'Buy',
     },
     talks: {
       nextUp: 'Next up',
@@ -124,7 +143,7 @@ const STRINGS: Record<Locale, Strings> = {
     },
   },
   ua: {
-    nav: { blog: 'Блог', lab: 'Лаб', games: 'Ігри', talks: 'Доповіді', gallery: 'Галерея', about: 'Про' },
+    nav: { blog: 'Блог', lab: 'Лаб', games: 'Ігри', talks: 'Доповіді', gallery: 'Галерея', books: 'Книги', about: 'Про' },
     site: {
       title: 'Ярослав Єрмілов',
       tagline: 'Нотатки, експерименти, доповіді.',
@@ -137,6 +156,7 @@ const STRINGS: Record<Locale, Strings> = {
       games: 'Поки нема ігор.',
       talks: 'Поки нема доповідей.',
       gallery: 'Поки нема фото.',
+      books: 'Поки нема книг.',
     },
     home: {
       catchMeAt: 'Побачимося',
@@ -145,6 +165,15 @@ const STRINGS: Record<Locale, Strings> = {
       location: 'Київ, Україна',
       followLinkedIn: 'Підписатися в LinkedIn',
       elsewhere: 'У мережі',
+    },
+    books: {
+      indexTitle: 'Книги',
+      indexLede: 'Книги, які я прочитав — про інженерію, лідерство, художнє і всякі дивні знахідки. Спершу найновіші.',
+      backToBooks: '← До книг',
+      by: 'автор —',
+      rating: 'Оцінка',
+      read: 'Прочитано',
+      buy: 'Купити',
     },
     talks: {
       nextUp: 'Далі',

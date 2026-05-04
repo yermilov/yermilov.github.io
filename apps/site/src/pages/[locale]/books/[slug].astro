@@ -1,0 +1,224 @@
+---
+import { LOCALES, t, localePath, bcp47Locale, type Locale } from '@lib/i18n';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getBooks } from '@lib/content';
+
+export async function getStaticPaths() {
+  const books = await getBooks();
+  return LOCALES.flatMap((locale) =>
+    books.map((book) => ({
+      params: { locale, slug: book.slug },
+      props: { book },
+    })),
+  );
+}
+
+const { book } = Astro.props;
+const locale = Astro.params.locale as Locale;
+const strings = t(locale);
+const { Content } = await book.render();
+
+const fmt = new Intl.DateTimeFormat(bcp47Locale(locale), { dateStyle: 'long' });
+const stars = book.data.rating
+  ? '★'.repeat(book.data.rating) + '☆'.repeat(5 - book.data.rating)
+  : null;
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${book.data.title} — ${book.data.author}`}
+  description={book.data.summary}
+  alternatePath={`books/${book.slug}`}
+>
+  <article class="page-frame book" data-pagefind-body>
+    <p class="workbench breadcrumb">
+      <a href={localePath(locale, 'books')}>{strings.books.backToBooks}</a>
+    </p>
+
+    <div class="book-head">
+      <div class="cover-wrap">
+        <img src={book.data.cover} alt={`Cover of ${book.data.title}`} loading="eager" />
+      </div>
+      <div class="meta">
+        <h1 class="title">{book.data.title}</h1>
+        <p class="author">{strings.books.by} {book.data.author}</p>
+        {stars && (
+          <p class="rating" aria-label={`${book.data.rating} out of 5`}>
+            <span class="stars">{stars}</span>
+          </p>
+        )}
+        <dl class="facts">
+          <div>
+            <dt>{strings.books.read}</dt>
+            <dd>
+              <time datetime={book.data.readAt.toISOString()}>{fmt.format(book.data.readAt)}</time>
+            </dd>
+          </div>
+          {book.data.genre && (
+            <div>
+              <dt>Genre</dt>
+              <dd>{book.data.genre}</dd>
+            </div>
+          )}
+          {book.data.series && (
+            <div>
+              <dt>Series</dt>
+              <dd>{book.data.series}</dd>
+            </div>
+          )}
+        </dl>
+        {book.data.affiliateUrl && (
+          <p class="buy">
+            <a href={book.data.affiliateUrl} rel="noopener" target="_blank">{strings.books.buy} →</a>
+          </p>
+        )}
+      </div>
+    </div>
+
+    <div class="book-body prose-column">
+      <Content />
+    </div>
+
+    {book.data.tags.length > 0 && (
+      <footer class="book-footer prose-column">
+        <ul class="tag-list">
+          {book.data.tags.map((tag) => <li>#{tag}</li>)}
+        </ul>
+      </footer>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .book {
+    padding: var(--space-4) var(--space-3) var(--space-6);
+  }
+  .breadcrumb {
+    margin: 0 0 var(--space-3);
+  }
+  .breadcrumb a {
+    color: var(--ink-muted);
+    border-bottom: none;
+  }
+  .breadcrumb a:hover {
+    background: transparent;
+    color: var(--orange-accent);
+  }
+  .book-head {
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+    margin-bottom: var(--space-5);
+  }
+  .cover-wrap {
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    box-shadow: 4px 6px 0 0 var(--rule);
+  }
+  .cover-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .meta {
+    min-width: 0;
+  }
+  .title {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    margin: 0 0 0.4rem;
+    line-height: 1.15;
+  }
+  .author {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--ink-muted);
+    margin: 0 0 var(--space-2);
+  }
+  .rating {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-mono);
+  }
+  .stars {
+    color: var(--orange-accent);
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+  }
+  .facts {
+    margin: 0 0 var(--space-3);
+    display: grid;
+    gap: 0.4rem 1rem;
+    grid-template-columns: max-content auto;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .facts > div {
+    display: contents;
+  }
+  .facts dt {
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .facts dd {
+    margin: 0;
+    color: var(--ink);
+  }
+  .buy {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+  .book-body {
+    margin-top: var(--space-3);
+  }
+  .book-body :global(img),
+  .book-body :global(video) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+  }
+  .book-body :global(ul) {
+    list-style: disc outside;
+    padding-inline-start: 1.4rem;
+  }
+  .book-body :global(ol) {
+    list-style: decimal outside;
+    padding-inline-start: 1.6rem;
+  }
+  .book-body :global(li) {
+    margin-bottom: 0.4rem;
+  }
+  .book-body :global(li:last-child) {
+    margin-bottom: 0;
+  }
+  .book-footer {
+    margin-top: var(--space-5);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--rule);
+  }
+  .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-1) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--green-primary);
+  }
+  @media (max-width: 600px) {
+    .book-head {
+      grid-template-columns: 1fr;
+    }
+    .cover-wrap {
+      max-width: 220px;
+    }
+  }
+</style>

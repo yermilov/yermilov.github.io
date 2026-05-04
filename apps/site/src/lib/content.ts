@@ -5,6 +5,7 @@ type PostEntry = CollectionEntry<'posts'>;
 type TalkEntry = CollectionEntry<'talks'>;
 type LabEntry = CollectionEntry<'labs'>;
 type GameEntry = CollectionEntry<'games'>;
+type BookEntry = CollectionEntry<'books'>;
 
 const isProd = import.meta.env.PROD;
 function isPublished<T extends { data: { draft?: boolean } }>(entry: T): boolean {
@@ -69,4 +70,20 @@ export async function getLabBySlug(slug: string, locale: Locale): Promise<LabEnt
 export async function getGameBySlug(slug: string, locale: Locale): Promise<GameEntry | undefined> {
   const all = await getCollection('games');
   return all.find((g) => g.data.slug === slug && g.data.language === locale);
+}
+
+/**
+ * All published books, newest first by readAt. Locale-agnostic — books
+ * appear in the index under both /en/books/ and /ua/books/. The detail
+ * page shows the entry in its own language regardless of which locale
+ * shell wraps it.
+ */
+export async function getBooks(): Promise<BookEntry[]> {
+  const all = await getCollection('books', isPublished);
+  return all.sort((a, b) => b.data.readAt.getTime() - a.data.readAt.getTime());
+}
+
+export async function getBookBySlug(slug: string): Promise<BookEntry | undefined> {
+  const all = await getCollection('books', isPublished);
+  return all.find((b) => b.slug === slug);
 }

@@ -1,0 +1,157 @@
+---
+import { LOCALES, t, localePath, bcp47Locale, type Locale } from '@lib/i18n';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getBooks } from '@lib/content';
+
+export async function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const strings = t(locale);
+const books = await getBooks();
+
+const yearFmt = new Intl.DateTimeFormat(bcp47Locale(locale), { year: 'numeric' });
+---
+
+<BaseLayout locale={locale} title={strings.books.indexTitle} description={strings.books.indexLede} alternatePath="books">
+  <section class="page-frame index">
+    <header class="prose-column">
+      <p class="workbench">/ {strings.books.indexTitle.toUpperCase()}</p>
+      <h1>{strings.books.indexTitle}</h1>
+      <p class="lede">{strings.books.indexLede}</p>
+    </header>
+
+    {books.length === 0 ? (
+      <div class="prose-column">
+        <p class="empty">{strings.empty.books}</p>
+      </div>
+    ) : (
+      <ul class="books-grid" role="list">
+        {books.map((book) => {
+          const href = localePath(locale, `books/${book.slug}`);
+          const stars = book.data.rating
+            ? '★'.repeat(book.data.rating) + '☆'.repeat(5 - book.data.rating)
+            : null;
+          return (
+            <li class="book-card">
+              <a href={href} class="book-link" aria-label={book.data.title}>
+                <div class="cover-wrap">
+                  <img src={book.data.cover} alt={`Cover of ${book.data.title}`} loading="lazy" />
+                </div>
+                <div class="meta">
+                  <h2 class="title">{book.data.title}</h2>
+                  <p class="author">{book.data.author}</p>
+                  <p class="footer">
+                    {stars && <span class="stars" aria-label={`${book.data.rating} out of 5`}>{stars}</span>}
+                    <span class="year">{yearFmt.format(book.data.readAt)}</span>
+                  </p>
+                </div>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .index {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+  .lede {
+    font-size: 1.1rem;
+    color: var(--ink-muted);
+    margin: 0 0 var(--space-3);
+  }
+  .empty {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+  .books-grid {
+    list-style: none;
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-4) var(--space-3);
+  }
+  .book-card {
+    display: contents;
+  }
+  .book-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    border: none;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .book-link:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+  .cover-wrap {
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    box-shadow: 2px 4px 0 0 var(--rule);
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+  .cover-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .book-link:hover .cover-wrap {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 6px 0 0 var(--rule);
+  }
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .book-link:hover .title {
+    color: var(--orange-accent);
+  }
+  .author {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    margin: 0;
+    line-height: 1.3;
+  }
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0.2rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+  .stars {
+    color: var(--orange-accent);
+    letter-spacing: 0.05em;
+  }
+  .year {
+    color: var(--ink-muted);
+    margin-left: auto;
+  }
+</style>
