@@ -31,7 +31,7 @@ export function htmlLang(locale: Locale): string {
 }
 
 export interface Strings {
-  nav: { blog: string; lab: string; games: string; talks: string; gallery: string; books: string; about: string };
+  nav: { blog: string; lab: string; games: string; talks: string; gallery: string; books: string; about: string; kit: string };
   site: { title: string; tagline: string; languageName: string; otherLanguageName: string };
   empty: { blog: string; lab: string; games: string; talks: string; gallery: string; books: string };
   books: {
@@ -82,7 +82,7 @@ export interface Strings {
 
 const STRINGS: Record<Locale, Strings> = {
   en: {
-    nav: { blog: 'Blog', lab: 'Lab', games: 'Games', talks: 'Talks', gallery: 'Gallery', books: 'Books', about: 'About' },
+    nav: { blog: 'Blog', lab: 'Lab', games: 'Games', talks: 'Talks', gallery: 'Gallery', books: 'Books', about: 'About', kit: 'Kit' },
     site: {
       title: 'Yaroslav Yermilov',
       tagline: 'Notes, experiments, talks.',
@@ -143,7 +143,7 @@ const STRINGS: Record<Locale, Strings> = {
     },
   },
   ua: {
-    nav: { blog: 'Блог', lab: 'Лаб', games: 'Ігри', talks: 'Доповіді', gallery: 'Галерея', books: 'Книги', about: 'Про' },
+    nav: { blog: 'Блог', lab: 'Лаб', games: 'Ігри', talks: 'Доповіді', gallery: 'Галерея', books: 'Книги', about: 'Про', kit: 'Kit' },
     site: {
       title: 'Ярослав Єрмілов',
       tagline: 'Нотатки, експерименти, доповіді.',
