@@ -14,12 +14,8 @@ const books = await getBooks();
 const yearFmt = new Intl.DateTimeFormat(bcp47Locale(locale), { year: 'numeric' });
 ---
 
-<BaseLayout locale={locale} title={strings.books.indexTitle} description={strings.books.indexLede} alternatePath="books">
+<BaseLayout locale={locale} title={strings.books.indexTitle} alternatePath="books">
   <section class="page-frame index">
-    <header class="prose-column">
-      <p class="lede">{strings.books.indexLede}</p>
-    </header>
-
     {books.length === 0 ? (
       <div class="prose-column">
         <p class="empty">{strings.empty.books}</p>

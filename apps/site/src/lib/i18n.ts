@@ -36,7 +36,6 @@ export interface Strings {
   empty: { blog: string; lab: string; games: string; talks: string; gallery: string; books: string };
   books: {
     indexTitle: string;
-    indexLede: string;
     backToBooks: string;
     by: string;
     rating: string;
@@ -107,7 +106,6 @@ const STRINGS: Record<Locale, Strings> = {
     },
     books: {
       indexTitle: 'Books',
-      indexLede: 'Books I’ve read — software engineering, leadership, fiction, the occasional weird gem. Newest first.',
       backToBooks: '← Back to books',
       by: 'by',
       rating: 'Rating',
@@ -168,7 +166,6 @@ const STRINGS: Record<Locale, Strings> = {
     },
     books: {
       indexTitle: 'Книги',
-      indexLede: 'Книги, які я прочитав — про інженерію, лідерство, художнє і всякі дивні знахідки. Спершу найновіші.',
       backToBooks: '← До книг',
       by: 'автор —',
       rating: 'Оцінка',
