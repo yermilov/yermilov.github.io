@@ -29,9 +29,8 @@ const currentPath = Astro.url.pathname;
 
 <header class="site-header">
   <div class="page-frame header-row">
-    <a class="brand" href={homeHref} aria-label={strings.site.title}>
-      <span class="brand-mark">y/</span>
-      <span class="brand-name">{strings.site.title}</span>
+    <a class="brand" href={homeHref} aria-label={strings.nav.home}>
+      <span class="brand-mark">{strings.nav.home}</span>
     </a>
     <nav aria-label="Primary">
       <ul>
@@ -93,9 +92,7 @@ const currentPath = Astro.url.pathname;
   .brand-mark {
     color: var(--green-primary);
     font-weight: 700;
-  }
-  .brand-name {
-    color: var(--ink-muted);
+    text-transform: lowercase;
   }
   nav ul {
     list-style: none;

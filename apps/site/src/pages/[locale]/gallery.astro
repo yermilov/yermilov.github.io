@@ -61,11 +61,6 @@ function formatDate(d: Date): string {
 
 <BaseLayout locale={locale} title={strings.nav.gallery} alternatePath="gallery">
   <section class="page-frame index">
-    <header class="prose-column">
-      <p class="workbench">/ {strings.nav.gallery.toUpperCase()}</p>
-      <h1>{strings.nav.gallery}</h1>
-    </header>
-
     {items.length === 0 ? (
       <div class="prose-column">
         <p class="empty">{strings.empty.gallery}</p>
