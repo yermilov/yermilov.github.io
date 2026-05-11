@@ -15,10 +15,6 @@ const posts = await getPosts();
 
 <BaseLayout locale={locale} title={strings.nav.blog} alternatePath="blog">
   <section class="page-frame index">
-    <header class="prose-column">
-      <p class="workbench">/ {strings.nav.blog.toUpperCase()}</p>
-      <h1>{strings.nav.blog}</h1>
-    </header>
     <div class="prose-column">
       {posts.length === 0 ? (
         <p class="empty">{strings.empty.blog}</p>

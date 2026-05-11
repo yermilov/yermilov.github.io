@@ -34,11 +34,6 @@ const daysFromToday = (date: Date): number =>
 
 <BaseLayout locale={locale} title={strings.nav.talks} alternatePath="talks">
   <section class="page-frame index">
-    <header class="prose-column">
-      <p class="workbench">/ {strings.nav.talks.toUpperCase()}</p>
-      <h1>{strings.nav.talks}</h1>
-    </header>
-
     {talks.length === 0 ? (
       <div class="prose-column">
         <p class="empty">{strings.empty.talks}</p>
