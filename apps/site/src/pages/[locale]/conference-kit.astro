@@ -1,0 +1,75 @@
+---
+import { LOCALES, t, type Locale } from '@lib/i18n';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const strings = t(locale);
+---
+
+<BaseLayout locale={locale} title={strings.nav.kit} alternatePath="conference-kit">
+  <article class="page-frame conference-kit">
+    <div class="prose-column">
+      <p class="workbench">/ CONFERENCE KIT</p>
+      <h1>{strings.site.title}</h1>
+
+      {locale === 'ua' ? (
+        <>
+          <p>
+            Ярослав Єрмілов — Principal Software Engineer у Superhuman
+            (раніше Grammarly). Упродовж майже дев’яти років у компанії
+            він зосереджувався на 0-to-1 проєктах — від ідеї до запуску.
+          </p>
+          <p>
+            У 2025 році Ярослав був серед перших, хто впроваджував
+            AI-розробку в Superhuman: очолив розгортання AI-агентів для
+            програмування в масштабі всієї компанії та працював над
+            внутрішньою платформою (AI coding harness).
+          </p>
+          <p>
+            Із травня 2025 року він не написав жодного рядка коду
+            вручну.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>
+            Yaroslav Yermilov is a Principal Software Engineer at
+            Superhuman (formerly Grammarly). Over nearly nine years at
+            the company, he has focused on 0-to-1 projects, taking
+            ideas from concept to production.
+          </p>
+          <p>
+            In 2025, Yaroslav became one of the early drivers of AI
+            coding adoption at Superhuman, leading the rollout of AI
+            coding agents across the company and building the internal
+            AI coding harness.
+          </p>
+          <p>
+            He hasn’t written a single line of code manually since
+            May 2025.
+          </p>
+        </>
+      )}
+
+      <p>
+        <a
+          href="https://drive.google.com/file/d/1YcuyZfCYJPXIoDvM8e4esTgiyENq16a6/view?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {locale === 'ua' ? 'Завантажити фото →' : 'Download photo →'}
+        </a>
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .conference-kit {
+    padding: var(--space-5) var(--space-3) var(--space-6);
+  }
+</style>
