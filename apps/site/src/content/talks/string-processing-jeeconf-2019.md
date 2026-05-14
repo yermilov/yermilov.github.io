@@ -2,7 +2,7 @@
 title: "String and Text Processing in Java on a Scale"
 event: "JEEConf 2019, Kyiv"
 eventUrl: "https://jeeconf.com/program/string-and-text-processing-in-java-on-a-scale/"
-date: 2019-05-17
+date: 2019-04-26
 abstract: |
   Our Java applications handle millions of strings per second. We work with different platforms, including mobile. On a scale, even rare things happen. You can bet that eventually, an innocent text will crash your server… or the whole cluster. Over the years we have tried many performance tricks. Or should we call it premature optimizations?
 
