@@ -200,3 +200,24 @@ body.theme-lab ::selection {
   color: var(--ink-muted);
   text-transform: uppercase;
 }
+
+/* ── Relative-day highlights (today / tomorrow / yesterday) ─────── */
+
+.rel-days {
+  display: inline-block;
+}
+.rel-days--today {
+  color: var(--orange-bright);
+  font-weight: 700;
+  background: var(--orange-soft);
+  padding: 0 0.4em;
+  border-radius: 2px;
+}
+.rel-days--tomorrow {
+  color: var(--orange-accent);
+  font-weight: 700;
+}
+.rel-days--yesterday {
+  color: var(--ink);
+  font-style: italic;
+}

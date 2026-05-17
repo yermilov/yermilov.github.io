@@ -2,6 +2,7 @@
 import { LOCALES, t, localePath, languageBadge, bcp47Locale, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { getTalks } from '@lib/content';
+import RelativeDays from '@components/RelativeDays.tsx';
 
 export async function getStaticPaths() {
   return LOCALES.map((locale) => ({ params: { locale } }));
@@ -98,7 +99,13 @@ function calMonth(date: Date): string {
                   <a href={detailHref}>{talk.data.title}</a>
                 </h2>
                 <p class="workbench meta">
-                  <span>{rtf.format(daysFromToday(talk.data.date), 'day')}</span>
+                  <RelativeDays
+                    client:idle
+                    iso={talk.data.date.toISOString()}
+                    bcp47={bcp47Locale(locale)}
+                    fallback={rtf.format(daysFromToday(talk.data.date), 'day')}
+                    serverDays={daysFromToday(talk.data.date)}
+                  />
                   {talk.data.language && (
                     <>
                       <span aria-hidden="true">·</span>
@@ -139,7 +146,13 @@ function calMonth(date: Date): string {
                   <a href={detailHref}>{talk.data.title}</a>
                 </h2>
                 <p class="workbench meta">
-                  <span>{rtf.format(daysFromToday(talk.data.date), 'day')}</span>
+                  <RelativeDays
+                    client:idle
+                    iso={talk.data.date.toISOString()}
+                    bcp47={bcp47Locale(locale)}
+                    fallback={rtf.format(daysFromToday(talk.data.date), 'day')}
+                    serverDays={daysFromToday(talk.data.date)}
+                  />
                   {talk.data.language && (
                     <>
                       <span aria-hidden="true">·</span>

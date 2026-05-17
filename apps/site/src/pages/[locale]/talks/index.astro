@@ -2,6 +2,7 @@
 import { LOCALES, t, bcp47Locale, type Locale } from '@lib/i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import TalkCard from '@components/TalkCard.astro';
+import RelativeDays from '@components/RelativeDays.tsx';
 import { getTalks } from '@lib/content';
 
 export async function getStaticPaths() {
@@ -43,7 +44,13 @@ const daysFromToday = (date: Date): number =>
         {upcoming[0] && (
           <div class="prose-column upcoming">
             <p class="workbench upcoming-tag">
-              ▸ {strings.talks.nextUp} · {rtf.format(daysFromToday(upcoming[0].data.date), 'day')}
+              ▸ {strings.talks.nextUp} · <RelativeDays
+                client:idle
+                iso={upcoming[0].data.date.toISOString()}
+                bcp47={bcp47Locale(locale)}
+                fallback={rtf.format(daysFromToday(upcoming[0].data.date), 'day')}
+                serverDays={daysFromToday(upcoming[0].data.date)}
+              />
             </p>
             <ul class="talk-list" role="list">
               {upcoming.map((talk) => (
